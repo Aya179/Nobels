@@ -1,0 +1,376 @@
+@{
+    Layout = "_LayoutRepresntitiveAndAdvisor";
+}
+
+<div class="col-md-12  row mt-4">
+    <div class="col-md-12 ">
+        <h3 class="" style="text-align: center;">طلبات  الإنتاج المتأخرة </h3>
+    </div>
+    <div class="col-md-12 row justify-content-center w-100 my-3 " hidden>
+        <div class="col-2">
+            <input class="form-check-input" type="radio" name="radio" id="f_all" value="0"
+                   onchange="chnage_filter(this)" >
+            <label class="form-check-label" for="">الكل</label>
+        </div>
+        <div class="col-2">
+            <input class="form-check-input" type="radio" name="radio" id="f_unsch"
+                   onchange="chnage_filter(this)" value="1">
+            <label class="form-check-label" for="">غير مجدول</label>
+        </div>
+        <div class="col-2">
+            <input class="form-check-input" type="radio" name="radio" id="f_prim"
+                   onchange="chnage_filter(this)" value="2" checked>
+            <label class="form-check-label" for="">مجدول غير مؤكد </label>
+        </div>
+    </div>
+    <div class="col-md-8 mx-auto mb-3">
+        <div class="row">
+            <label class="col-1" for="district">المدينة</label>
+            <SELECT class="form-control col-6 mx-auto mb-2" id="district" name="district"
+                    onchange="change_district(this)" asp-items="ViewBag.City">
+                <option hidden></option>
+                <option value="0">الكل</option>
+                
+            </SELECT>
+        </div>
+        <div class="row" hidden>
+            <label class="col-1" for="gallery">المعرض</label>
+            <SELECT class="form-control col-6 mx-auto" id="gallery" name="gallery"
+                    onchange="change_gallery(this)" disabled>
+                <option hidden></option>
+                <option value="0">الكل</option>
+                <option value="1">معرض-1</option>
+                <option value="2">معرض-2</option>
+
+            </SELECT>
+        </div>
+    </div>
+    <div class="col-md-12 ">
+        <h4 class="" style="text-align: center;">
+            <span id="f_type">
+               طلبات  الإنتاج المتأخرة
+            </span>
+            <span id="district_display"></span> <span id="gallery_display"></span>
+        </h4>
+    </div>
+    <!-- <div class="col-md-8 mx-auto w-100 my-4">
+        <input class="form-control" type="search" name="search" id="search"
+            placeholder="&#xF002; رقم أمر المبيعات/العميل" style="font-family: FontAwesome">
+    </div> -->
+    <div class="col-md-10 mx-auto my-3">
+        <table class="table" id="mytable" >
+            <thead>
+                <tr>
+
+                    <th>رقم العرض</th>
+                    <th>تاريخ إنشاء العرض</th>
+                    <th>رقم أمر المبيعات</th>
+                    <th>قيمة أمر المبيعات</th>
+                    <th>العميل</th>
+                    <th hidden>تاريخ التدقيق الفني</th>
+                    <th>المدينة</th>
+                    <th hidden>المعرض</th>
+                    <th></th>
+
+                </tr>
+            </thead>
+            <tbody id="body">
+             
+            </tbody>
+        </table>
+        <!-- <h4 class="mt-3" style="text-align: center;">الرجاء اختيار أحد العروض</h4> -->
+    </div>
+    <!-- <div class="col-md-12 my-4 mx-auto w-100 "><button class="btn btn-submit"
+            type="submit">متابعة
+            الجدولة</button>
+    </div> -->
+</div>
+
+@section Scripts
+      
+      {
+
+    <script>
+
+
+
+        var filter = 0, district = 0, gallery = 0;
+        var district_text, gallery_text;
+        function filteration() {
+            if (filter == 0 && district == 0 ) { 
+                
+                $('tbody tr').show();
+                $('span#f_type').text(' الطلبات المتأخرة ');
+              
+                $('select#gallery').prop('disabled', true);
+                $('td:nth-child(7),th:nth-child(7)').show();
+                $('td:nth-child(8),th:nth-child(8)').show();
+                $('#gallery_display')[0].textContent = '';
+                $('span#district_display').text('');
+
+               
+            }
+            if (filter != 0 && district == 0 ) {
+                
+
+                // $('td:nth-child(5),th:nth-child(5)').show();
+                $('tbody tr').hide();
+                $('select#gallery').prop('disabled', true);
+              
+                $('td:nth-child(7),th:nth-child(7)').show();
+                $('td:nth-child(8),th:nth-child(8)').show();
+                $('#gallery_display')[0].textContent = '';
+                $('span#district_display').text('');
+
+
+                if (filter == 1) {
+
+                    $('span#f_type').text('الطلبات المرفوعة-بحاجة لجدولة الإنتاج- ');
+                }
+                if (filter == 2) {
+                   
+                    $('span#f_type').text('الطلبات المرفوعة-تمت جدولة إنتاجها-');
+                }
+
+
+
+            }
+
+            if (filter != 0 && district != 0 && gallery == 0) {
+                
+
+                
+                $('tbody tr').hide();
+                $('select#gallery').prop('disabled', false);
+                $('td:nth-child(7),th:nth-child(7)').hide();
+                $('td:nth-child(8),th:nth-child(8)').show();
+                $('#gallery_display')[0].textContent = '';
+
+
+
+                if (filter == 1) {
+
+
+                    $('table > tbody  > tr').each(function (index, tr) {
+
+                        if ( $(tr).find('td:nth-child(7)').text() == district_text) {
+                            $(this).show();
+                        }
+
+                    });
+                    $('span#f_type').text('طلبات -الإنتاج- غير المجدولة ');
+                }
+                if (filter == 2) {
+                    $('table > tbody  > tr').each(function (index, tr) {
+
+                        if ( $(tr).find('td:nth-child(7)').text() == district_text) {
+                            $(this).show();
+                        }
+
+                    });
+                    $('span#f_type').text('الطلبات المتأخرة');
+
+                }
+                $('span#district_display').text('في ' + district_text);
+
+            }
+            if (filter != 0 && district != 0 && gallery != 0) {
+                
+
+                //
+                $('tbody tr').hide();
+                $('select#gallery').prop('disabled', false);
+                $('td:nth-child(7),th:nth-child(7)').hide();
+                $('td:nth-child(8),th:nth-child(8)').hide();
+
+
+                if (filter == 1) {
+
+
+                    $('table > tbody  > tr').each(function (index, tr) {
+
+                        if ( $(tr).find('td:nth-child(7)').text() == district_text && $(tr).find('td:nth-child(8)').text() == gallery_text) {
+                            $(this).show();
+                        }
+
+                    });
+                    $('span#f_type').text('طلبات -الإنتاج- غير المجدولة ');
+                }
+                if (filter == 2) {
+                    $('table > tbody  > tr').each(function (index, tr) {
+
+                        if ( $(tr).find('td:nth-child(7)').text() == district_text && $(tr).find('td:nth-child(8)').text() == gallery_text) {
+                            $(this).show();
+                        }
+
+                    });
+                    $('span#f_type').text('الطلبات المتأخرة');
+
+                }
+                $('span#district_display').text('في ' + district_text);
+                $('#gallery_display')[0].textContent = ' في ' + gallery_text;
+            }
+            if (filter == 0 && district != 0 && gallery == 0) {
+                
+
+                
+                $('tbody tr').hide();
+                $('span#f_type').text('كافة طلبات -الإنتاج-');
+                $('select#gallery').prop('disabled', false);
+                $('td:nth-child(7),th:nth-child(7)').hide();
+                $('td:nth-child(8),th:nth-child(8)').show();
+                $('#gallery_display')[0].textContent = '';
+
+                $('table > tbody  > tr').each(function (index, tr) {
+                    // console.log(index);
+                    // console.log($(tr).find('td:nth-child(7)').text());
+                    // console.log($(tr).find('td:nth-child(7)').text() == district_text);
+                    // console.log($(tr).find('td:nth-child(8)').text() == gallery_text);
+                    if ($(tr).find('td:nth-child(7)').text() == district_text) {
+                        $(this).show();
+                    }
+
+                });
+
+                $('span#district_display').text('في ' + district_text);
+
+            }
+            if (filter == 0 && district != 0 && gallery != 0) {
+                
+
+             //   
+                $('tbody tr').hide();
+                $('span#f_type').text('كافة طلبات -الإنتاج-');
+                $('select#gallery').prop('disabled', false);
+                $('td:nth-child(7),th:nth-child(7)').hide();
+                $('td:nth-child(8),th:nth-child(8)').hide();
+
+
+
+                $('table > tbody  > tr').each(function (index, tr) {
+                    // console.log(index);
+                    // console.log($(tr).find('td:nth-child(7)').text());
+                    // console.log($(tr).find('td:nth-child(7)').text() == district_text);
+                    // console.log($(tr).find('td:nth-child(8)').text() == gallery_text);
+                    if ($(tr).find('td:nth-child(7)').text() == district_text && $(tr).find('td:nth-child(8)').text() == gallery_text) {
+                        $(this).show();
+                    }
+
+                });
+
+                $('span#district_display').text('في ' + district_text);
+                $('#gallery_display')[0].textContent = ' في ' + gallery_text;
+            }
+        }
+       function chnage_filter(e) {
+            val = $(e).val();
+            filter = val;
+            gallery = 0;
+            $('select#gallery').val(0);
+            district = 0;
+            $('select#district').val(0);
+            fillTable(filter);
+            filteration();}
+            
+
+        function change_district(e) {
+
+
+            val = $(e).val();
+            district = val;
+            
+            district_text = $(e).find('option:selected').text();
+           // alert(val + '' + district_text);
+            gallery=0;
+            $('select#gallery').val(0);
+            getBranches();
+            filteration();
+
+        }
+        function change_gallery(e) {
+            val = $(e).val();
+            gallery = val;
+            
+            gallery_text = $(e).find('option:selected').text();
+           // alert(val + '' + gallery_text);
+            filteration();
+
+        }
+
+
+        function fillTable(RadioValue){
+
+            $.get("/Production/lated_production_SchedulesApi", { radioValue: RadioValue, }, function (data) {
+
+                var table_tr = "";
+
+
+                for (var i = 0; i < data.length; i++) {
+                   
+                    if(RadioValue==2){
+                    table_tr += `
+                                     <tr>
+                                                     <td style="text-align: center;"> `+ data[i].quotionNumberId + ` </td>
+                                                             <td style="text-align: center;"> `+ data[i].quotation_date + ` </td>
+                                                     <td style="text-align: center;"> `+ data[i].quotionCode + ` </td>
+                                                      <td style="text-align: center;"> 20000 </td>
+                                                      <td style="text-align: center;"> `+ data[i].customerArabicName + ` </td>
+                                                                              <td style="text-align: center;" hidden> `+ data[i].productionDate.split('T')[0] + ` </td>
+                                                       <td style="text-align: center;">`+data[i].city +`</td>
+                                                               <td style="text-align: center;" hidden>`+ data[i].branch + `</td>
+                                                                       <td><a href="/Production/ConfirmProductionschedule?instReqId=`+ data[i].intallationRequestId + `" style="color: deepskyblue;">تأكيد</a>/<a href="/Production/Editschedule_the_production?instReqId=` + data[i].intallationRequestId + `" style="color: deepskyblue;">تعديل</a></td>
+
+
+                                       </tr>`;
+                                   
+                                   }
+
+                }
+
+
+
+
+                document.getElementById('body').innerHTML = table_tr;
+
+
+            });
+
+
+        }
+        function getBranches() {
+
+
+
+            var Id = document.getElementById('district').value;
+            $.get("/Production/getCityBranches", { id: Id }, function (data) {
+                console.log(data.branches);
+                var select = document.getElementById("gallery");
+                select.innerHTML = "  <option hidden></option> <option value='0'>الكل</option> ";
+
+                for (var i = 0; i < data.branches.length; i++) {
+
+                    var option = document.createElement("option");
+                    option.text = data.branches[i].branchName;
+                    option.value = data.branches[i].branchId;
+                    select.appendChild(option);
+
+
+                }
+
+            });
+
+
+
+
+        }
+
+
+        $(document).ready(function () {
+            fillTable(2);
+        });
+
+    </script>
+
+
+    }
+

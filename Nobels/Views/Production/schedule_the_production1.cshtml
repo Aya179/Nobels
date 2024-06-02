@@ -1,0 +1,261 @@
+@model IEnumerable<Nobels.Models.productionClass>
+
+@{
+    Layout = "_LayoutRepresntitiveAndAdvisor";
+}
+<style>
+        .dataTables_wrapper .dataTables_filter {
+    float: right;
+    text-align: right;
+    visibility: hidden;
+    }
+</style>
+
+<div class="col-md-12  row mt-4">
+    <div class="col-md-12 ">
+        <h3 class="" style="text-align: center;">جدولة -الإنتاج- </h3>
+    </div>
+    <div class="col-md-6 mx-auto">
+        <div class="row">
+            <label class="col-1" for="district">المدينة</label>
+            <SELECT class="form-control col-6 mx-auto mb-2" id="district" name="district"
+                    onchange="change_district(this)" asp-items="ViewBag.City">
+                <option hidden></option>
+                <option value="0">الكل</option>
+                @*<option value="1">الرياض</option>
+                <option value="2">الدمام</option>
+                <option value="3">الإحساء</option>
+                <option value="4">جدة</option>
+                <option value="5">القصيم</option>
+                <option value="6">المدينة</option>
+                <option value="7">خميس مشيط</option>
+                <option value="8">تبوك</option>*@
+            </SELECT>
+        </div>
+        <div class="row" hidden>
+            <label class="col-1" for="gallery">المعرض</label>
+            <SELECT class="form-control col-6 mx-auto" id="gallery" name="gallery"
+                    onchange="change_gallery(this)" disabled>
+                <option hidden></option>
+                <option value="0">الكل</option>
+                @*<option value="1">معرض-1</option>
+                <option value="2">معرض-2</option>*@
+
+            </SELECT>
+        </div>
+
+    </div>
+    <div class="col-md-8 mx-auto w-100 my-4">
+        <input class="form-control" type="search" name="search" id="search"
+               placeholder="&#xF002; العميل / رقم العرض / أمر المبيعات"
+               style="font-family: FontAwesome">
+    </div>
+    <div class="col-md-12 ">
+        <h4 class="mt-3" style="text-align: center;">
+            الطلبات
+            <span id="trekebat_city"></span><span id="gallery_display"></span>
+        </h4>
+    </div>
+
+    <div class="col-md-10 mx-auto my-3">
+        <table class="table" id="example">
+            <thead>
+                <tr>
+                    <th>رقم العرض</th>
+                    <th>تاريخ إنشاء العرض</th>
+                    <th>رقم أمر المبيعات</th>
+                    <th>قيمة أمر المبيعات</th>
+                    <th>العميل</th>
+                    <th hidden>تاريخ التدقيق الفني</th>
+                    <th>المدينة</th>
+                    <th hidden>المعرض</th>
+                    <th></th>
+
+
+                </tr>
+            </thead>
+            <tbody style="text-align:center;">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.quotionNumberId)</td>
+                        <td>@Html.DisplayFor(modelItem => item.quotation_date)</td>
+                        
+                        <td>@Html.DisplayFor(modelItem => item.quotionCode)</td>
+                        <td>20000</td>
+                        <td>@Html.DisplayFor(modelItem => item.CustomerArabicName)</td>
+                        <td hidden>2023-8-3</td>
+                        <td>@Html.DisplayFor(modelItem => item.city)</td>
+                        <td hidden>@Html.DisplayFor(modelItem => item.branch)</td>
+                        <td><a asp-controller="Production" asp-action="schedule_the_production2" asp-route-instReqId="@item.IntallationRequestId">جدولة الإنتاج</a></td>
+                    </tr>
+                }
+
+                @*<tr>
+                    <td>111</td>
+                    <td>222</td>
+                    <td>20000</td>
+                    <td>جمانة</td>
+                    <td>2023-8-3</td>
+                    <td>الرياض</td>
+                    <td>معرض-1</td>
+                    <td><a href="~/trkebat/schedule_the_production2">جدولة الإنتاج</a></td>
+                </tr>
+                <tr>
+                    <td>112</td>
+                    <td>223</td>
+                    <td>23000</td>
+                    <td>احمد</td>
+                    <td>2023-8-4</td>
+                    <td>الإحساء</td>
+                    <td>معرض-2</td>
+                    <td><a href="~/trkebat/schedule_the_production2">جدولة الإنتاج</a></td>
+                </tr>
+                <tr>
+                    <td>113</td>
+                    <td>224</td>
+                    <td>24000</td>
+                    <td>محمود</td>
+                    <td>2023-8-5</td>
+                    <td>جدة</td>
+                    <td>معرض-2</td>
+                    <td><a href="~/trkebat/schedule_the_production2">جدولة الإنتاج</a></td>
+                </tr>*@
+
+            </tbody>
+        </table>
+        <!-- <h4 class="mt-3" style="text-align: center;">الرجاء اختيار أحد العروض</h4> -->
+    </div>
+    <!-- <div class="col-md-12 my-4 mx-auto w-100 "><button class="btn btn-submit"
+            type="submit">متابعة
+            الجدولة</button>
+    </div> -->
+</div>
+
+
+@section Scripts
+      
+      {
+
+
+
+    <script>
+        var table = $('#example').DataTable({ searching: true, paging: false, info: false });
+
+        // #myInput is a <input type="text"> element
+        $('#search').on('keyup', function () {
+            table.search(this.value).draw();
+        });
+        var filter = 0, district = 0, gallery = 0;
+        var district_text, gallery_text;
+
+        function filteration() {
+            if (district == 0 ) {
+                $('tbody tr').show();
+
+                $('select#gallery').prop('disabled', true);
+
+                
+                $('td:nth-child(7),th:nth-child(7)').show();
+                $('td:nth-child(8),th:nth-child(8)').show();
+                $('#gallery_display')[0].textContent = '';
+                $('span#trekebat_city').text('');
+
+            }
+
+            if (district != 0 && gallery == 0) {
+                getBranches();
+                $('tbody tr').hide();
+                $('select#gallery').prop('disabled', false);
+                $('td:nth-child(7),th:nth-child(7)').hide();
+                $('td:nth-child(8),th:nth-child(8)').show();
+                $('#gallery_display')[0].textContent = '';
+
+
+
+                $('table > tbody  > tr').each(function (index, tr) {
+
+                    if ($(tr).find('td:nth-child(7)').text() == district_text) {
+                        $(this).show();
+                    }
+
+                });
+
+
+                $('span#trekebat_city').text('في ' + district_text);
+
+            }
+            if (district != 0 && gallery != 0) {
+                //getBranches();
+                $('tbody tr').hide();
+                $('select#gallery').prop('disabled', false);
+                $('td:nth-child(7),th:nth-child(7)').hide();
+                $('td:nth-child(8),th:nth-child(8)').hide();
+
+
+
+
+
+                $('table > tbody  > tr').each(function (index, tr) {
+
+                    if ($(tr).find('td:nth-child(7)').text() == district_text && $(tr).find('td:nth-child(8)').text() == gallery_text) {
+                        $(this).show();
+                    }
+
+                });
+
+
+
+                $('span#trekebat_city').text('في ' + district_text);
+                $('#gallery_display')[0].textContent = ' في ' + gallery_text;
+            }
+        }
+
+        function change_district(e) {
+            $('select#gallery').prop('disabled', false);
+            val = $(e).val();
+          
+            district = val;
+            district_text = $(e).find('option:selected').text();
+            $('select#gallery').val('');
+            gallery=0;
+            filteration();
+           
+        }
+
+        function change_gallery(e) {
+            val = $(e).val();
+            gallery = val;
+            gallery_text = $(e).find('option:selected').text();
+            filteration();
+        }
+        function getBranches(){
+
+
+
+            var Id = document.getElementById('district').value;
+            $.get("/Production/getCityBranches", { id: Id }, function (data) {
+                console.log(data.branches);
+                var select = document.getElementById("gallery");
+                select.innerHTML = "  <option hidden></option> <option value='0'>الكل</option> ";
+
+                for (var i = 0; i < data.branches.length; i++) {
+
+                        var option = document.createElement("option");
+                    option.text = data.branches[i].branchName;
+                    option.value = data.branches[i].branchId;
+                        select.appendChild(option);
+
+
+                    }
+
+                });
+                
+
+          
+
+        }
+
+    </script>
+    }
+

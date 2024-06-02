@@ -1,0 +1,239 @@
+@model IEnumerable<Nobels.Models.productionClass>
+
+@{
+    Layout = "_LayoutRepresntitiveAndAdvisor";
+}
+<style>
+    .dataTables_wrapper .dataTables_filter {
+        float: right;
+        text-align: right;
+        visibility: hidden;
+    }
+</style>
+<div class="col-md-12  row mt-4">
+    <div class="col-md-12 ">
+        <h3 class="" style="text-align: center;">تحديثات المستودع</h3>
+        <h4 class="" style="text-align: center;">تسليم فريق التركيبات</h4>
+    </div>
+    <div class="col-md-12 row justify-content-center w-100 my-3 ">
+        <div class="col-2">
+            <input class="form-check-input" type="radio" name="radio" id="f_all" value="0"
+                   onchange="chnage_filter(this)" checked>
+            <label class="form-check-label" for="">الكل </label>
+        </div>
+        <div class="col-2">
+            <input class="form-check-input" type="radio" name="radio" id="f_unsch"
+                   onchange="chnage_filter(this)" value="1">
+            <label class="form-check-label" for=""> تم التسليم </label>
+        </div>
+        <div class="col-2">
+            <input class="form-check-input" type="radio" name="radio" id="f_prim"
+                   onchange="chnage_filter(this)" value="2">
+            <label class="form-check-label" for=""> غير مستلم</label>
+        </div>
+    </div>
+
+    <div class="col-md-8 mx-auto w-100 my-4">
+        <input class="form-control" type="search" name="search" id="search"
+               placeholder="&#xF002; العميل / رقم العرض / أمر المبيعات"
+               style="font-family: FontAwesome">
+    </div>
+    <div class=" col-10 mx-auto">
+        <table class="table " id="example">
+            <thead>
+                <tr>
+                    <th>رقم العرض </th>
+                    <th>تاريخ  إنشاءالعرض</th>
+                    <th>رقم أمر المبيعات</th>
+                    <th>قيمة أمر المبيعات</th>
+                    <th>العميل</th>
+                    <!-- <th>تاريخ التدقيق الفني</th> -->
+                    <th>المدينة</th>
+                    <th>الفريق </th>
+                    <th>تاريخ التركيب </th>
+                    <th></th>
+                    <!-- <th></th> -->
+
+
+                </tr>
+            </thead>
+            <tbody style="text-align:center;">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.quotionNumberId)</td>
+                        <td>@Html.DisplayFor(modelItem => item.quotation_date)</td>
+
+                        <td>@Html.DisplayFor(modelItem => item.quotionCode)</td>
+                        <td>2000</td>
+                        <td>@Html.DisplayFor(modelItem => item.CustomerArabicName)</td>
+
+                        <td>@Html.DisplayFor(modelItem => item.city)</td>
+                        <td>@Html.DisplayFor(modelItem => item.teamName)</td>
+                        <td>
+                            @{
+                                var date = item.InstallationDate.Value.ToShortDateString();
+                            }
+                            @Html.DisplayFor(modelItem => date)</td>
+
+
+
+                        @if (item.TeamReceiveDate == null)
+                        {
+                            if (DateTime.Now.Date ==item.InstallationDate.Value.Date||DateTime.Now.Date.AddDays(1)==item.InstallationDate.Value.Date)
+                            {
+                                <td>
+                                    <button class="btn btn-submit" onclick="updatetime(@item.WarehouseUpdateId)">تسليم </button>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <button class="btn btn-submit" onclick="updateDateFromproductionDate('@item.InstallationDate.Value.ToShortDateString()')">تسليم </button>
+                                </td>
+                            }
+
+                        }
+                        else
+                        {
+                            <td style="color:#B2CB49;">
+
+                                تم التسليم بتاريخ
+                                @item.TeamReceiveDate.Value.ToShortDateString()
+
+
+                            </td>
+                        }
+
+
+
+
+
+
+
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+       
+    </div>
+
+
+
+
+  
+</div>
+
+
+@section Scripts
+
+    {
+
+
+
+    <script>
+        var table = $('#example').DataTable({
+            searching: true, paging: false, info: false, columnDefs: [{
+                targets: "_all",
+                searchable: "visible"
+            }],
+        });
+
+        // #myInput is a <input type="text"> element
+        $('#search').on('keyup', function () {
+            table.search(this.value).draw();
+        });
+        function chnage_filter(e) {
+            val = $(e).val();
+            // console.log(val);
+            $('tbody tr').hide();
+            //filter = val;
+            if (val == 0) {
+                $('tbody tr').show();
+
+            }
+            if (val == 1) {
+
+                $('table > tbody  > tr').each(function (index, tr) {
+
+                    if ($(tr).find('td:nth-child(9)').text().includes("تم التسليم بتاريخ")) {
+                        $(this).show();
+                    }
+
+                });
+            }
+            if (val == 2) {
+
+                $('table > tbody  > tr').each(function (index, tr) {
+
+                    if (!$(tr).find('td:nth-child(9)').text().includes("تم التسليم بتاريخ")) {
+                        $(this).show();
+                    }
+
+                });
+            }
+        }
+        function updatetime(id) {
+            Swal.fire({
+                title: 'تسليم الطلب',
+                icon: 'info',
+                showCancelButton: true,
+                cancelButtonText: 'إلغاء',
+                confirmButtonText: 'تسليم'
+            }).then((result) => {
+                if (result['isConfirmed']) {
+
+                    $.post("/trkebat/updateTeamReceiveDate", { WarehouseUpdateId: id }, function (data) {
+
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'تم التسليم',
+
+
+                        }).then(function () {
+                            window.location.reload();
+
+                        });
+
+                    });
+
+                }
+            });
+
+            //swal.fire({
+            //    title: 'Select a date',
+            //    input: 'date',
+            //    inputAttributes: {
+            //        min: '2022-01-01',
+            //        max: '2022-12-31',
+            //        step: '1'
+            //    }
+            //}).then((result) => {
+            //    if (result.value) {
+            //        console.log(result.value);
+            //    }
+            //});
+
+        }
+
+
+        function updateDateFromproductionDate(date) {
+
+
+
+            Swal.fire({
+                icon: 'error',
+                title: 'تاريخ التركيب هو '+date+' لا يمكن التسليم قبل هذا التاريخ',
+                showCloseButton: true
+
+            });
+
+
+           
+        }
+
+
+    </script>
+}

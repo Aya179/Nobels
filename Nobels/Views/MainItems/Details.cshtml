@@ -1,0 +1,53 @@
+﻿@model Nobels.Models.MainItem
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Employee> SignInManager
+@inject UserManager<Employee> UserManagerc
+@{
+    ViewData["Title"] = "Details";
+
+    var user = UserManagerc.FindByNameAsync(User.Identity.Name);
+    var role = user.Result.RoleId;
+    if (role == 6)
+    {
+        Layout = "_LayoutProductManeger";
+
+    }
+    else
+    {
+        Layout = "_Layout";
+
+    }
+}
+
+
+
+<h1>Details</h1>
+
+<div>
+    <h4>MainItem</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MainItemName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MainItemName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MainItemEnName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MainItemEnName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MainItemPhoto)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MainItemPhoto)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

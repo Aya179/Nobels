@@ -1,0 +1,107 @@
+﻿
+@{
+    Layout = "_LayoutRepresntitiveAndAdvisor";
+}
+<div class="col-md-12  row mt-4">
+    <div class="mx-auto col-md-12 mb-3">
+        <h4 class="text-center">تمت الجدولة بنجاح</h4>
+    </div>
+    <div class="row col-md-12">
+        <form asp-action="scheduled_succesfullyform" style="    display: contents;">
+            <div class="col-md-6 ">
+                <p class="row">
+                    <span class="col-4">رقم العرض</span>
+                    <span id="qId" class="col-6">@ViewBag.qId</span>
+                </p>
+                <p class="row">
+                    <span class="col-4">رقم أمر المبيعات</span>
+                    <span class="col-6">@ViewBag.code</span>
+                </p>
+                <p class="row">
+                    <span class="col-4">العميل</span>
+                    <span class="col-6">@ViewBag.customer</span>
+                </p>
+            </div>
+            <div class="col-md-6 ">
+                <p class="row">
+                    <span class="col-4">تاريخ بدء التركيب </span>
+                    <span class="col-6">@ViewBag.insDate</span>
+                </p>
+                <p class="row">
+                    <span class="col-4">تاريخ انتهاء التركيب</span>
+                    @if (ViewBag.addOneToDuration == 1)
+                    {
+                        <span class="col-6">  @ViewBag.newendDate </span>
+                    }
+                   
+                    else {
+                    <span class="col-6">@ViewBag.endDate </span>
+                    }
+                    
+                </p>
+                <p class="row">
+                    <span class="col-4">مدة التركيب </span>
+                    <span class="col-6"> @ViewBag.duration  يوم</span>
+                </p>
+
+            </div>
+         @*   <div class="col-12" >
+                <p>
+                    هذه الجدولة أولية, سيظهر إشعار بتاريخ @ViewBag.endDate لتأكيد الجدولة كموعد نهائي
+                    أو اختيار موعد جديد
+                </p>
+            </div>*@
+            
+            <div class="col-md-12 mt-4">
+                <textarea name="notes" id="notes" class="form-control" cols="30" rows="5"
+                          placeholder="ملاحظات"></textarea>
+            </div>
+            
+                <div class="col-md-12 my-2 w-100">
+                    <input id="qid" name="qid" value="@ViewBag.qId" hidden />
+                    
+                    <button @*asp-controller="trkebat" asp-action="schedule_trkeb_requestall" *@class="btn btn-submit" type="submit" >
+                        انهاء الجدولة و العودة لطلبات
+                        التركيب
+                    </button>
+                </div>
+       
+            
+
+        </form>
+    </div>
+</div>
+@section Scripts
+
+    {
+
+
+    <script>
+    //function go(){
+    //        var notes1 = document.getElementById("notes").value;
+    //        var qid1 = document.getElementById("qid").value;
+    //    alert(notes1);
+
+    //    $.post("/trkebat/updateShipmentDate", { WarehouseUpdateId: id }, function (data) {
+
+
+    //                    Swal.fire({
+    //                        icon: 'success',
+    //                        title: 'تم الشحن',
+
+
+    //                    }).then(function () {
+    //                        window.location.reload();
+
+    //                    });
+
+    //                });
+    //        window.location.href = "/trkebat/schedule_trkeb_requestall";
+    //}
+
+
+
+    </script>
+
+      }
+

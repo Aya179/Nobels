@@ -1,0 +1,61 @@
+﻿@model Nobels.Models.EmployeeRole
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+
+
+<!-- Credit card form -->
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+               
+                <div class="card-header" style=" display: flex;
+  justify-content: space-between;">
+                    <a asp-action="Index"> <i class="fa fa-arrow-left fa-lg"></i></a>
+                    <p>إنشاء صلاحية</p>
+
+
+                </div>
+
+                <div class="card-body">
+                    <form asp-action="Create" style=" width: 50vw;  margin: auto;">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <!-- 2 column grid layout with text inputs for the first and last names -->
+
+                        <!-- Text input -->
+                        <div class="form-outline mb-4">
+                            <label asp-for="RoleName" class="control-label"></label>
+                            <input asp-for="RoleName" class="form-control" />
+                            <span asp-validation-for="RoleName" class="text-danger"></span>
+                        </div>
+
+                        <!-- Text input -->
+                        <div class="form-outline mb-4">
+                            <label asp-for="Notes" class="control-label"></label>
+                            <input asp-for="Notes" class="form-control" />
+                            <span asp-validation-for="Notes" class="text-danger"></span>
+                        </div>
+
+                     
+
+                        <button class="btn btn-primary btn-lg btn-block" type="submit">
+                            إضافة سماحية
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+<!-- Credit card form -->
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

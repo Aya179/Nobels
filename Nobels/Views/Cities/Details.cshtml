@@ -1,0 +1,60 @@
+﻿@model Nobels.Models.City
+
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Employee> SignInManager
+@inject UserManager<Employee> UserManagerc
+@{
+    var user = UserManagerc.FindByNameAsync(User.Identity.Name);
+    var role = user.Result.RoleId;
+    if (role == 6)
+    {
+        Layout = "_LayoutProductManeger";
+
+    }
+    else
+    {
+        Layout = "_Layout";
+
+    }
+}
+
+
+<section>
+  <div class="row ">
+    <div class="col-12">
+      <div class="card mb-4 col ">
+      
+
+
+        <div class="card-header" style=" display: flex;justify-content: space-between;">
+                    <a asp-action="Index"> <i class="fa fa-arrow-left fa-lg"></i></a>
+                    <p>معلومات مدينة</p>
+
+
+               </div>
+        <div class="card-body d-flex justify-content-center">
+          <form  style=" width: 50vw; ">
+             <input type="hidden" asp-for="CityId" />
+            
+
+            
+            <div class="form-outline mb-4">
+               
+                <label asp-for="CityName" class="control-label"></label>
+                <input asp-for="CityName" class="form-control" type="text"  readonly/>
+                <span asp-validation-for="CityName" class="text-danger"></span>
+            </div>
+
+
+
+            
+
+            
+          </form>
+        </div>
+      </div>
+    </div>
+
+  
+  </div>
+</section>

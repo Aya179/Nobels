@@ -1,0 +1,63 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Employee> SignInManager
+@inject UserManager<Employee> UserManagerc
+@{
+    var user = UserManagerc.FindByNameAsync(User.Identity.Name);
+    var role = user.Result.RoleId;
+    if (role == 6)
+    {
+        Layout = "_LayoutProductManeger";
+
+    }
+    else
+    {
+        Layout = "_Layout";
+
+    }
+}
+
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+
+                <div class="card-header" style=" display: flex;
+  justify-content: space-between;">
+                    <a asp-action="Index"> <i class="fa fa-arrow-left fa-lg"></i></a>
+                    <p>تحميل زبائن من ملف csv</p>
+
+
+                </div>
+
+                <div class="card-body">
+                    <form asp-action="ImportFromExcel" style=" width: 50vw;  margin: auto;" enctype="multipart/form-data" method="post">
+
+                        <!-- 2 column grid layout with text inputs for the first and last names -->
+                      
+
+
+
+                        <!-- Text input -->
+                        <div class="form-outline mb-4" >
+                            <input type="file" name="formFile" />
+                           
+                        </div>
+
+                        <!-- Email input -->
+
+                        <!-- Number input -->
+                       
+
+
+                        <button type="submit" class="btn btn-primary btn-lg btn-block">
+                            إضافة المنتجات
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>

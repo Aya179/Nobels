@@ -1,0 +1,116 @@
+﻿@model Nobels.Models.Quotation
+
+@{
+    Layout = "_LayoutRepresntitiveAndAdvisor";
+    ViewData["Title"] = "Delete";
+}
+
+<section>
+    <div class="row ">
+        <div class="col-12">
+            <div class="card mb-4 col ">
+
+
+
+                <div class="card-header" style=" display: flex;justify-content: space-between;">
+                    <a asp-action="Index"> <i class="fa fa-arrow-left fa-lg"></i></a>
+                    <p>رفض العرض  @ViewBag.Id</p>
+
+
+                </div>
+                <div class="card-body d-flex justify-content-center">
+                    <form asp-action="Delete" style=" width: 50vw; " id="myform">
+
+                        <input type="hidden" asp-for="QuotationId" />
+
+                        <div class="row mb-4">
+                            <div class="col">
+                                <div class="form-outline" hidden>
+                                    <label asp-for="CustomerId" class="control-label"></label>
+                                    <input asp-for="Customer.Address" class="form-control" readonly />
+
+                                    <span asp-validation-for="CustomerId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-outline" hidden>
+                                    <label asp-for="QuotationStatus" class="form-label" for="form6Example2"></label>
+                                    <input type="text" asp-for="QuotationStatus" id="form6Example2" class="form-control" readonly />
+
+                                    <span asp-validation-for="QuotationStatus" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-outline mb-4" hidden>
+                            <label asp-for="Code" class="form-label" for="form6Example3"></label>
+                            <input asp-for="Code" type="text" id="form6Example3" class="form-control" readonly />
+
+                            <span asp-validation-for="Code" class="text-danger"></span>
+                        </div>
+
+
+                        <div class="form-outline mb-4">
+                            <label  class="form-label" for="form6Example3">السبب</label>
+                            <input placeholder="سبب الرفض" type="text" name="note" id="note" class="form-control" required />
+
+                            <span asp-validation-for="Notes" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-outline mb-4" hidden>
+                            <label asp-for="BranchId" class="control-label"></label>
+                            <input asp-for="Branch.BranchName" class="form-control" readonly></input>
+
+                            <span asp-validation-for="Branch.BranchName" class="text-danger"></span>
+                        </div>
+
+                        @* <div class="form-outline mb-4">
+                        <label asp-for="QuotationSimpleDate" class="form-label" for="form6Example4"></label>
+                        <input asp-for="QuotationSimpleDate" type="datetime" id="form6Example4" class="form-control" readonly />
+
+                        <span asp-validation-for="QuotationSimpleDate" class="text-danger"></span>
+                        </div>
+                        *@
+
+
+                        <button class="btn btn-danger btn-lg btn-block" type="button" onclick="submitMyform()">
+                            رفض العرض
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</section>
+@section Scripts {
+    <script>
+        function submitMyform() {
+            const form = document.getElementById('myform');
+            //const input = document.querySelector('input[name="note"]');
+
+
+
+            if ($('#note').val().length == 0) {
+
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'يجب إضافة سبب الرفض أولاً ! ',
+
+
+                });
+
+            }
+            else {
+                form.submit();
+            }
+
+
+        }
+
+
+
+
+    </script>
+}

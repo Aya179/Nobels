@@ -1,0 +1,249 @@
+﻿@model Nobels.Models.Color
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Employee> SignInManager
+@inject UserManager<Employee> UserManagerc
+@{
+    var user = UserManagerc.FindByNameAsync(User.Identity.Name);
+    var role = user.Result.RoleId;
+    if (role == 6)
+    {
+        Layout = "_LayoutProductManeger";
+
+    }
+    else
+    {
+        Layout = "_Layout";
+
+    }
+}
+
+<section>
+    <div class="row ">
+        <div class="col-12">
+            <div class="card mb-4 col ">
+            <div class="card-header" style=" display: flex;justify-content: space-between;">
+                <a asp-action="Index"> <i class="fa fa-arrow-left fa-lg"></i></a>
+                    <p>تعديل المنتج الخاص باللون </p>
+            </div>
+
+            <div class="card-body d-flex justify-content-center">
+            <form  style=" width: 50vw; " >
+            
+            
+                <div class="row mb-4">
+                    
+                    
+                    <div class="col">
+                                <label class="control-label">الأنواع التابعة لهذا اللون</label>
+                        <select class="form-control" id="data2" size="6"></select>
+                    </div>
+                    
+                            <div class="col">
+                                <p>
+                                    <br />
+                                    <br />
+                                </p>
+                                <button class="btn btn-primary btn-lg btn-block" type="button" onclick="addnewcolor1()"><<</button>
+                                <button class="btn btn-primary btn-lg btn-block" type="button" onclick="deleteColor()">>>   </button>
+                            </div>
+                    <div class="col">
+                                <label class="control-label">الأنواع الأخرى</label>
+
+                        <select class="form-control" id="data1" size="6"></select>
+                    </div>
+                            
+
+                              
+                               
+                    </div>
+                        
+                    <div class="row">
+                        <div alighn="center">
+                                <button type="button" class="btn btn-primary btn-lg" id="b3" onclick="display()">حفظ التغييرات</button>
+                            </div>
+                    </div>
+            </form>
+
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+
+
+@section Scripts {
+
+
+<script>
+
+    function display(){
+            var url = document.URL;
+            var stuff = url.split('/');
+            var idd = stuff[stuff.length - 1];
+            //var selectedId = document.getElementById("data1").value;
+        var Selectid=document.getElementById("data2");
+            var Selectid1 = document.getElementById("data1");
+        for(var i=0;i<Selectid.length;i++) {
+              
+
+                $.post("/Colors/updateItemTypenew", { colorId: idd, itemTypeId: Selectid[i].value }, function (data) {
+
+                
+                 //get1();
+                 });
+
+               // alert(Selectid[i].text);
+        }
+
+
+            for (var i = 0; i < Selectid1.length; i++) {
+
+
+                $.post("/Colors/deletItemType", { colorId: idd, itemTypeId: Selectid1[i].value }, function (data) {
+
+
+                 
+                });
+
+               
+            }
+
+            window.location.replace("/Colors/Index");
+    }
+
+        function addnewcolor1(){
+
+            var url = document.URL;
+            var stuff = url.split('/');
+            var idd = stuff[stuff.length - 1];
+            var selectedId = document.getElementById("data1").value;
+
+           // $.post("/Colors/updateItemType", { colorId: idd, itemTypeId:selectedId }, function (data) {
+
+              //  $('#data1 option:selected').remove();
+               // $('data2').prop('selectedIndex', 0);
+              // get1();
+           // });
+
+
+            var e = document.getElementById("data1");
+            var value = e.value;
+            var text = e.options[e.selectedIndex].text;
+           var select = document.getElementById('data2');
+
+            var opt = document.createElement('option');
+            opt.value = value;
+            //opt.text = text;
+            opt.innerHTML = text;
+            select.appendChild(opt);
+            $('#data1 option:selected').remove();
+
+              
+
+        }
+
+        function deleteColor(){
+            var url = document.URL;
+            var stuff = url.split('/');
+            var idd = stuff[stuff.length - 1];
+
+
+            //var selectedId = document.getElementById("data2").value;
+            //$.post("/Colors/deletItemType", { colorId: idd,itemTypeId: selectedId }, function (data) {
+
+            //    $('#data2 option:selected').remove();
+
+
+            //  
+            //});
+
+
+            var e = document.getElementById("data2");
+            var value = e.value;
+            var text = e.options[e.selectedIndex].text;
+            var select = document.getElementById('data1');
+
+            var opt = document.createElement('option');
+            opt.value = value;
+            //opt.text = text;
+            opt.innerHTML = text;
+            select.appendChild(opt);
+            $('#data2 option:selected').remove();
+
+
+
+        }
+
+    function get1(){
+
+
+            var url = document.URL;
+            var stuff = url.split('/');
+            var idd = stuff[stuff.length - 1];
+
+            $.get("/Colors/itemTypeSelect", { id: idd }, function (data) {
+                console.log(data.data1);
+                console.log(data.data2);
+
+                //
+                var select = document.getElementById("data1");
+
+
+               // select.innerHTML = "  <option>الرجاء اختيار المنتج</option>";
+
+                for (var i = 0; i < data.data1.length; i++) {
+                    // alert(data[i].ItemArName);
+                    if (data.data1[i] == null) {
+                        console.log("null");
+                    }
+                    else {
+                    var option = document.createElement("option");
+                    option.text = data.data1[i].typeArName;
+                    option.value = data.data1[i].typeId;
+                    select.appendChild(option);
+                    }
+                    //   document.getElementById('cat').innerHTML()
+
+                }
+                var select = document.getElementById("data2");
+
+
+               // select.innerHTML = "  <option>الرجاء اختيار المنتج</option>";
+
+                for (var i = 0; i < data.data2.length; i++) {
+                    // alert(data[i].ItemArName)
+                    if(data.data2[i]==null){
+                        console.log("null");
+                    }
+                    else{
+                    var option = document.createElement("option");
+                    option.text = data.data2[i].typeArName;
+                    option.value = data.data2[i].typeId;
+                   // if (option.value != null && option.text != null)
+                        select.appendChild(option);}
+
+                    //   document.getElementById('cat').innerHTML()
+
+                }
+
+
+            });
+
+
+
+    }
+
+
+
+          
+    $(document).ready(function() {
+        get1();
+       // get2();
+       
+    });
+
+
+
+    </script>
+
+}

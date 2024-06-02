@@ -1,0 +1,173 @@
+﻿@model Nobels.Models.Customer
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Employee> SignInManager
+@inject UserManager<Employee> UserManagerc
+@*@{
+    ViewData["Title"] = "Create";
+    var user = UserManagerc.FindByNameAsync(User.Identity.Name);
+    var role = user.Result.RoleId;
+    if (role == 6)
+    {
+        Layout = "_LayoutProductManeger";
+
+    }
+
+    else
+    {
+        Layout = "_Layout";
+
+    }
+}*@
+@{
+   
+    Layout = "_LayoutRepresntitiveAndAdvisor";
+}
+
+
+
+
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+
+                <div class="card-header" style=" display: flex;
+  justify-content: space-between;">
+                    <a asp-action="Index"> <i class="fa fa-arrow-left fa-lg"></i></a>
+                    <p>إنشاء عميل</p>
+
+
+                </div>
+
+                <div class="card-body">
+                    <form asp-action="Create" style=" width: 50vw;  margin: auto;">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <!-- 2 column grid layout with text inputs for the first and last names -->
+                        <div class="row mb-4">
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label asp-for="ArabicName" class="control-label"></label>
+                                    <input asp-for="ArabicName" class="form-control" />
+                                    <span asp-validation-for="ArabicName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label asp-for="EnglishName" class="control-label"></label>
+                                    <input asp-for="EnglishName" class="form-control" />
+                                    <span asp-validation-for="EnglishName" class="text-danger"></span>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row mb-4">
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label asp-for="Address" class="control-label"></label>
+                                    <input asp-for="Address" class="form-control" />
+                                    <span asp-validation-for="Address" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label asp-for="SecondAddress" class="control-label"></label>
+                                    <input asp-for="SecondAddress" class="form-control" />
+                                    <span asp-validation-for="SecondAddress" class="text-danger"></span>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label asp-for="Phone" class="control-label"></label>
+                                    <div class="div_phone">
+                                        <input asp-for="Phone" class="form-control input_phone" type="text" />
+                                        <span class="span_phone">+05</span>
+                                    </div>
+                                    <span asp-validation-for="Phone" class="text-danger"></span>
+                                </div>
+
+
+
+
+
+
+
+                            </div>
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label asp-for="PhonNumber" class="control-label"></label>
+                                    <div class="div_phone">
+                                        <input asp-for="PhonNumber" class="form-control input_phone" type="text" />
+                                        <span class="span_phone">+05</span>
+                                    </div>
+                                    <span asp-validation-for="PhonNumber" class="text-danger"></span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Text input -->
+                        <div class="form-outline mb-4">
+                            <label asp-for="CityId" class="control-label"></label>
+                            <select asp-for="CityId" class="form-control" asp-items="ViewBag.CityId"></select>
+                        </div>
+
+
+
+                        <!-- Email input -->
+                        <div class="form-outline mb-4">
+                            <label asp-for="Email" class="control-label"></label>
+                            <input asp-for="Email" class="form-control" type="email" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+
+                        <div class="form-outline mb-4">
+                            <label asp-for="Notes" class="control-label"></label>
+                            <input asp-for="Notes" class="form-control" />
+                            <span asp-validation-for="Notes" class="text-danger"></span>
+                        </div>
+
+
+
+                        <div class="form-check">
+                            <label asp-for="Gender" class="form-label" for="form6Example6"></label>
+
+                            <div class="custom-control custom-radio">
+                                <div class="radio-1 inl ">
+                                    <input asp-for="Gender" class="custom-control-input" id="male" value="سيد" type="radio">
+                                    <label for="male" class="custom-control-label">سيد</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                </div>
+                                <div class="radio-2">
+                                    <input asp-for="Gender" class="custom-control-input" id="female" value="سيدة" type="radio">
+                                    <label for="female" class="custom-control-label">سيدة</label>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary btn-lg btn-block" type="submit">
+                            إضافة عميل
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+<!-- Credit card form -->
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

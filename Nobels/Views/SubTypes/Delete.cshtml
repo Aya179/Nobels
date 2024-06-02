@@ -1,0 +1,92 @@
+﻿@model Nobels.Models.SubType
+
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Employee> SignInManager
+@inject UserManager<Employee> UserManagerc
+@{
+    ViewData["Title"] = "Delete";
+
+
+    var user = UserManagerc.FindByNameAsync(User.Identity.Name);
+    var role = user.Result.RoleId;
+    if (role == 6)
+    {
+        Layout = "_LayoutProductManeger";
+
+    }
+    else
+    {
+        Layout = "_Layout";
+
+    }
+}
+
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+
+                <div class="card-header" style=" display: flex;
+  justify-content: space-between;">
+                    <a asp-action="Index"> <i class="fa fa-arrow-left fa-lg"></i></a>
+                    <p>حذف نوع منتج فرعي</p>
+
+
+                </div>
+
+                <div class="card-body">
+                    <form asp-action="Delete" style=" width: 50vw;  margin: auto;" enctype="multipart/form-data" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <!-- 2 column grid layout with text inputs for the first and last names -->
+                        <div class="row mb-4">
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label asp-for="SubTypeEnName" class="control-label"></label>
+                                    <input asp-for="SubTypeEnName" class="form-control" readonly />
+                                    <span asp-validation-for="SubTypeEnName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label asp-for="SubTypeArName" class="control-label"></label>
+                                    <input asp-for="SubTypeArName" class="form-control" readonly />
+                                    <span asp-validation-for="SubTypeArName" class="text-danger"></span>
+
+                                </div>
+                            </div>
+                        </div>
+
+                       
+
+                       
+
+                        <!-- Email input -->
+                        <div class="form-outline mb-4">
+                            <label asp-for="TypeId" class="control-label"></label>
+                            <input asp-for="Type.TypeArName" class="form-control" readonly></input>
+                        </div>
+
+                       
+
+                        <div class="form-outline mb-4">
+                            <label asp-for="Notes" class="control-label"></label>
+                            <input asp-for="Notes" class="form-control" readonly />
+                            <span asp-validation-for="Notes" class="text-danger"></span>
+                        </div>
+
+
+
+                        <button class="btn btn-danger btn-lg btn-block" type="submit">
+
+                            حذف نوع المنتج الفرعي
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>

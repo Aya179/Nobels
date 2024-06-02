@@ -1,0 +1,70 @@
+﻿@model Nobels.Models.Setting
+
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Employee> SignInManager
+@inject UserManager<Employee> UserManagerc
+@{
+    var user = UserManagerc.FindByNameAsync(User.Identity.Name);
+    var role = user.Result.RoleId;
+    if (role == 6)
+    {
+        Layout = "_LayoutProductManeger";
+
+    }
+    else
+    {
+        Layout = "_Layout";
+
+    }
+}
+
+
+
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+                
+                <div class="card-header" style=" display: flex;
+  justify-content: space-between;">
+                    <a asp-action="Index"> <i class="fa fa-arrow-left fa-lg"></i></a>
+                    <p>تعديل قيمة الضريبة</p>
+
+
+                </div>
+
+                <div class="card-body">
+                    <form asp-action="Edit" style=" width: 50vw;  margin: auto;" enctype="multipart/form-data" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="id" />
+
+                        <!-- 2 column grid layout with text inputs for the first and last names -->
+                       <div class="form-outline mb-4">
+                                <label asp-for="tax" class="control-label"></label>
+                               <input asp-for="tax" class="form-control" />
+                               <span asp-validation-for="tax" class="text-danger"></span>
+                        </div>
+
+                      
+
+
+                       
+
+                        
+
+                        <button class="btn btn-outline-primary btn-lg btn-block" type="submit">
+                            تعديل
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

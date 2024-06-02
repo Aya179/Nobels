@@ -1,0 +1,141 @@
+﻿@*@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Employee> SignInManager
+@inject UserManager<Employee> UserManager
+
+<ul class="navbar-nav">
+@if (SignInManager.IsSignedIn(User))
+{
+    <li class="nav-item">
+        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
+    </li>
+    <li class="nav-item">
+        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+            <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+        </form>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
+    </li>
+}
+</ul>
+*@
+
+
+
+
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Employee> SignInManager
+@inject UserManager<Employee> UserManager
+
+    @{
+    var user = UserManager.FindByNameAsync(User.Identity.Name);
+    var role = user.Result.RoleId;
+    }
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+
+        <li class="nav-item dropdown no-arrow">
+
+            <a class="nav-link dropdown-toggle"
+           href="#"
+           id="userDropdown"
+           role="button"
+           data-toggle="dropdown"
+           aria-haspopup="true"
+           aria-expanded="false">
+
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@User.Identity.Name</span>
+                <img class="img-profile rounded-circle"
+                 src="https://profile.sadjad.ac.ir/assets/images/profilepic/f85c79f0-e431-11e7-9290-354575f54c77.jpg" />
+            </a>
+            <!-- Dropdown - User Information -->
+            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+             aria-labelledby="userDropdown">
+                @if (ViewContext.RouteData.Values["controller"].ToString() == "showRoomAndProjectManger")
+                {
+                    <a class="dropdown-item" asp-controller="showRoomAndProjectManger" asp-action="userprofile" asp-route-name="@User.Identity.Name">
+                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                        الحساب الشخصي
+                    </a>
+                }
+                else if (ViewContext.RouteData.Values["controller"].ToString() == "RepresntitiveAndAdvisor")
+                {
+                    <a class="dropdown-item" asp-controller="RepresntitiveAndAdvisor" asp-action="userprofile" asp-route-name="@User.Identity.Name">
+                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                        الحساب الشخصي
+                    </a>
+                }
+                else if (ViewContext.RouteData.Values["controller"].ToString() == "ProductManager"|| role==6)
+                {
+                    <a class="dropdown-item" asp-controller="ProductManager" asp-action="userprofile" asp-route-name="@User.Identity.Name">
+            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+            الحساب الشخصي
+            </a>
+            }
+                else if (ViewContext.RouteData.Values["controller"].ToString() == "Technicaloffice" || role==13)
+                {
+                    <a class="dropdown-item" asp-controller="Technicaloffice" asp-action="userprofile" asp-route-name="@User.Identity.Name">
+            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+            الحساب الشخصي
+            </a>
+            } 
+                else if (ViewContext.RouteData.Values["controller"].ToString() == "FinancialOffice" || role == 18)
+                {
+                    <a class="dropdown-item" asp-controller="Technicaloffice" asp-action="userprofile" asp-route-name="@User.Identity.Name">
+            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+            الحساب الشخصي
+            </a>
+            }
+
+               @* else
+                {
+                    <a class="dropdown-item" asp-controller="QutationCheck" asp-action="userprofile" asp-route-name="@User.Identity.Name">
+                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                        الحساب الشخصي
+                    </a>
+                }*@
+
+
+                <div class="dropdown-divider"></div>
+                <form class="form-inline" asp-controller="Account" asp-action="Logout">
+                    <button class="dropdown-item"
+                        data-toggle="modal"
+                        data-target="#logoutModal">
+                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                        تسجيل خروج
+                    </button>
+                </form>
+            </div>
+        </li>
+
+        @* <li class="nav-item">
+    <a class="nav-link text-dark" asp-controller="Home" asp-action="Index"
+    title="Welcome">Welcome @User.Identity.Name!</a>
+    </li>
+    <li class="nav-item">
+    <form class="form-inline" asp-controller="Account" asp-action="Logout">
+    <button type="submit" class="nav-link btn btn-link text-info">Logout</button>
+    </form>
+    </li>*@
+
+
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="Account"
+           asp-action="Login">Login</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="Account"
+           asp-action="Register">Register</a>
+        </li>
+    }
+</ul>

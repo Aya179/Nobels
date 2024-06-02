@@ -1,0 +1,185 @@
+﻿@model Nobels.Models.Color
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Employee> SignInManager
+@inject UserManager<Employee> UserManagerc
+@{
+    ViewData["Title"] = "Create";
+
+    var user = UserManagerc.FindByNameAsync(User.Identity.Name);
+    var role = user.Result.RoleId;
+    if(role==6)
+    {
+        Layout = "_LayoutProductManeger";
+
+    }
+    else{
+        Layout = "_Layout";
+
+    }
+}
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.min.css" />
+
+
+<section>
+  <div class="row ">
+    <div class="col-12">
+      <div class="card mb-4 col ">
+      
+          
+
+        <div class="card-header" style=" display: flex;justify-content: space-between;">
+                    <a asp-action="Index"> <i class="fa fa-arrow-left fa-lg"></i></a>
+                    <p>إنشاءاللون</p>
+
+
+               </div>
+        <div class="card-body d-flex justify-content-center">
+          <form asp-action="Create" style=" width: 50vw; ">
+            
+            <div class="row mb-4">
+              <div class="col">
+                <div class="form-outline">
+                 <label asp-for="ColorName" class="control-label"></label>
+                <input id="ColorName" class="form-control" />
+                <span asp-validation-for="ColorName" class="text-danger"></span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-outline">
+                      <label asp-for="ColorCode" class="control-label"></label>
+                       <input id="ColorCode" class="form-control" />
+@*                          <span asp-validation-for="ColorCode" class="text-danger"></span>
+*@                </div>
+              </div>
+            </div>
+                        <div class="form-outline mb-4">
+                            <label asp-for="itemTypeId1" class="control-label"></label>
+
+                            <select  id="itemTypeId1" asp-items="ViewBag.ItemTypeId" class="form-control chzn-select chosen-rtl" multiple="true" name="faculty"></select>
+                        </div>
+            
+            <div class="form-outline mb-4">
+               
+            <label asp-for="ColorTemplatePhoto" class="control-label"></label>
+                <input id="ColorTemplatePhoto" class="form-control" type="color" />
+                  
+                <span asp-validation-for="ColorTemplatePhoto" class="text-danger"></span>
+            </div>
+
+
+            
+           
+            <div class="form-outline mb-4">
+                <label asp-for="Note" class="control-label"></label>
+                <input id="Note" class="form-control" />
+                <span asp-validation-for="Note" class="text-danger"></span>
+            </div>
+          
+            
+
+            
+
+            <button class="btn btn-primary btn-lg btn-block" type="submit" onclick="addnewcolor()">
+              إضافة اللون            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  
+  </div>
+</section>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js" integrity="sha512-rMGGF4wg1R73ehtnxXBt5mbUfN9JUJwbk21KMlnLZDJh7BkPmeovBuddZCENJddHYYMkCh9hPFnPmS9sspki8g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-te/1.4.0/jquery-te.min.js" integrity="sha512-813LH2NdwwzXnVfsmzSuAyyit5bRFdh997hN9Vzm0cdx3LdZV7TZNNb2Ag0dgJPD3J1Xn1Alg2YW70id+RtLrw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+
+
+
+        $(function () {
+            $(".chzn-select").chosen();
+        });
+
+                                   // var total = [];
+
+        $('.chzn-select').on('change', function (evt, params) {
+           // var selectedValue = params.selected;
+           // console.log(selectedValue);
+           // total.push(selectedValue);
+          
+           // total.push();
+          //  console.log(total);
+        });
+      
+
+        function addnewcolor(){
+
+            $('.chzn-select').on('change', function (evt, params) {
+                var selectedValue = params.selected;
+                console.log(selectedValue);
+                total.push(selectedValue);
+
+            });
+           // console.log(total);
+            var total = $('.chzn-select').val();
+            for (var i = 0; i < total.length; i++) {
+
+                var name = document.getElementById('ColorName').value;
+               
+                
+                var code = document.getElementById('ColorCode').value;
+                if(code==null)
+                {
+                    code="0000";
+                }
+                var note = document.getElementById('Note').value;
+                 if(note==null)
+                {
+                    note="NONote";
+                }
+                var template = document.getElementById('ColorTemplatePhoto').value;
+                var typeId=total[i];
+                $.post("/Colors/addColorApi", { ColorName: name, ColorCode: code, ColorTemplatePhoto: template, Note: note, itemTypeId1:typeId}, function (data) {
+
+                   
+
+                   // alert("done");
+
+
+                });
+            }}
+
+        //$(".chzn-select").chosen({
+
+        //    disable_search_threshold: 10
+
+        //}).change(function (event) {
+
+        //    if (event.target == this) {
+        //        alert($(this).val());
+        //    }
+
+        //});
+
+
+
+
+
+//         $(document).ready(function () {
+//             alert("fff");
+           
+// mobiscroll.select('#multiple-select', {
+//    inputElement: document.getElementById('my-input'),
+//    touchUi: false
+//});
+//        });
+
+
+       
+    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,110 @@
+﻿@model Nobels.Models.ItemType
+
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Employee> SignInManager
+@inject UserManager<Employee> UserManagerc
+@{
+        ViewData["Title"] = "Edit";
+
+    var user = UserManagerc.FindByNameAsync(User.Identity.Name);
+    var role = user.Result.RoleId;
+    if (role == 6)
+    {
+        Layout = "_LayoutProductManeger";
+
+    }
+    else
+    {
+        Layout = "_Layout";
+
+    }
+}
+
+
+
+
+
+
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+
+                <div class="card-header" style=" display: flex;
+  justify-content: space-between;">
+                    <a asp-action="Index"> <i class="fa fa-arrow-left fa-lg"></i></a>
+                    <p>تعديل الصنف</p>
+
+
+                </div>
+
+                <div class="card-body">
+                    <form asp-action="Edit" style=" width: 50vw;  margin: auto;" enctype="multipart/form-data" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="TypeId" />
+
+                        <!-- 2 column grid layout with text inputs for the first and last names -->
+                        <div class="row mb-4">
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label asp-for="TypeArName" class="control-label"></label>
+                                    <input asp-for="TypeArName" class="form-control" />
+                                    <span asp-validation-for="TypeArName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col">
+
+                                <div class="form-outline ">
+
+
+                                    <label asp-for="TypeEnName" class="control-label"></label>
+                                    <input asp-for="TypeEnName" class="form-control" />
+                                    <span asp-validation-for="TypeEnName" class="text-danger"></span>
+                                </div>
+                            </div>
+                           @* <div class="col">
+
+                                 <div class="form-outline">
+                            <label asp-for="MainItemId" class="control-label"></label>
+                            <select asp-for="MainItemId" class="form-control" asp-items="ViewBag.MainItemId"></select>
+                        </div>
+                            </div>*@
+
+                        </div>
+
+                        @*<div class="form-outline mb-4">
+
+
+                            <label asp-for="Photopath" class="control-label"> @Html.DisplayNameFor(model => model.Photopath)</label>
+                            <input asp-for="Photopath" class="form-control" type="file" name="file1" id="file1" multiple="multiple" />
+
+
+                            <span asp-validation-for="Photopath" class="text-danger"></span>
+
+                        </div>
+*@
+
+
+
+                        <button class="btn btn-primary btn-lg btn-block" type="submit">
+                            تعديل
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+
+
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

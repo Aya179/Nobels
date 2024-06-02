@@ -1,0 +1,50 @@
+.btn-edit {
+    background-color: white;
+    color: #B2CB49;
+    margin: auto;
+    display: table;
+    border-radius: 20px;
+    border-color: #B2CB49;
+
+}
+
+.btn-submit {
+    background-color: #B2CB49;
+    color: white;
+    margin: auto;
+    display: table;
+    border-radius: 20px;
+
+}
+
+#calendar>div.fc-view-harness.fc-view-harness-active>div>table>thead>tr>th>div>div {
+    overflow: hidden !important;
+}
+
+
+.fc-theme-standard td,
+.fc-theme-standard th,
+.fc-scrollgrid-section {
+    border: none;
+}
+#calendar > div.fc-view-harness.fc-view-harness-active > div > table > tbody > tr > td > div > div > div > table > tbody{
+    display: none;
+}
+
+table.fc-scrollgrid {
+    /* border-style: hidden !important; */
+    border-bottom-width: unset !important;
+    border-right-width: 1px !important;
+}
+
+/* to define  th height of days */
+.fc-view-harness {
+    height: 2.5rem !important;
+}
+
+table#schedule td.bg-success{
+    cursor: pointer;
+}
+table#schedule td{
+    text-align: center;
+}

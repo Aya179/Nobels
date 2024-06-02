@@ -1,0 +1,230 @@
+@{
+    Layout = "_LayoutRepresntitiveAndAdvisor";
+}
+<style>
+    .dataTables_wrapper .dataTables_filter {
+        float: right;
+        text-align: right;
+        visibility: hidden;
+    }
+</style>
+<div class="col-md-12  row mt-4">
+    <div class="col-md-12 mb-2">
+        <h3 class="title" style="text-align: center;">
+            الطلبات المجدولة في الإنتاج بتاريخ
+            اليوم
+        </h3>
+        <h4 style="text-align: center;" id="date-time"></h4>
+    </div>
+
+    <div class="col-md-12 mb-3">
+        <SELECT class="form-control col-3 mx-auto" id="district" name="district"
+                onchange="change_district(this)">
+            <option value="" hidden>المدينة</option>
+            <option value="0">الكل</option>
+            <option value="1">الرياض</option>
+            <option value="2">الدمام</option>
+            <option value="3">الإحساء</option>
+            <option value="4">جدة</option>
+            <option value="5">القصيم</option>
+            <option value="6">المدينة</option>
+            <option value="7">خميس مشيط</option>
+            <option value="8">تبوك</option>
+        </SELECT>
+    </div>
+    <div class="col-md-6 mx-auto  my-4">
+        <input class="form-control" type="search" name="search" id="search"
+               placeholder="&#xF002; العميل / رقم العرض / أمر المبيعات"
+               style="font-family: FontAwesome">
+    </div>
+    <div class="col-md-12 ">
+        <h4 class="" style="text-align: center;">
+            <span id="f_type">كافة طلبات التركيب</span>
+            المرفوعة من
+            الباعة <span id="district_display"></span>
+        </h4>
+    </div>
+
+    <div class="col-md-12 mx-auto my-3">
+        <table class="table" style="white-space: nowrap;" id="example">
+            <thead>
+                <tr>
+                    <th>رقم العرض</th>
+                    <th>رقم أمر المبيعات</th>
+                    <th>العميل</th>
+                    <th>قيمة العرض</th>
+                    <th>المعرض</th>
+                    <th>المدينة</th>
+                    <th>الحي</th>
+
+                    <th>التاريخ المقترح للتركيب</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody style="text-align:center;">
+                <tr>
+                    <td>111</td>
+                    <td>222</td>
+                    <td>جمانة</td>
+                    <td>33000</td>
+                    <td>معرض 1</td>
+                    <td>الدمام</td>
+                    <td>الحي 1</td>
+
+                    <td>10-8-2023</td>
+                    <td>
+                        <a href="" style="color: deepskyblue;">تأكيد</a>
+                        <a href="" style="color: deepskyblue;">تعديل</a>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>112</td>
+                    <td>223</td>
+                    <td>احمد</td>
+                    <td>36000</td>
+                    <td>معرض 2</td>
+                    <td>جدة</td>
+                    <td>الحي 2</td>
+
+                    <td>15-8-2023</td>
+                    <td>
+                        <a href="" style="color: deepskyblue;">تأكيد</a>
+                        <a href="" style="color: deepskyblue;">تعديل</a>
+                    </td>
+
+                </tr>
+
+            </tbody>
+        </table>
+        <!-- <h4 class="mt-3" style="text-align: center;">الرجاء اختيار أحد العروض</h4> -->
+    </div>
+    <!-- <div class="col-md-12 my-4 mx-auto w-100 "><button class="btn btn-submit"
+            type="submit">متابعة
+            الجدولة</button>
+    </div> -->
+</div>
+
+
+ @section Scripts
+      
+      {
+    <script>
+
+        var table = $('#example').DataTable({ searching: true, paging: false, info: false });
+
+        // #myInput is a <input type="text"> element
+        $('#search').on('keyup', function () {
+            table.search(this.value).draw();
+        });
+        var dt = new Date();
+        document.getElementById('date-time').innerHTML = dt.toDateString();
+        function chnage_filter(e) {
+            val = $(e).val();
+            if (val == 0) {
+                $('tbody tr').show();
+                $('span#f_type').text('كافة طلبات التركيب');
+                // $('td:nth-child(5),th:nth-child(5)').hide();
+            }
+            else {
+                // $('td:nth-child(5),th:nth-child(5)').show();
+                $('tbody tr').hide();
+                if (val == 1) {
+                    $('td').each(function () {
+                        if (this.textContent.includes('تأكيد')) {
+                            $(this).parent().show();
+                        }
+                    });
+                    $('span#f_type').text('طلبات التركيب غير المجدولة ');
+                }
+                if (val == 2) {
+                    $('td').each(function () {
+                        if (this.textContent.includes('متابعة')) {
+                            $(this).parent().show();
+                        }
+                    });
+                    $('span#f_type').text('طلبات التركيب المجدولة أولياً');
+                }
+
+
+            }
+            // alert(val);
+        }
+        function change_district(e) {
+            val = $(e).val();
+            if (val == 0) {
+                $('tbody tr').show();
+                $('td:nth-child(5),th:nth-child(5)').hide();
+                $('span#district_display').text('');
+            }
+            else {
+                $('td:nth-child(5),th:nth-child(5)').show();
+                $('tbody tr').hide();
+                if (val == 1) {
+                    $('td').each(function () {
+                        if (this.textContent.includes('الرياض')) {
+                            $(this).parent().show();
+                        }
+                    });
+                }
+                if (val == 2) {
+                    $('td').each(function () {
+                        if (this.textContent.includes('الدمام')) {
+                            $(this).parent().show();
+                        }
+                    });
+                }
+                if (val == 3) {
+                    $('td').each(function () {
+                        if (this.textContent.includes('الإحساء')) {
+                            $(this).parent().show();
+                        }
+                    });
+                }
+                if (val == 4) {
+                    $('td').each(function () {
+                        if (this.textContent.includes('جدة')) {
+                            $(this).parent().show();
+                        }
+                    });
+                }
+                if (val == 5) {
+                    $('td').each(function () {
+                        if (this.textContent.includes('القصيم')) {
+                            $(this).parent().show();
+                        }
+                    });
+                }
+                if (val == 6) {
+                    $('td').each(function () {
+                        if (this.textContent.includes('المدينة')) {
+                            $(this).parent().show();
+                        }
+                    });
+                }
+                if (val == 7) {
+                    $('td').each(function () {
+                        if (this.textContent.includes('خميس مشيط')) {
+                            $(this).parent().show();
+                        }
+                    });
+                }
+                if (val == 8) {
+                    $('td').each(function () {
+                        if (this.textContent.includes('تبوك')) {
+                            $(this).parent().show();
+                        }
+                    });
+                }
+                $('span#district_display').text('في ' + $(e).find('option:selected').text());
+            }
+            //alert(val);
+
+            //  console.log($(e).find('option:selected').text());
+        }
+    </script>
+    
+
+}
+
+

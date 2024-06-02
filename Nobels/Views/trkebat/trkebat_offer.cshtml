@@ -1,0 +1,187 @@
+﻿@model Nobels.Models.InstallationRequest
+@{
+    Layout = "_LayoutRepresntitiveAndAdvisor";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-12  row mt-4">
+        <div class="col-md-12 mb-3">
+            <h4 class="" style="text-align: center;">رفع طلب تركيب</h4>
+        </div>
+        <form asp-action="trkebat_offerCreate" style="display: contents;" id="Createform">
+            <div class="col-md-4 ">
+                <p class="row">
+                    <span class="col-5">رقم العرض :</span>
+                    <span class="col-6">@ViewBag.quid</span>
+                    <input asp-for="QutationId" value="@ViewBag.quid" hidden />
+                    <input asp-for="EmployeeId" value="@ViewBag.userId" hidden />
+                </p>
+                <p class="row">
+                    <span class="col-5">رقم أمر المبيعات : </span>
+                    <span class="col-6">@ViewBag.code</span>
+                </p>
+                <p class="row">
+                    <span class="col-5">العميل : </span>
+                    <span class="col-6">@ViewBag.customer</span>
+                   
+
+                </p>
+            </div>
+            <div class="col-md-4 ">
+                @*<p class="row">
+                    <span class="col-5">الكود : </span>
+                    <span class="col-6">@ViewBag.code</span>
+                </p>*@
+                <p class="row">
+                    <span class="col-5">قيمة العرض : </span>
+                    <span class="col-6">001</span>
+                </p>
+                <p class="row">
+                    <span class="col-5">تاريخ إنشاء العرض : </span>
+                    <span class="col-6">@ViewBag.qudate</span>
+                    <input type="text" asp-for="CreationDate"  value="@ViewBag.qudate" hidden />
+                </p> 
+                <p class="row">
+                    <span class="col-5">المعرض : </span>
+                    <span class="col-6">@ViewBag.branch</span>
+                </p>
+            </div>
+            <div class="col-md-4 ">
+                @*<p class="row">
+                    <span class="col-5">المدينة : </span>
+                    <span class="col-6">@ViewBag.city</span>
+                </p>
+                <p class="row">
+                    <span class="col-5">الحي : </span>
+                    <span class="col-6">@ViewBag.neig</span>
+                </p>*@
+                
+               
+            </div>
+            <div class="col-md-12 mt-4">
+                <textarea name="notes" id="notes" class="form-control" cols="30" rows="5"
+                          placeholder="ملاحظات"></textarea>
+            </div>
+            <div class="col-md-12 mt-4">
+                <label class="col-auto align-self-end">
+                       عنوان التركيب:
+                    </label>
+                <p class="row" hidden>
+                    
+                </p>
+                <p class="row">
+                   &nbsp;&nbsp;&nbsp;&nbsp; <span >المدينة : </span>&nbsp;&nbsp;
+                    <span >@ViewBag.city</span>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span >الحي : </span>&nbsp;&nbsp;
+                    <span >@ViewBag.neig</span>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span >رقم البيت : </span>&nbsp;&nbsp;
+                    <span >@ViewBag.housenumber</span>&nbsp;&nbsp;&nbsp;&nbsp;- &nbsp;&nbsp;&nbsp;&nbsp;
+                    <span >شارع : </span>&nbsp;&nbsp;
+                    <span >@ViewBag.street</span>
+                </p>
+            </div>
+            <div class="col-md-12 mt-4">
+                <p> المراجعة المالية:  @ViewBag.finan</p>
+                <p> المراجعة الفنية : @ViewBag.tech</p>
+                <p class="row">
+                    <label for="suggested_date" class="col-auto align-self-end">
+                        التاريخ المقترح
+                        للتركيب
+                    </label>
+                    <input type="date" class="form-control col-2 datepicker" name="DesiredDate"
+                           id="suggested_date" max="" asp-for="DesiredDate"  >
+                </p>
+            </div>
+            <div class="col-md-12 my-2 w-100">
+                <button class="btn btn-submit px-3" type="button" onclick="go()">رفع</button>
+            </div>
+
+
+        </form>
+    </div>
+</div>
+
+
+
+ @section Scripts
+      
+      {
+
+
+    <script>
+        var date = new Date(); // Now
+        date.setDate(date.getDate() + 30); // Set now + 30 days as the new date
+
+        $(function () {
+            $('[type="date"]#suggested_date').prop('min', function () {
+                return date.toJSON().split('T')[0];
+            });
+           
+        });
+        //to prevent update date from input only from calander
+        //$("input[type='date']").keydown(function (event) { event.preventDefault(); });
+        $("input[type='date']").keydown(false);
+       
+
+        
+
+        // Everything except weekend days
+const validate = dateString => {
+  const day = (new Date(dateString)).getDay();
+  if (day==5 ) {
+    return false;
+  }
+  return true;
+}
+
+// Sets the value to '' in case of an invalid date
+document.getElementById('suggested_date').onchange = evt => {
+  if (!validate(evt.target.value)) {
+    evt.target.value = '';
+    Swal.fire({
+                    icon: 'error',
+                    title: 'لا يمكنك اختيار يوم الجمعة',
+                    showCloseButton: true
+
+                });
+  }
+}
+
+
+        function go() {
+            var form = document.getElementById("suggested_date").value;
+            console.log(form);
+            if (form != "") {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'هل أنت متأكد من رفع الطلب ؟',
+                    text: 'قم بالتأكيد',
+                    footer: '<button class="swal2-confirm swal2-styled" type="submit" form="Createform">رفع </button>',
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                    showCloseButton: true
+                });
+            }
+            else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'الرجاء إدخال التاريخ',
+                    showCloseButton: true
+
+                });
+
+            }
+
+        }
+
+      
+
+
+
+
+
+
+    </script>
+
+      }
+

@@ -1,0 +1,461 @@
+@using Microsoft.AspNetCore.Identity
+@model IEnumerable<Nobels.Models.BillModel>
+@inject SignInManager<Employee> SignInManager
+@inject UserManager<Employee> UserManagerc
+
+<style>
+    body{
+    margin-top:20px;
+    color: #484b51;
+} 
+
+.page-header img{
+    width: 15%;
+    float: right;
+}
+thead {
+    background: #98bd85;
+    color: white;
+}
+.f-input  input{
+    outline: none;
+    border: none;
+}
+
+.f-input {
+    border: 1px solid lightgray;
+    padding: 0 10px;
+    display: flex;
+    justify-content: space-between;
+}
+.m-input  input{
+  background: #c1d9b5;
+    outline: none;
+    border: none;
+    color:black
+}
+.m-input {
+    background: #c1d9b5;
+    padding: 0 10px;
+    display: flex;
+    justify-content: flex-end;
+
+    color:black
+}
+
+
+
+.text-secondary-d1 {
+    color: #728299!important;
+}
+.page-header {
+    margin: 0 0 1rem;
+    padding-bottom: 1rem;
+    padding-top: .5rem;
+    border-bottom: 1px dotted #e2e2e2;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -ms-flex-align: center;
+    align-items: center;
+}
+.page-title {
+    padding: 0;
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 300;
+}
+.brc-default-l1 {
+    border-color: #dce9f0!important;
+}
+
+.ml-n1, .mx-n1 {
+    margin-left: -.25rem!important;
+}
+.mr-n1, .mx-n1 {
+    margin-right: -.25rem!important;
+}
+.mb-4, .my-4 {
+    margin-bottom: 1.5rem!important;
+}
+
+hr {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border: 0;
+    border-top: 1px solid rgba(0,0,0,.1);
+}
+
+.text-grey-m2 {
+    color: #888a8d!important;
+}
+
+.text-success-m2 {
+    color: #86bd68!important;
+}
+
+.font-bolder, .text-600 {
+    font-weight: 600!important;
+}
+
+.text-110 {
+    font-size: 110%!important;
+}
+.text-blue {
+    color: #478fcc!important;
+}
+.pb-25, .py-25 {
+    padding-bottom: .75rem!important;
+}
+
+.pt-25, .py-25 {
+    padding-top: .75rem!important;
+}
+.bgc-default-tp1 {
+    background-color: rgba(121,169,197,.92)!important;
+}
+.bgc-default-l4, .bgc-h-default-l4:hover {
+    background-color: #f3f8fa!important;
+}
+.page-header .page-tools {
+    -ms-flex-item-align: end;
+    align-self: flex-end;
+}
+
+.btn-light {
+    color: #757984;
+    background-color: #f5f6f9;
+    border-color: #dddfe4;
+}
+.w-2 {
+    width: 1rem;
+}
+
+.text-120 {
+    font-size: 120%!important;
+}
+.text-primary-m1 {
+    color: #4087d4!important;
+}
+
+.text-danger-m1 {
+    color: #dd4949!important;
+}
+.text-blue-m2 {
+    color: #68a3d5!important;
+}
+.text-150 {
+    font-size: 150%!important;
+}
+.text-60 {
+    font-size: 60%!important;
+}
+.text-grey-m1 {
+    color: #7b7d81!important;
+}
+.align-bottom {
+    vertical-align: bottom!important;
+}
+.test{
+    direction:ltr;
+}
+
+
+
+    </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+@{
+    Layout = "_LayoutshowRoomAndProjectManger";
+}
+
+<body>
+  
+
+
+  <div class="page-content container">
+    <div class="page-header text-blue-d2">
+        <input id="bill5" type="hidden"  />
+     
+
+@*      <img class=""   src="~/vendor/nobles1 copy.png">
+*@  
+
+            @if (ViewBag.status == 1)
+            {
+                <button type="button" onclick="generatePDF()" class="btn-sm btn-success pull-right" hidden>طباعة</button>
+            }
+            else{
+                    <button type="button" onclick="generatePDF()" class="btn-sm btn-success pull-right">طباعة</button>
+
+
+            }
+       
+    </div>
+
+    <div class="container px-0" id="page">
+        <div class="row mt-4">
+            <div class="col-12 col-lg-12">
+                <div class="row">
+                       @* <div class="col-6">
+                            <img class="" src="~/vendor/nobles1 copy.png">
+                        </div>*@
+                    <div class="col-12">
+                        <div class="text-center text-150">
+                           
+                            <span class="text-default-d3">عرض سعر غير رسمي غير قابل للتداول</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- .row -->
+
+                <hr class="row brc-default-l1 mx-n1 mb-4" />
+
+                <div class="row">
+                    <div class="text-95 col-sm-6 align-self-start d-sm-flex justify-content-between">
+                      
+                        <div class="text-grey-m2">
+                          <div class="m-1  f-input  "> Date:@DateTime.Now.ToShortDateString() :التاريخ</div>
+                                <div class="m-1  f-input  "> Show_room :<input type="text" value="@ViewBag.branch" readonly> : المعرض</div>
+                                @if (SignInManager.IsSignedIn(User))
+                                {
+
+
+                                    <div class="m-1  f-input  ">Vendor:<input type="text" value="@User.Identity.Name"  readonly> : البائع</div>
+                                }
+                            </div>
+                    </div>
+                    <!-- /.col -->
+
+                    <div class="text-95 col-sm-6 align-self-start d-sm-flex justify-content-end">
+                        <hr class="d-sm-none" />
+                        <div class="text-grey-m2">
+
+                                <div class="my-2  f-input  ">quotation_number :<input type="text" value="@ViewBag.code" readonly> :رقم العرض </div>
+                                                                <div class="my-2  f-input  ">Name  :<input type="text" value="@ViewBag.cutom" readonly>
+                                    @if (ViewBag.Gender == "أنثى")
+                                    {
+                                            <p>:السيدة</p>
+                                    }
+                                    else
+                                    {
+                                            <p>:السيد</p>
+                                    }
+                                     </div>
+
+
+                            <div class="my-2  f-input  "> Tel :<input type="text" value="@ViewBag.phone" readonly
+                            > :هاتف </div>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                </div>
+
+                <table class="table table-bordered text-center" id="table_td">
+                  <thead>
+                    <tr>
+
+                               
+                                <th>الغرفة</th>
+                         <th>المنتج الأساسي</th>
+                         <th>ProductNameاسم المنتج</th>
+                                
+                         <th>اللون</th>
+                         <th>UnitPriceإفرادي</th>
+                          <th>الكميةQTY</th>
+                       @*   <th>نوع الخصم</th>
+                           <th>قيمة الخصم</th>*@
+
+                      <th>الإجماليExtendedTotal</th>
+                     
+                      
+                      
+                      
+                     
+                      
+                     
+                     
+                    </tr>
+                  </thead>
+                  <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td style="text-align: center;">
+                                        @Html.DisplayFor(modelItem => item.roomName)
+                                    </td>
+
+                                    <td style="text-align: center;">
+                                        @Html.DisplayFor(modelItem => item.MainItemName)
+                                    </td>
+                                    <td style="text-align: center;">
+                                        @Html.DisplayFor(modelItem => item.itemname)
+                                    </td>
+
+                                   
+                                    <td style="text-align: center;">
+                                        @Html.DisplayFor(modelItem => item.Colorname)
+                                    </td>
+                                    <td style="text-align: center;">
+                                        @Html.DisplayFor(modelItem => item.Unitprice)
+                                    </td>
+                                     <td style="text-align: center;">
+                                        @Html.DisplayFor(modelItem => item.quantity)
+                                    </td>
+                                    @*<td style="text-align: center;">
+                                        
+                                        @Html.DisplayFor(modelItem => item.percentType)
+                                    </td>*@
+                                   @* <td style="text-align: center;">
+                                        @if (item.percentType == "نسبة")
+                                        { <p>@item.discountValue%</p>
+                                        }
+                                        else
+                                        {
+                                            <p>@item.discountValue</p>
+                                        }
+
+                                    </td>*@
+                                    <td style="text-align: center;">
+                                        @Html.DisplayFor(modelItem => item.totalValue)
+                                    </td>
+
+                                   
+                                </tr>
+                            }
+
+                   
+                  </tbody>
+                </table>
+            </div>
+               
+
+            <div class="col-md-12">
+              <hr>
+              <div class="row test">
+                <div class="col-8">
+                  
+                </div>
+                <div class="col-4">
+
+                  <div class="text-grey-m2">
+                    <div class="m-1  m-input  "> <input type="text"  id="total" readonly>: الإجمالي  </div>
+                    @*<div class="m-1  m-input  "> <input type="text" readonly> : نسبة الخصم</div>*@
+@*                    <div class="m-1  m-input  "><input type="text" id="Dics" >  قيمة الخصم:</div>
+*@                              
+                    
+                  </div>
+                
+                </div>
+@*                <div class="col-md-12">
+                  <div class="text-grey-m2 test">
+                               <div class="m-1  m-input  "><input type="number">  قيمة خصم العرض:</div>
+  
+                    <div class="m-1  m-input  " > <input type="text" readonly id="tax" >  : ضريبة القيمة المضافة </div>
+                    <div class="m-1  m-input  "> <input type="text" id="TotalBill" readonly> إجمالي مع الضريبة:</div>
+                    <div class="m-1  m-input  "><input type="date" /> :عرض السعر صالح إلى تاريخ</div>
+                    
+                  </div>
+                </div>
+*@
+                        <div class="col-md-12">
+                            <div class="text-grey-m2 test">
+                                <div class="m-1  m-input  "><input type="date" /> :عرض السعر صالح إلى تاريخ</div>
+                            </div>
+                        </div>
+</div>
+            </div>
+
+           
+           
+
+            <text class="text-center">
+              <hr>
+              <p>عنوان_الشركة:
+                        @ViewBag.addr
+              </p>
+            </text>
+        </div>
+    </div>
+</div>
+  
+
+
+
+
+
+
+    
+<!-- JavaScript Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+@section Scripts {
+<script>
+
+
+    function generatePDF() {
+
+                // Choose the element id which you want to export.
+                var element = document.getElementById('page');
+
+                var opt = {
+                    margin: 0.5,
+                    filename: 'Report.pdf',
+                    image: { type: 'jpeg', quality: 1 },
+                    html2canvas: { scale: 1 },
+                    jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape', precision: '12' }
+                };
+
+                // choose the element and pass it to html2pdf() function and call the save() on it to save as pdf.
+                html2pdf().set(opt).from(element).save();
+            }
+        function Total()
+        {
+            var myTab = document.getElementById('table_td');
+            var sum = 0;
+            var sum1 = 0;
+
+        var discount = 0;
+        var Sumtotal = 0;
+            for (i = 1; i < myTab.rows.length; i++)
+            {
+
+                var objCells = myTab.rows.item(i).cells;
+               sum1 = sum1 + parseFloat(myTab.rows[i].cells[6].innerHTML)
+                //sum=sum+parseFloat(myTab.rows[i].cells[4].innerHTML*myTab.rows[i].cells[3].innerHTML)
+                //Sumtotal=Sumtotal+parseFloat(myTab.rows[i].cells[7].innerHTML)
+                //discount=discount+parseFloat(myTab.rows[i].cells[6].innerHTML)
+            }
+            var tx=document.getElementById("bill5").value;
+                document.getElementById("total").value = sum1;
+            //document.getElementById("total").value = sum;
+            // document.getElementById("Dics").value = sum-Sumtotal;
+              document.getElementById("tax").value =@ViewBag.tax;
+              //  var t = @ViewBag.tax;
+              //var tax2=sum*t;
+        //discount = sum - Sumtotal;
+        //       document.getElementById("TotalBill").value =(sum-discount)+tax2 +"SAR" ;
+       
+
+        }
+
+        $(document).ready(function () {
+
+
+                $.get("/showRoomAndProjectManger/GetTax", function (data) {
+                //  document.getElementById('name1').value = data;
+              document.getElementById('bill5').value = data;
+
+
+            });
+         
+            Total();
+
+        });
+</script>
+    
+}
+
+</body>

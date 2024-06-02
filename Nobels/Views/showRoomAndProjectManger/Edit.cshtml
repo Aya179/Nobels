@@ -1,0 +1,124 @@
+﻿@model  Nobels.Models.Customer
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "_LayoutshowRoomAndProjectManger";
+}
+
+
+<!-- Credit card form -->
+<section>
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+       
+                <div class="card-header" style=" display: flex;
+  justify-content: space-between;">
+                    <a asp-action="Index"> <i class="fa fa-arrow-left fa-lg"></i></a>
+                    <p> تعديل معلومات عميل</p>
+
+
+               </div>
+
+        <div class="card-body">
+                    <form asp-action="Edit" style=" width: 50vw;  margin: auto;">
+                        <input type="hidden" asp-for="Id" />
+              <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+           
+            <!-- 2 column grid layout with text inputs for the first and last names -->
+            <div class="row mb-4">
+              <div class="col">
+                <div class="form-outline">
+                                    <label asp-for="ArabicName" class="control-label"></label>
+                                    <input asp-for="ArabicName" class="form-control" />
+                                    <span asp-validation-for="ArabicName" class="text-danger"></span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-outline">
+                     <label asp-for="EnglishName" class="control-label"></label>
+                <input asp-for="EnglishName" class="form-control" />
+                <span asp-validation-for="EnglishName" class="text-danger"></span>
+                  
+                </div>
+              </div>
+            </div>
+
+
+             <div class="row mb-4">
+              <div class="col">
+                <div class="form-outline">
+                                    <label asp-for="Address" class="control-label"></label>
+                            <input asp-for="Address" class="form-control" />
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-outline">
+                  <label asp-for="SecondAddress" class="control-label"></label>
+                            <input asp-for="SecondAddress" class="form-control" />
+                            <span asp-validation-for="SecondAddress" class="text-danger"></span>
+                  
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-4">
+              <div class="col">
+                <div class="form-outline">
+                                    <label asp-for="Phone" class="control-label"></label>
+                            <input asp-for="Phone" class="form-control"  />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-outline">
+                  <label asp-for="PhonNumber" class="control-label"></label>
+                            <input asp-for="PhonNumber" class="form-control" />
+                            <span asp-validation-for="PhonNumber" class="text-danger"></span>
+                  
+                </div>
+              </div>
+            </div>
+
+            <!-- Text input -->
+            <div class="form-outline mb-4">
+                            <label asp-for="CityId" class="control-label"></label>
+                            <select asp-for="CityId" class="form-control" asp-items="ViewBag.CityId"></select>
+            </div>
+
+           
+
+            <!-- Email input -->
+            <div class="form-outline mb-4">
+                            <label asp-for="Email" class="control-label"></label>
+                            <input asp-for="Email" class="form-control" type="email"/>
+                            <span asp-validation-for="Email" class="text-danger" ></span>
+            </div>
+
+           
+            <div class="form-outline mb-4">
+                            <label asp-for="Notes" class="control-label"></label>
+                            <input asp-for="Notes" class="form-control" />
+                            <span asp-validation-for="Notes" class="text-danger"></span>
+            </div>
+
+            <button class="btn btn-primary btn-lg btn-block" type="submit">
+              تعديل معلومات عميل
+            </button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+    
+  </div>
+</section>
+<!-- Credit card form -->
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

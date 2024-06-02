@@ -1,0 +1,176 @@
+@model IEnumerable<Nobels.Models.productionClass>
+
+@{
+    Layout = "_LayoutRepresntitiveAndAdvisor";
+}
+<style>
+    .dataTables_wrapper .dataTables_filter {
+        float: right;
+        text-align: right;
+        visibility: hidden;
+    }
+</style>
+<div class="col-md-12  row mt-4">
+    <div class="col-md-12 mb-2">
+        <h3 class="title" style="text-align: center;">
+            طلبات الإنتاج المجدولة خلال 48 ساعة
+        </h3>
+        <h4 style="text-align: center;" id="date-time"></h4>
+    </div>
+
+    <div class="col-md-12 mb-3">
+        <SELECT class="form-control col-3 mx-auto" id="district" name="district"
+                onchange="change_district(this)" asp-items="ViewBag.City">
+            <option value="" hidden>المدينة</option>
+            <option value="0">الكل</option>
+           
+        </SELECT>
+    </div>
+    <div class="col-md-6 mx-auto  my-4">
+        <input class="form-control" type="search" name="search" id="search"
+               placeholder="&#xF002; العميل / رقم العرض / أمر المبيعات"
+               style="font-family: FontAwesome">
+    </div>
+    <div class="col-md-12 ">
+        <h4 class="" style="text-align: center;">
+            <span id="f_type">كافة طلبات التركيب</span>
+            المرفوعة من
+            الباعة <span id="district_display"></span>
+        </h4>
+    </div>
+
+    <div class="col-md-12 mx-auto my-3">
+        <table class="table" id="example">
+            <thead>
+                <tr>
+                    <th>رقم العرض</th>
+                    <th>تاريخ إنشاء العرض</th>
+                    <th>رقم أمر المبيعات</th>
+                    <th>العميل</th>
+                    <th>قيمة العرض</th>
+                   
+                    <th>المدينة</th>
+                    <th>المعرض</th>
+                    <th>الحي</th>
+
+                    <th>تاريخ الإنتاج</th>
+                    <th></th>
+                </tr>
+
+            </thead>
+            <tbody style="text-align:center;">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.quotionNumberId)</td>
+                        <td>@Html.DisplayFor(modelItem => item.quotation_date)</td>
+
+                        <td>@Html.DisplayFor(modelItem => item.quotionCode)</td>
+                        <td>@Html.DisplayFor(modelItem => item.CustomerArabicName)</td>
+                        <td>2000</td>
+                        <td>@Html.DisplayFor(modelItem => item.city)</td>
+                        <td>@Html.DisplayFor(modelItem => item.branch)</td>
+                        <td>@Html.DisplayFor(modelItem => item.neighborhood)</td>
+                        <td>
+                            @{
+                                string DateOnly = item.ProductionDate.Value.Date.ToShortDateString();
+                            }
+                            @Html.DisplayFor(modelItem => DateOnly)
+                        <td>
+                            <a asp-action="ConfirmProductionschedule" asp-route-instReqId="@item.IntallationRequestId" style="color: deepskyblue;">تأكيد</a>/
+                            <a asp-action="Editschedule_the_production" asp-route-instReqId="@item.IntallationRequestId" style="color: deepskyblue;">تعديل</a>
+                        </td>
+
+                    </tr>
+                }
+
+                
+            </tbody>
+        </table>
+
+        <!-- <h4 class="mt-3" style="text-align: center;">الرجاء اختيار أحد العروض</h4> -->
+    </div>
+    <!-- <div class="col-md-12 my-4 mx-auto w-100 "><button class="btn btn-submit"
+            type="submit">متابعة
+            الجدولة</button>
+    </div> -->
+</div>
+
+
+ @section Scripts
+      
+      {
+    <script>
+        
+        var table = $('#example').DataTable({ searching: true, paging: false, info: false });
+
+        // #myInput is a <input type="text"> element
+        $('#search').on('keyup', function () {
+            table.search(this.value).draw();
+        });
+        var  district = 0
+        var district_text;
+        var dt = new Date();
+        document.getElementById('date-time').innerHTML = dt.toDateString();
+        function chnage_filter(e) {
+            val = $(e).val();
+            if (val == 0) {
+                $('tbody tr').show();
+                $('span#f_type').text('كافة طلبات التركيب');
+                // $('td:nth-child(6),th:nth-child(6)').hide();
+            }
+            else {
+                // $('td:nth-child(6),th:nth-child(6)').show();
+                $('tbody tr').hide();
+                if (val == 1) {
+                    $('td').each(function () {
+                        if (this.textContent.includes('تأكيد')) {
+                            $(this).parent().show();
+                        }
+                    });
+                    $('span#f_type').text('طلبات التركيب غير المجدولة ');
+                }
+                if (val == 2) {
+                    $('td').each(function () {
+                        if (this.textContent.includes('متابعة')) {
+                            $(this).parent().show();
+                        }
+                    });
+                    $('span#f_type').text('طلبات التركيب المجدولة أولياً');
+                }
+
+
+            }
+            // alert(val);
+        }
+        function change_district(e) {
+            val = $(e).val();
+            var district_text = $(e).find('option:selected').text();
+            if (val == 0) {
+                $('tbody tr').show();
+                $('td:nth-child(6),th:nth-child(6)').show();
+                $('span#district_display').text('');
+            }
+            else {
+                $('td:nth-child(6),th:nth-child(6)').hide();
+                $('tbody tr').hide();
+              
+              
+                    $('td').each(function () {
+                    if (this.textContent.includes(district_text)) {
+                            $(this).parent().show();
+                        }
+                    });
+                
+                $('span#district_display').text('في ' + $(e).find('option:selected').text());
+            }
+            //alert(val);
+
+            //  console.log($(e).find('option:selected').text());
+        }
+    </script>
+    
+
+}
+
+

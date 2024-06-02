@@ -1,0 +1,146 @@
+@model IEnumerable<Nobels.Models.ProductionSchedule>
+
+@{
+    Layout = "_LayoutRepresntitiveAndAdvisor";
+}
+
+                            <div class="col-md-12  row mt-4">
+                                <div class="col-md-12 ">
+        <h3 class="" style="text-align: center;">تعديل جدولة الإنتاج للعرض  @ViewBag.quoID</h3>
+                                </div>
+                                <div class="col-md-12 ">
+                                    <p class="col-md-12 px-0">
+
+                                        <span>
+                                            <span>رقم أمر المبيعات : </span>
+                                            <span>@ViewBag.code</span>
+                                        </span>
+                                        <span class="mx-3">
+                                            <span>قيمة أمر المبيعات : </span>
+                                            <span>20000</span>
+                                        </span>
+                                        <span>
+                                            <span>العميل : </span>
+                <span>@ViewBag.customer</span>
+                                        </span>
+                                    </p>
+                                    <p class="col-md-12 px-0">
+                                        <span>
+                                            <span>تاريخ التدقيق الفني : </span>
+                <span>@ViewBag.tech</span>
+                                        </span>
+                                        <span class="mx-3">
+                                            <span>المدينة : </span>
+                <span>@ViewBag.city</span>
+                                        </span>
+
+                                        <span>
+                                            <span>المعرض : </span>
+                <span>@ViewBag.Branch</span>
+                                        </span>
+                                    </p>
+
+                                </div>
+                   <form asp-action="Editschedule_the_productionForm" id="Createform">
+       
+                        <input value="@ViewBag.reqid" name="reqId" id="reqId" hidden />
+        <span class="col-auto align-self-center"> الجدولة السابقة @ViewBag.date </span>
+
+                                <p class="col-md-12  row">
+
+            <span class="col-auto align-self-center"> الجدولة الجديدة : </span>
+                                   <input type="date" class="form-control " name="selectedDate" id="selectedDate" onchange="handler(event);" required oninvalid="this.setCustomValidity('الرجاء  إدخال التاريخ أولاً')">
+
+                                </p>
+                                @*<p class="col-md-12  ">
+                                    <span>إجمالي قيم الطلبات : </span>
+                                    <span></span>
+
+                                </p>*@
+        <div class="mb-3">
+            <label id="notes_label" for="notes">إضافة ملاحظة</label>
+            <textarea name="notes" id="notes" class="form-control" cols="10" rows="4"
+                      placeholder="ملاحظات"></textarea>
+        </div>
+
+                                <div class="col-md-12 my-4 mx-auto w-100 "><button class="btn btn-submit"
+                                        type="button" onclick="go()">تعديل</button>
+                                </div>
+    </form>
+                            </div>
+@section Scripts
+      
+      {
+
+    <script>
+        var date = new Date(); // Now
+        date.setDate(date.getDate() ); // Set now + 30 days as the new date
+
+        $(function () {
+            $('[type="date"]#selectedDate').prop('min', function () {
+                return date.toJSON().split('T')[0];
+            });
+        });
+
+        $("input[type='date']").keydown(function (event) { event.preventDefault(); });
+
+        // Everything except weekend days
+        const validate = dateString => {
+            const day = (new Date(dateString)).getDay();
+            if (day == 5) {
+                return false;
+            }
+            return true;
+        }
+
+        // Sets the value to '' in case of an invalid date
+        document.getElementById('selectedDate').onchange = evt => {
+            if (!validate(evt.target.value)) {
+                evt.target.value = '';
+                Swal.fire({
+                    icon: 'error',
+                    title: 'لا يمكنك اختيار يوم الجمعة',
+                    showCloseButton: true
+
+                });
+            }
+        }
+
+        function handler(e) {
+            console.log(e.target.value);
+
+            
+
+        }
+
+        function go() {
+            var form = document.getElementById("selectedDate").value;
+            console.log(form);
+            if (form!="")
+            {
+                Swal.fire({
+                icon: 'warning',
+                title: 'هل أنت متأكد من التعديل ؟',
+                text: 'قم بالتأكيد',
+                footer: '<button class="swal2-confirm swal2-styled" type="submit" form="Createform">تعديل </button>',
+                showCancelButton: false,
+                showConfirmButton: false,
+                showCloseButton: true
+            });
+            }
+                     else {
+            Swal.fire({
+                icon: 'error',
+                title: 'الرجاء إدخال التاريخ',
+                showCloseButton: true
+
+            });
+
+        }
+        
+        }
+    </script>
+        
+        
+        
+        }

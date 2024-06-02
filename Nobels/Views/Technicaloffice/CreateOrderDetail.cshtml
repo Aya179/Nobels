@@ -1,0 +1,978 @@
+﻿@model Nobels.Models.customerSelectModel
+
+@{
+
+    Layout = "_LayoutRepresntitiveAndAdvisor";
+
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.min.css" />
+
+<style>
+        a:hover {
+        color: #a1b356 !important;
+        text-decoration: underline;
+    }
+
+    a {
+        color: #b2cb49 !important;
+        text-decoration: none;
+        background-color: transparent;
+    }
+
+    input {
+        border: 0;
+        outline: 0;
+    }
+
+        input:focus {
+            outline: none !important;
+        }
+        .styled-table {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+  /* /// min-width: 400px;*/
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        margin-left: auto;
+        margin-right: auto;
+        width: 50%;
+}
+    .styled-table thead tr {
+        background-color: #b2cb49;
+        color: #ffffff;
+        text-align: left;
+
+    }
+</style>
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+
+                <div class="card-header" style=" display: flex;
+  justify-content: space-between;">
+                    <p>إنشاء غرفة</p>
+
+                    <a  onclick="open_r()">
+                        <i class="fa fa-minus-circle" id="minus_id" style="display:none" aria-hidden="true"></i>
+                        <i class="fa fa-plus-circle" id="plus_id" aria-hidden="true"></i>
+                    </a>
+                </div>
+                <div class="card-body" id="open_add_r"  style="display:none">
+
+                    <form method="post" id="formSubmission" style=" width: fit-content;  margin: auto;">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+
+
+                        <div class="row mb-4">
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label  class="control-label">اسم الغرفة</label>
+                                    <input  class="form-control" id="name1" />
+
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label class="control-label">ملاحظات</label>
+                                    <input  class="form-control" id="note1" />
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4" hidden>
+                            <div class="col">
+                                <div class="form-outline">
+                                    @* <label asp-for="discountType" class="control-label"></label>
+                                    <input asp-for="discounttype" class="form-control" id="discounttype"/>*@
+
+                                    <label class="control-label"> نوع الخصم</label>
+
+                                    <select id="discounttype1" class="form-control">
+
+
+                                        <option value="0">نسبة</option>
+                                        <option value="1">قيمة</option>
+
+
+
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label  class="control-label">قيمة الخصم</label>
+                                    <input class="form-control" id="discount1" />
+
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+                        <input class="form-control" id="qid" value="@ViewBag.qid" hidden />
+                        <div class="form-group">
+                            <input type="button" value="إضافة" class="btn btn-primary btn-lg btn-block" onclick="addRoomToPage()" />
+                        </div>
+                    </form>
+                    <div class="row mb-4">
+                        <table class="styled-table table table-striped">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;">
+                                   الغرفة 
+                                </th>
+                                <th style="text-align: center;">
+                                    رقم العرض
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="body2">
+                                @*   @foreach (var item in ViewBag.allrooms)
+                        {
+                            <tr>
+                                <td> @item</td>
+                                <td> @ViewBag.qid</td>
+
+                            </tr>}*@
+                        </tbody>
+                    </table></div>
+
+
+                </div>
+            </div>
+        </div>
+</section>
+<section>
+    <div class="row justify-content-center">
+        <div class="col-md-12 mt-4">
+            <div class="row justify-content-between">
+                <div class="col-4">
+                    <label for="name">اسم العميل:</label>
+                    <input class="form-control" type="text" name="name" id="name" asp-for="qu.Customer.ArabicName">
+                    <label for="order_num">رقم العرض</label>
+                    <input class="form-control" type="text" name="order_num" id="order_num" asp-for="qu.QuotationId">
+
+
+                    <label for="product">الغرفة :</label>
+                    <select class="form-control" id="room" asp-items="ViewBag.room">
+                        <option value="0" selected>الرجاء اختيار الغرفة </option>
+                    </select>
+
+
+
+
+                </div>
+
+                <div class="col-4">
+                    <p>
+                        السعر الإجمالي :
+                        <span id="total">-</span> SAR
+                    </p>
+                    <p>
+                        التخفيض :
+                        <span id="discount">0</span>%
+                    </p>
+                    <p>
+                        السعر الصافي :
+                        <span id="price">-</span> SAR
+                    </p>
+                    <p>
+                        (VAT) :
+                        <span id="vats">-</span> SAR
+                    </p>
+                    <p style="vertical-align: middle;">
+                        السعر الصافي +  (Vat) :
+                        <span id="totalwithvats">-</span> SAR
+                    </p>
+                </div>
+            </div>
+            <input id="uominput" hidden />
+            <input id="RmCostinput" hidden />
+            <input id="FCostinput" hidden />
+            <input id="ICostinput" hidden />
+            <input id="OptionSelected" hidden />
+            <input id="itemdes" hidden />
+            <input class="form-control" type="text" name="order_num" id="priceinput" hidden>
+
+
+            <hr />
+            <form id="myform">
+                <div class="row justify-content-between">
+
+                    <div class="col-3">
+                        <label for="sub_cat"> المنتج الأساسي</label>
+                        <select id="sub_cat" class="form-control" onchange="get_item(this)" asp-items="ViewBag.ItemSubTypeId" name="sub_cat[]">
+                            <option value="">الرجاء الاختيار</option>
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <label for="item_name"> المنتج الفرعي</label>
+                        <select class="form-control chosen-select form-control-chosen chosen-rtl" name="item_name" id="item_name" onchange="dis_change(this)">
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <label for="qtyinput">الكمية </label>
+                        <input class="form-control" type="number" min="1" name="order_num" id="qtyinput" />
+                        <input class="form-control" name="unit" id="qtyunit" readonly />
+
+
+                    </div>
+                </div>
+
+                <div class="row justify-content-between">
+
+
+                    <div class="col-3">
+
+
+                        <label class="control-label"> اللون رقم 1</label>
+
+                        <select id="itemcolor" class="form-control">
+                        </select>
+                    </div>
+                    <div class="col-3">
+
+
+                        <label class="control-label"> اللون رقم 2</label>
+
+                        <select id="itemcolor1" class="form-control">
+                        </select>
+                    </div>
+                    <div class="col-3">
+
+
+                        <label class="control-label"> اللون رقم 3</label>
+
+                        <select id="itemcolor2" class="form-control">
+                        </select>
+                    </div>
+                </div>
+
+            </form>
+
+
+
+
+            <hr class="font-weight-bolder">
+            <button class="btn btn-primary m-2" onclick="add_line()">إضافة جديد</button>
+
+            <table class="table" style="font-size: smaller;width:100%" id="products">
+                <thead>
+
+                    <tr>
+                        <th><label for=""> المنتج الأساسي</label></th>
+                        <th><label for=""> المنتج الفرعي</label></th>
+                        <th hidden></th>
+                        <th style="width: 15rem;">وصف الغرض</th>
+                        <th> الغرفة</th>
+                        <th hidden> الغرفةid</th>
+                        <th>UOM</th>
+                        <th>QTY</th>
+                        <th>Unit Price</th>
+                        <th>Total Price</th>
+                        <th>Vat</th>
+                        <th>Total Price + VAT</th>
+                        @*<th>Rm Cost</th>
+                        <th>F Cost</th>
+                        <th>I Cost</th>*@
+                        <th>اللون رقم 1</th>
+                        <th>اللون رقم 2</th>
+                        <th>اللون رقم 3</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody id="products_body">
+                </tbody>
+
+
+
+            </table>
+
+
+            <div class="" style="display: flex;align-items: flex-start;flex-direction: column;">
+
+                <button class="btn btn-primary m-2" type="submit" onclick="addOrder()">حفظ</button>
+                <div class="my-2 mx-auto d-none" id="quota">
+                    <button type="submit" class="btn btn-primary  " id="b1" onclick="GoToBill()"> عرض سعر مفصل</button>
+
+                    <button type="submit" class="btn btn-primary  " id="b2" onclick="GoToRoomBill()"> عرض سعر الزبون</button>
+                    <button type="submit" class="btn btn-primary  " id="b3" onclick="GoToRoomdetBill()">عرض سعر مفصل وفق الغرف</button>
+                </div>
+            </div>
+
+
+            <!-- edit Modal -->
+
+
+            <div id="rejectModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+                 aria-hidden="true" style="    opacity: 100%;">
+                <div class="modal-dialog  modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header ">
+
+                            <h4>تعديل اسم الغرفة.</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                                    style="    margin: -1rem auto -1rem -1rem;">
+                                &times;
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>ادخل القيمة الجديدة</p>
+                            <input class="form-control" name="roomname11" id="roomname11" cols="30" rows="2"/>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">إلغاء</button>
+                            <button class="btn bg-danger text-white"
+                                    data-dismiss="modal" onclick="editename()" >
+                                تعديل
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+@section Scripts {
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js" integrity="sha512-rMGGF4wg1R73ehtnxXBt5mbUfN9JUJwbk21KMlnLZDJh7BkPmeovBuddZCENJddHYYMkCh9hPFnPmS9sspki8g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-te/1.4.0/jquery-te.min.js" integrity="sha512-813LH2NdwwzXnVfsmzSuAyyit5bRFdh997hN9Vzm0cdx3LdZV7TZNNb2Ag0dgJPD3J1Xn1Alg2YW70id+RtLrw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+        <script>
+
+
+            function editename(){
+                var roomid=document.querySelectorAll('button[name="namevalue"]')[0].id;
+                var room = document.getElementById("roomname11").value;
+                if(room!=null)
+                {$.post("/RepresntitiveAndAdvisor/editeRoomName", { roomId: roomid, roomname: room }, function (data) {
+
+
+                    fillRoomToTable();
+                       get_room();
+
+
+                });}
+
+
+            }
+
+            function get_room() {
+                var url = document.URL;
+                var stuff = url.split('/');
+                var id = stuff[stuff.length - 1];
+                // alert(cat_val);
+                $.get("/RepresntitiveAndAdvisor/GetRoom", { q: id }, function (data) {
+                    console.log(data);
+                    var select = document.getElementById("room");
+                    select.innerHTML = "  <option value='0'>الرجاء اختيار الغرفة</option>";
+                    // var option="";
+                    for (var i = 0; i < data.length; i++) {
+                        // alert(data[i].subTypeArName);
+                        var option = document.createElement("option");
+                        option.text = data[i].roomName;
+                        option.value = data[i].id;
+                        select.appendChild(option);
+                        //   document.getElementById('cat').innerHTML()
+
+                    }
+
+
+
+
+                });
+
+
+
+
+
+
+            }
+
+
+
+
+            function addRoomToPage(){
+
+
+                var name1 = document.getElementById('name1').value;
+                var note1 = document.getElementById('note1').value;
+                var discounttype1 = 0;//document.getElementById('discounttype1').value;
+                var discount1 = 0;//document.getElementById('discount1').value;
+                var url = document.URL;
+                var stuff = url.split('/');
+                var id = stuff[stuff.length - 1];
+                $.post("/RepresntitiveAndAdvisor/AddRoom", {
+
+                    name: name1, note: note1, qid: id, discount: discount1, discountType: discounttype1
+                }, function (data) {
+                    get_room();
+                    fillRoomToTable();
+
+                    Swal.fire({
+                            icon: 'success',
+                            title: 'تم إضافة غرفة جديدة',
+
+
+                        });
+                    document.getElementById("formSubmission").reset();
+                });
+
+            }
+            function open_r() {
+                if (document.getElementById("open_add_r").style.display === "none")
+                {document.getElementById("open_add_r").style.display = "block";
+                    document.getElementById("plus_id").style.display = "none";
+                    document.getElementById("minus_id").style.display = "block";
+                }
+                else{
+                    document.getElementById("open_add_r").style.display = "none";
+                    document.getElementById("plus_id").style.display = "block";
+                    document.getElementById("minus_id").style.display = "none";
+                };
+                // document.getElementById("open_add_r").style('display': 'block');
+            }
+
+
+                var counter=0;
+        var html;
+        $(document).ready(function () {
+            $.get("/RepresntitiveAndAdvisor/GetTax", function (data) {
+                document.getElementById('vats').innerHTML = data;
+
+            });
+
+
+            fillRoomToTable();
+        });
+        function deleteRoom(val){
+
+                $.get("/RepresntitiveAndAdvisor/deleteRoom", { id: val }, function (data) {
+             fillRoomToTable();
+             get_room();
+                    Swal.fire({
+                        icon: 'error',
+                            title: 'تم حذف الغرفة',
+
+
+                        });
+
+             });
+        }
+        function fillRoomToTable(){
+                var url = document.URL;
+                var stuff = url.split('/');
+                var id1 = stuff[stuff.length - 1];
+                // alert(id);
+                $.get("/RepresntitiveAndAdvisor/getAllquRoms", { id: id1 }, function (data) {
+
+                    var table_tr = "";
+
+
+                    for (var i = 0; i < data.length; i++) {
+
+                        table_tr += `
+                                         <tr>
+                                                                  <td style="text-align: center;"> `+ data[i].roomName + ` </td>
+                                           <td  style="text-align: center;">` + id1 + `  </td>
+                                                             <td><button style="border: none;background-color: #b2cb49; border-color: #b2cb49;" onclick="deleteRoom(` + data[i].id + `)"><i class="fas fa-trash-alt"></i></button>-
+                                                      <button  style="border: none;background-color: #b2cb49; border-color: #b2cb49;" data-target="#rejectModal" data-toggle="modal" name="namevalue" type="button" id="` + data[i].id + `" ><i class="fas fa-edit"></i>
+
+                        </button></td>
+
+
+
+
+
+
+                                           </tr>`;
+
+                    }
+
+
+
+
+                    document.getElementById('body2').innerHTML = table_tr;
+
+
+                });
+        }
+        function get_item(e) {
+            var cat_val1 = $(e).val();
+           // console.log(cat_val1);
+            $(".chosen-select").chosen("destroy");
+            $.get("/RepresntitiveAndAdvisor/GetItem", { subid: cat_val1 }, function (data) {
+                //console.log(data);
+                //
+                var select = document.getElementById("item_name");
+
+
+                select.innerHTML = "  <option>الرجاء اختيار المنتج</option>";
+
+                for (var i = 0; i < data.length; i++) {
+
+                    var option = document.createElement("option");
+                    if (cat_val1 == 58 || cat_val1 == 59 || cat_val1 == 60 || cat_val1 == 61 || cat_val1 == 62 || cat_val1 == 64 || cat_val1 == 65) { option.text = data[i].itemCode; }
+                    else { option.text = data[i].notes; }
+                    option.value = data[i].itemId;
+                    select.appendChild(option);
+
+
+
+                }
+                $(".chosen-select").chosen({ width: "100%" });
+
+            });
+
+
+        }
+
+          //function  addOptionToSelect(optionselected){
+
+          //      document.getElementById('OptionSelected').value = optionselected.value;
+          //      var select = document.getElementById("itemcolor");
+          //      select.innerHTML = "  <option value=" + optionselected.value + ">" + optionselected.value + "</option>";
+
+
+          //}
+
+
+            function add_line() {
+
+
+
+
+
+
+                if (document.getElementById("room").value != 0) {
+                    var table = document.getElementById("products");
+
+                    var lastRowIndex = table.rows.length - 1;
+                    //console.log(lastRowIndex);
+
+                    //var lastCellIndex = table.rows[lastRowIndex].cells.length - 12;
+
+                    //console.log(table.rows[lastRowIndex]); // alerts the cell's containing HTML, or 9
+
+                    //var lastCell = table.rows[lastRowIndex].cells[lastCellIndex]; // contains a reference to the last cell
+                    //console.log(table.rows[lastRowIndex].cells[lastCellIndex].innerHTML);
+                    //..................................
+
+                    var sub = document.getElementById("sub_cat");
+                    var subId = document.getElementById("sub_cat").value;
+                    var subText = sub.options[sub.selectedIndex].text
+                    var items = document.getElementById("item_name");
+                    var itemsId = document.getElementById("item_name").value;
+                    var itemsText = items.options[items.selectedIndex].text;
+                    var rooms = document.getElementById("room");
+                    var roomId = document.getElementById("room").value;
+                    var roomText = rooms.options[rooms.selectedIndex].text;
+                    var uom = document.getElementById("uominput").value;
+                    //var rm = document.getElementById("RmCostinput").value;
+                    var vatsfromapi = document.getElementById('vats').innerHTML;
+
+                    //  var fcost = document.getElementById("FCostinput").value;
+                    // var icost = document.getElementById("ICostinput").value;
+                    var colors = document.getElementById("itemcolor");
+                    var colorsId = document.getElementById("itemcolor").value;
+                    var colorsText = colors.options[colors.selectedIndex].text;
+                    if (colorsText == "غير مطلوب تحديد اللون ") {
+                        colorsText = "NOCOLOR";
+                        // colorsId=0;
+                    }
+                    var colors1 = document.getElementById("itemcolor1");
+                    var colorsId1 = document.getElementById("itemcolor1").value;
+                    var colorsText1 = colors1.options[colors1.selectedIndex].text;
+                    if (colorsText1 == "غير مطلوب تحديد اللون ") {
+                        colorsText1 = "NOCOLOR";
+                        //colorsId=0;
+                    }
+                    var colors2 = document.getElementById("itemcolor2");
+                    var colorsId2 = document.getElementById("itemcolor2").value;
+                    var colorsText2 = colors2.options[colors2.selectedIndex].text;
+                    if (colorsText2 == "غير مطلوب تحديد اللون ") {
+                        colorsText2 = "NOCOLOR";
+                        //colorsId=0;
+                    }
+
+                    var qytinput = document.getElementById("qtyinput").value;
+                    var priceinput = document.getElementById("priceinput").value;
+                    var itemdes = document.getElementById("itemdes").value;
+
+
+                    $('#products').append($('<tr id="' + lastRowIndex + '" >')
+                        .append($('<td>').append(subText))
+                        .append($('<td >').append(itemsText))
+                        .append($('<td  hidden>').append(itemsId))
+                        .append($('<td contenteditable="true">').append(itemdes))
+                        .append($('<td >').append(roomText))
+                        .append($('<td hidden >').append(roomId))
+                        .append($('<td id="uom"> ').append(uom))
+                        .append($('<td id="QUT">').append(qytinput))
+                        .append($('<td id="price">').append(priceinput))
+                        .append($('<td id="Total">').append(".."))
+                        .append($('<td id="VAT">').append(vatsfromapi))
+                        .append($('<td  id="Totalvat">').append("-"))
+                        //.append($('<td id="RmCost">').append(rm))
+                        // .append($('<td id="FCost">').append(fcost))
+                        // .append($('<td id="ICost">').append(icost))
+                        .append($('<td >').append(colorsText))
+                        .append($('<td >').append(colorsText1))
+                        .append($('<td >').append(colorsText2))
+                        // .append($('<td hidden >').append(colorsId))
+                        .append($('<td >').append(' <a onclick="deleteRow(this)" ><i class="fas fa-trash-alt"></i></a>'))
+                    )
+
+
+                    Totalprice(lastRowIndex);
+                    document.getElementById("myform").reset();
+                    $("#item_name").chosen("destroy");
+
+                    $("#item_name").empty();
+                    $("#itemcolor1").empty();
+                    $("#itemcolor").empty();
+                    $("#itemcolor2").empty();
+                    document.getElementById("room").value="0";
+                    document.getElementById("itemcolor2").disabled = false;
+                    document.getElementById("itemcolor").disabled = false;
+                    document.getElementById("itemcolor1").disabled = false;
+                }
+
+                else {
+
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'يجب اختيار الغرفة أولاً ! ',
+
+
+                    });
+                }
+
+                //  document.getElementById("itemcolor2").innerHTML = "";
+
+            }
+            function deleteRow(r) {
+                var i = r.parentNode.parentNode.rowIndex;
+                document.getElementById("products").deleteRow(i);
+            }
+        function Totalprice(e) {
+
+            var qty = document.getElementById('products').rows[e + 1].cells[7].innerHTML;
+          //  console.log(qty);
+                var price = document.getElementById('products').rows[e + 1].cells[8].innerHTML;
+                var vat = document.getElementById('products').rows[e + 1].cells[10].innerHTML;
+            //var vat = document.getElementById('diss').value;
+           // //var result = parseFloat(qty * price) + parseFloat(vat);
+            var total = (qty * price);
+            var totalwithVat = parseFloat(total) * (parseFloat(vat)+100)/100;
+            if(qty!=null&&price!=null)
+            document.getElementById('products').rows[e + 1].cells[9].innerHTML=total;
+            if(total!=null&&vat!="")
+                document.getElementById('products').rows[e + 1].cells[11].innerHTML = totalwithVat;
+
+          if(vat!=""){
+                var table = document.getElementById("products"); //ur table id
+                var rows = table.getElementsByTagName("tr");
+                //var vats = 0;
+                var totalwithvats = 0;
+                var price = 0;
+               // var total = 0;
+                for (var i = 1; i < rows.length; i++) {
+
+                   // vats += parseFloat(rows[i].cells[10].querySelector('input').value);//instead of 1 pass column index
+                    totalwithvats += parseFloat(rows[i].cells[11].innerHTML);//instead of 1 pass column index
+                    price += parseFloat(rows[i].cells[9].innerHTML);//instead of 1 pass column index
+                   // total += parseFloat(rows[i].cells[11].querySelector('input').value);//instead of 1 pass column index
+                }
+
+
+                //document.getElementById('vats').innerHTML=vats;
+                document.getElementById('totalwithvats').innerHTML = totalwithvats;
+                document.getElementById('price').innerHTML = price;
+                document.getElementById('total').innerHTML = price;
+          }
+
+
+
+
+
+
+        }
+
+
+        function addOrder() {
+
+            var table = document.getElementById("products"); // table id
+
+
+            if (table.rows.length == 1) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'الرجاء الإضافة أولا ثم الحفظ',
+                    showCloseButton: true
+
+                });
+            }
+            else{
+
+                var qid1 = document.getElementById("order_num").value;
+                var rows = table.getElementsByTagName("tr");
+
+                for (var i = 1; i < rows.length; i++) {
+
+                    // vats += parseFloat(rows[i].cells[10].querySelector('input').value);//instead of 1 pass column index
+                    var itemname1 = rows[i].cells[2].innerHTML;
+                    var totalwithvat1 = rows[i].cells[11].innerHTML;
+                    var price1 = rows[i].cells[9].innerHTML;
+                        var quantity1 = rows[i].cells[7].innerHTML;
+                    var dis = 0
+                    var DisType = "نسبة";
+                    var roomname = rows[i].cells[4].innerHTML;
+                    var colorname = rows[i].cells[12].innerHTML;
+                        if (colorname == "الرجاء اختيار اللون"){
+                            colorname="NOCOLOR";
+                        }
+                    var colorname1 = rows[i].cells[13].innerHTML;
+                    if (colorname1 == "الرجاء اختيار اللون"){
+                            colorname1="NOCOLOR";
+                        }
+                    var colorname2 = rows[i].cells[14].innerHTML;
+                        if (colorname2 == "الرجاء اختيار اللون") {
+                            colorname2 = "NOCOLOR";
+                        }
+
+                    $.post("/RepresntitiveAndAdvisor/GetQutationUpdate", {
+
+                            qid: qid1, itemid: itemname1, price: price1, quantity: quantity1, discount: dis, type: DisType, total: totalwithvat1, roomId: roomname, color: colorname, color1: colorname1, color2: colorname2, mainItemId: 48
+                    }, function (data) {
+
+
+
+                      $('#quota').removeClass('d-none');
+
+
+                    });
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'تم الحفظ',
+
+
+                        });
+                    // total += parseFloat(rows[i].cells[11].querySelector('input').value);//instead of 1 pass column index
+                }
+
+
+
+            }
+
+
+
+        }
+
+
+            function GoToBill() {
+                var id = document.getElementById('order_num').value;
+                window.open('@Url.Action("BillView", "Technicaloffice")/' + id);
+                /* var id = document.getElementById('Qid').value;
+                 $.post("/AddCustomer/GetBill", {
+
+                     QID: id
+                 }, function(data) {
+
+
+
+                 });
+                 */
+
+
+
+            }
+
+
+            function GoToRoomBill() {
+
+                //  var id = document.getElementById('Qid').value;
+                var url = document.URL;
+                var stuff = url.split('/');
+                var id = stuff[stuff.length - 1];
+                window.open('@Url.Action("RoomBillView", "Technicaloffice")/' + id);
+
+            }
+
+            function GoToRoomdetBill() {
+
+                //  var id = document.getElementById('Qid').value;
+                var url = document.URL;
+                var stuff = url.split('/');
+                var id = stuff[stuff.length - 1];
+                window.open('@Url.Action("RoomDetaildView", "Technicaloffice")/' + id);
+
+            }
+
+        function dis_change(e) {
+            // alert(e.value);
+
+
+               document.getElementById("itemcolor2").disabled = false;
+               document.getElementById("itemcolor").disabled = false;
+               document.getElementById("itemcolor1").disabled = false;
+
+            $.get("/RepresntitiveAndAdvisor/getItemData", { id: e.value }, function (data) {
+                console.log(data);
+
+
+                document.getElementById('uominput').value = data.uom;
+                document.getElementById('RmCostinput').value = data.rmCost;
+                document.getElementById('FCostinput').value = data.fCost;
+                document.getElementById('ICostinput').value = data.iCost;
+                   document.getElementById('qtyunit').value=data.uom;
+                    document.getElementById('priceinput').value = data.itemCurrentPrice;
+                    document.getElementById('itemdes').value = data.notes;
+
+
+
+
+            });
+                var itemid = document.getElementById('item_name').value;
+                $.get("/RepresntitiveAndAdvisor/GetItemColorById", { ItemId: itemid }, function (data) {
+                   // console.log(data.color1[0].color.colorName);
+                   // console.log(data);
+                   if(data!="empty") {
+                    if(data.color1.length!=0){
+
+                    var select = document.getElementById("itemcolor");
+                  //  var rawOption = document.getElementById("OptionSelected").value;
+                        select.innerHTML = "  <option>الرجاء اختيار اللون</option>";
+                  //  select.innerHTML = "  <option value="+rawOption+">"+rawOption+"</option>";
+
+                    for (var i = 0; i < data.color1.length; i++) {
+
+
+                        var option = document.createElement("option");
+
+                        option.text = data.color1[i].color.colorName;
+                        option.value = data.color1[i].color.colorId;
+                        select.appendChild(option);
+
+
+                    }
+                    }
+                    else{
+                        document.getElementById("itemcolor").disabled = true;
+                    var select = document.getElementById("itemcolor");
+                    select.innerHTML = "  <option>غير مطلوب تحديد اللون </option>";
+
+
+                    }
+
+                    if(data.color2.length!=0){
+
+                    var select = document.getElementById("itemcolor1");
+                  //  var rawOption = document.getElementById("OptionSelected").value;
+                    select.innerHTML = "  <option>الرجاء اختيار اللون</option>";
+                  //  select.innerHTML = "  <option value="+rawOption+">"+rawOption+"</option>";
+
+                    for (var i = 0; i < data.color2.length; i++) {
+
+
+                        var option = document.createElement("option");
+
+                        option.text = data.color2[i].color.colorName;
+                        option.value = data.color2[i].color.colorId;
+                        select.appendChild(option);
+
+
+                    }
+                    }
+                     else{
+                        document.getElementById("itemcolor1").disabled = true;
+                         var select = document.getElementById("itemcolor1");
+                    select.innerHTML = "  <option>غير مطلوب تحديد اللون </option>";
+
+                    }
+                    if(data.color3.length!=0){
+
+                    var select = document.getElementById("itemcolor2");
+                  //  var rawOption = document.getElementById("OptionSelected").value;
+                        select.innerHTML = "  <option>الرجاء اختيار اللون</option>";
+                  //  select.innerHTML = "  <option value="+rawOption+">"+rawOption+"</option>";
+
+                    for (var i = 0; i < data.color3.length; i++) {
+
+
+                        var option = document.createElement("option");
+
+                        option.text = data.color3[i].color.colorName;
+                        option.value = data.color3[i].color.colorId;
+                        select.appendChild(option);
+
+
+                    }
+                    }
+                     else{
+                        document.getElementById("itemcolor2").disabled = true;
+                         var select = document.getElementById("itemcolor2");
+                    select.innerHTML = "  <option>غير مطلوب تحديد اللون </option>";
+
+                    }
+                    }
+                    else{
+                        document.getElementById("itemcolor").disabled = false;
+                        var select = document.getElementById("itemcolor");
+                        select.innerHTML = "  <option>غير مطلوب تحديد اللون </option>";
+                       document.getElementById("itemcolor1").disabled = false;
+                        var select1 = document.getElementById("itemcolor1");
+                        select1.innerHTML = "  <option>غير مطلوب تحديد اللون </option>";
+                      document.getElementById("itemcolor2").disabled = false;
+                        var select2 = document.getElementById("itemcolor2");
+                        select2.innerHTML = "  <option>غير مطلوب تحديد اللون </option>";
+
+
+                    }
+                });
+
+        }
+
+        function update_price() {
+            $('#net_price').html($('#total_price').html() - ($('#total_price').html() * $('#discount').html() / 100));
+            $('#vat_total').html((Number($('#net_price').html()) + Number($('#vat').html())) * $('#quantity').val());
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </script>
+
+
+    }

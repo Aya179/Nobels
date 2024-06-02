@@ -1,0 +1,168 @@
+﻿@model Nobels.Models.Employee
+
+@{
+    ViewData["Title"] = "Edit";
+    // Layout = "_LayoutTechnicaloffice";
+    Layout = "_LayoutRepresntitiveAndAdvisor";
+
+
+}
+
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+
+                <div class="card-header" style=" display: flex;
+  justify-content: space-between;">
+                    <a href="#" action="action" type="button" value="Back" onclick="window.history.go(-1); return false;"> <i class="fa fa-arrow-left fa-lg"></i></a>
+                    <p>الحساب الشخصي</p>
+
+
+                </div>
+
+                <div class="card-body">
+                    <form asp-action="userprofile" style=" width: 50vw;  margin: auto;">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Id" />
+                        <input asp-for="EmployeeNumber" class="form-control" type="hidden" />
+                        @*                        <input asp-for="EmployeeNumber" class="form-control"  type="hidden" />
+                        *@
+                        <!-- 2 column grid layout with text inputs for the first and last names -->
+                        <div class="row mb-4">
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label asp-for="FirstName" class="control-label"></label>
+                                    <input asp-for="FirstName" class="form-control" readonly />
+                                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col">
+
+                                <div class="form-outline ">
+
+
+                                    <label asp-for="LastName" class="control-label"></label>
+                                    <input asp-for="LastName" class="form-control" readonly />
+                                    <span asp-validation-for="LastName" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        @* <div class="form-outline mb-4">
+
+
+                        <label asp-for="BranchId" class="control-label"></label>
+                        <input  class="form-control" value=@ViewBag.BranchId readonly></input>
+
+                        </div>*@
+
+
+
+                        @* <div class="form-outline mb-4">
+
+
+                        <label asp-for="RoleId" class="control-label"></label>
+                        <input  class="form-control" value=@ViewBag.RoleId readonly></input>
+
+                        </div>*@
+
+
+
+                        <!-- Text input -->
+                        <!-- Text input -->
+                        <div class="form-outline mb-4">
+                        </div>
+
+                        <!-- Email input -->
+                        <div class="form-outline mb-4">
+                            <label asp-for="Email" class="control-label"></label>
+                            <input asp-for="Email" class="form-control" type="email"readonly />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <!-- Number input -->
+                        <div class="row mb-4">
+                            <div class="col" hidden>
+                                <div class="form-outline" >
+                                    <label asp-for="Phone" class="control-label"></label>
+                                    <div class="div_phone">
+                                        @if (ViewBag.phone != null)
+
+
+                                        {
+                                            <input asp-for="Phone" class="form-control input_phone" type="text" value="@ViewBag.phone" />
+                                        }
+                                        else
+                                        {
+                                            <input asp-for="Phone" class="form-control input_phone" type="text" />
+
+                                        }
+                                        <span class="span_phone">+05</span>
+                                    </div>
+
+                                    <!--<input asp-for="Phone" class="form-control" type="text" /> -->
+                                    <span asp-validation-for="Phone" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col" hidden>
+                                <div class="form-outline">
+
+
+                                    <label asp-for="RoleId" class="control-label"></label>
+                                    <select asp-for="RoleId" class="form-control" asp-items="ViewBag.RoleId"></select>
+
+                                </div>
+                            </div>
+
+                            <div class="col" >
+                                <div class="form-outline">
+
+
+                                    <label asp-for="EmployeeNumber" class="control-label"></label>
+                                    <input asp-for="EmployeeNumber" class="form-control" readonly ></input>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="row mb-4">
+                            <div class="col">
+
+                                <div class="form-outline ">
+                                    <label asp-for="UserName" class="control-label"></label>
+                                    <input asp-for="UserName" class="form-control" readonly />
+                                    <span asp-validation-for="UserName" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col">
+
+                                <div class="form-outline ">
+                                    <label asp-for="Password" class="control-label"></label>
+                                    <input asp-for="Password" class="form-control" />
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary btn-lg btn-block" type="submit">
+                            تعديل
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

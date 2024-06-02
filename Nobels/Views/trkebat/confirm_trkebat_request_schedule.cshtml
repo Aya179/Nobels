@@ -1,0 +1,89 @@
+@{
+    Layout = "_LayoutRepresntitiveAndAdvisor";
+}
+
+
+<div class="col-md-12   mt-4 w-100 ">
+
+    <div>
+        <h3 style="text-align: center;">تأكيد / تعديل جدولة طلب التركيب</h3>
+    </div>
+
+
+
+    <div class="" style="    margin-bottom: 1rem;">
+        <p class="col-3">
+            الطلب المحدد :
+        </p>
+        <p>
+            <span class="col-3">
+                رقم العرض :
+                <span >@ViewBag.quid</span>
+            </span>
+
+            <span class="col-3">
+                رقم أمر المبيعات :
+                <span >@ViewBag.code</span>
+            </span>
+
+            <span class="col-3">
+                العميل :
+              <span>@ViewBag.customer </span>
+            </span>
+        </p>
+
+        <p>
+            <span class="col-3">
+                المدينة :
+             <span>@ViewBag.city </span>
+            </span>
+
+          
+            <span class="col-3">
+                المعرض  :
+               <span>@ViewBag.branch </span>
+            </span>
+        </p>
+    </div>
+     <div class="col-md-12 mt-4">
+                <label class="col-auto align-self-end">
+                       عنوان التركيب:
+                    </label
+                <p class="row" hidden>
+                    
+                </p>
+                <p class="row">
+                   &nbsp;&nbsp;&nbsp;&nbsp; <span >المدينة : </span>&nbsp;&nbsp;
+                    <span >@ViewBag.city</span>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span >الحي : </span>&nbsp;&nbsp;
+                    <span >@ViewBag.neig</span>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span >رقم البيت : </span>&nbsp;&nbsp;
+                    <span >@ViewBag.housenumber</span>&nbsp;&nbsp;&nbsp;&nbsp;- &nbsp;&nbsp;&nbsp;&nbsp;
+                    <span >شارع : </span>&nbsp;&nbsp;
+                    <span >@ViewBag.street</span>
+                </p>
+            </div>
+    <div class="" style="    margin-bottom: 1rem;">
+        <span class="col-3">
+            التاريخ الأولي للتركيب :
+        </span>
+        <span class="col-3">
+            10-8-2023
+        </span>
+
+        <span class="col-3"> مسند إلى الفريق : </span>
+
+        <span class="col-3">
+            فريق9
+        </span>
+    </div>
+    <p class="col-12">التاريخ المفترض لانتهاء التصنيع وتسليم المواد : 2023-8-3</p>
+    <p class="col-12">لديك الخيارات التالية : </p>
+    <p class="col-12">1- تأكيد الجدولة في حال تأكيد انتهاء التصنيع</p>
+    <p class="col-12">2- تعديل الجدولة في حال تعذر الانتهاء من التصنيع</p>
+
+    <div class="col-12 row justify-content-center ">
+        <button class="btn btn-submit col-lg-1 m-3" type="submit">تأكيد</button>
+        <a class="btn btn-edit col-lg-1 m-3" asp-controller="trkebat" asp-action="edit_schedule_trekb_request" type="button">تعديل</a>
+    </div>
+</div>

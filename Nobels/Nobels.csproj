@@ -1,0 +1,132 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>aspnet-Nobels-45FF9B34-2135-4BAE-9CEB-8C9CBB3715EB</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\Production\ConfirmProductionschedule.cshtml" />
+    <Content Remove="Views\Production\Editschedule_the_production.cshtml" />
+    <Content Remove="Views\FinancialOffice\Accept.cshtml" />
+    <Content Remove="Views\FinancialOffice\AcceptQoutation.cshtml" />
+    <Content Remove="Views\FinancialOffice\BillView.cshtml" />
+    <Content Remove="Views\FinancialOffice\changeItemColor.cshtml" />
+    <Content Remove="Views\FinancialOffice\CreateOrderDetail.cshtml" />
+    <Content Remove="Views\FinancialOffice\Delete.cshtml" />
+    <Content Remove="Views\FinancialOffice\deleteOrder.cshtml" />
+    <Content Remove="Views\FinancialOffice\editOrder.cshtml" />
+    <Content Remove="Views\FinancialOffice\Index.cshtml" />
+    <Content Remove="Views\FinancialOffice\OrderDetails.cshtml" />
+    <Content Remove="Views\FinancialOffice\OrderDetailsUpdate.cshtml" />
+    <Content Remove="Views\FinancialOffice\RefuseQoutation.cshtml" />
+    <Content Remove="Views\FinancialOffice\RoomBillView.cshtml" />
+    <Content Remove="Views\FinancialOffice\RoomDetaildView.cshtml" />
+    <Content Remove="Views\FinancialOffice\userprofile.cshtml" />
+    <Content Remove="Views\Production\lated_production_Schedules.cshtml" />
+    <Content Remove="Views\Technicaloffice\BillView.cshtml" />
+    <Content Remove="Views\Technicaloffice\RoomBillView.cshtml" />
+    <Content Remove="Views\Technicaloffice\RoomDetaildView.cshtml" />
+    <Content Remove="Views\trkebat\NonInstallationRequestQuotations.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="30.0.1" />
+    <PackageReference Include="ExcelDataReader" Version="3.6.0" />
+    <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.9" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\branches\" />
+    <Folder Include="wwwroot\Items\img\" />
+    <Folder Include="wwwroot\ItemTypes\img\" />
+    <Folder Include="wwwroot\MainItems\img\" />
+    <Folder Include="wwwroot\SubTypes\img\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Production\daily_production_log.cshtml" />
+    <None Include="Views\Production\schedule_the_production1.cshtml" />
+    <None Include="Views\Production\ConfirmProductionschedule.cshtml" />
+    <None Include="Views\Production\Editschedule_the_production.cshtml" />
+    <None Include="Views\Production\schedule_the_production2.cshtml" />
+    <None Include="Views\Production\lated_production_Schedules.cshtml" />
+    <None Include="Views\Production\schedule_the_production3.cshtml" />
+    <None Include="Views\RepresntitiveAndAdvisor\AddItem.cshtml" />
+    <None Include="Views\RepresntitiveAndAdvisor\AllSelesReportView.cshtml" />
+    <None Include="Views\RepresntitiveAndAdvisor\BillView.cshtml" />
+    <None Include="Views\RepresntitiveAndAdvisor\BranchReportView.cshtml" />
+    <None Include="Views\RepresntitiveAndAdvisor\cover_arabic.cshtml" />
+    <None Include="Views\RepresntitiveAndAdvisor\Create.cshtml" />
+    <None Include="Views\RepresntitiveAndAdvisor\CreateOrderDetail.cshtml" />
+    <None Include="Views\RepresntitiveAndAdvisor\CreateQuatationRooms.cshtml" />
+    <None Include="Views\RepresntitiveAndAdvisor\CustomerReportView.cshtml" />
+    <None Include="Views\RepresntitiveAndAdvisor\DeleteOrderDetail.cshtml" />
+    <None Include="Views\RepresntitiveAndAdvisor\DeleteQU.cshtml" />
+    <None Include="Views\RepresntitiveAndAdvisor\Details.cshtml" />
+    <None Include="Views\RepresntitiveAndAdvisor\Edit.cshtml" />
+    <None Include="Views\RepresntitiveAndAdvisor\EditOrderDetail.cshtml" />
+    <None Include="Views\RepresntitiveAndAdvisor\home.cshtml" />
+    <None Include="Views\RepresntitiveAndAdvisor\Index.cshtml" />
+    <None Include="Views\RepresntitiveAndAdvisor\ItemColorFromItem.cshtml" />
+    <None Include="Views\RepresntitiveAndAdvisor\OrderDetails.cshtml" />
+    <None Include="Views\RepresntitiveAndAdvisor\QuatationIndex.cshtml" />
+    <None Include="Views\RepresntitiveAndAdvisor\RoomBillView.cshtml" />
+    <None Include="Views\RepresntitiveAndAdvisor\RoomDetaildView.cshtml" />
+    <None Include="Views\RepresntitiveAndAdvisor\userprofile.cshtml" />
+    <None Include="Views\FinancialOffice\Accept.cshtml" />
+    <None Include="Views\FinancialOffice\AcceptQoutation.cshtml" />
+    <None Include="Views\FinancialOffice\BillView.cshtml" />
+    <None Include="Views\FinancialOffice\changeItemColor.cshtml" />
+    <None Include="Views\FinancialOffice\CreateOrderDetail.cshtml" />
+    <None Include="Views\FinancialOffice\Delete.cshtml" />
+    <None Include="Views\FinancialOffice\deleteOrder.cshtml" />
+    <None Include="Views\FinancialOffice\editOrder.cshtml" />
+    <None Include="Views\FinancialOffice\Index.cshtml" />
+    <None Include="Views\FinancialOffice\OrderDetails.cshtml" />
+    <None Include="Views\FinancialOffice\OrderDetailsUpdate.cshtml" />
+    <None Include="Views\FinancialOffice\RefuseQoutation.cshtml" />
+    <None Include="Views\FinancialOffice\RoomBillView.cshtml" />
+    <None Include="Views\FinancialOffice\RoomDetaildView.cshtml" />
+    <None Include="Views\FinancialOffice\userprofile.cshtml" />
+    <None Include="Views\Technicaloffice\Accept.cshtml" />
+    <None Include="Views\Technicaloffice\AcceptQoutation.cshtml" />
+    <None Include="Views\Technicaloffice\BillView.cshtml" />
+    <None Include="Views\Technicaloffice\changeItemColor.cshtml" />
+    <None Include="Views\Technicaloffice\CreateOrderDetail.cshtml" />
+    <None Include="Views\Technicaloffice\Delete.cshtml" />
+    <None Include="Views\Technicaloffice\deleteOrder.cshtml" />
+    <None Include="Views\Technicaloffice\editOrder.cshtml" />
+    <None Include="Views\Technicaloffice\Index.cshtml" />
+    <None Include="Views\Technicaloffice\OrderDetails.cshtml" />
+    <None Include="Views\Technicaloffice\OrderDetailsUpdate.cshtml" />
+    <None Include="Views\Technicaloffice\RefuseQoutation.cshtml" />
+    <None Include="Views\Technicaloffice\RoomBillView.cshtml" />
+    <None Include="Views\Technicaloffice\RoomDetaildView.cshtml" />
+    <None Include="Views\Technicaloffice\userprofile.cshtml" />
+    <None Include="Views\trkebat\add_schedule_trekb_request.cshtml" />
+    <None Include="Views\trkebat\confirm_trkebat_request_schedule.cshtml" />
+    <None Include="Views\trkebat\edit_schedule_trekb_request.cshtml" />
+    <None Include="Views\trkebat\scheduled_succesfully.cshtml" />
+    <None Include="Views\trkebat\schedule_trkeb_requestall.cshtml" />
+    <None Include="Views\trkebat\NonInstallationRequestQuotations.cshtml" />
+    <None Include="Views\trkebat\track_trkebat.cshtml" />
+    <None Include="Views\trkebat\track_trkebat_form.cshtml" />
+    <None Include="Views\trkebat\trkebat_calender3inputs.cshtml" />
+    <None Include="Views\trkebat\trkebat_offer.cshtml" />
+    <None Include="Views\trkebat\warehouse.cshtml" />
+    <None Include="Views\trkebat\warehouse1.cshtml" />
+    <None Include="Views\trkebat\warehouse2.cshtml" />
+  </ItemGroup>
+
+</Project>

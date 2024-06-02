@@ -1,0 +1,588 @@
+﻿ @model Nobels.Models.OrderDetail
+
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Employee> SignInManager
+@inject UserManager<Employee> UserManagerc
+@{
+    var user = UserManagerc.FindByNameAsync(User.Identity.Name);
+    var role = user.Result.RoleId;
+    if (role == 6)
+    {
+        Layout = "_LayoutProductManeger";
+
+    }
+    else
+    {
+        Layout = "_Layout";
+
+    }
+}
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.min.css" />
+<style>
+        a:hover {
+        color: #a1b356 !important;
+        text-decoration: underline;
+    }
+
+    a {
+        color: #b2cb49 !important;
+        text-decoration: none;
+        background-color: transparent;
+    }
+</style>
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+
+                <div class="card-header" style=" display: flex;
+  justify-content: space-between;">
+                    <p>إنشاء غرفة</p>
+
+                    <a  onclick="open_r()">
+                        <i class="fa fa-minus-circle" id="minus_id" style="display:none" aria-hidden="true"></i>
+                        <i class="fa fa-plus-circle" id="plus_id" aria-hidden="true"></i>
+                    </a>
+                </div>
+                <div class="card-body" id="open_add_r"  style="display:none">
+                    <form method="post" id="formSubmission" style=" width: 50vw;  margin: auto;">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+
+
+                        <div class="row mb-4">
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label  class="control-label">اسم الغرفة</label>
+                                    <input  class="form-control" id="name1" />
+
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label class="control-label">ملاحظات</label>
+                                    <input  class="form-control" id="note1" />
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4" hidden>
+                            <div class="col">
+                                <div class="form-outline">
+                                    @* <label asp-for="discountType" class="control-label"></label>
+                                    <input asp-for="discounttype" class="form-control" id="discounttype"/>*@
+
+                                    <label class="control-label"> نوع الخصم</label>
+
+                                    <select id="discounttype1" class="form-control">
+
+
+                                        <option value="0">نسبة</option>
+                                        <option value="1">قيمة</option>
+
+
+
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label  class="control-label">قيمة الخصم</label>
+                                    <input class="form-control" id="discount1" />
+
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+                        <input class="form-control" id="qid" value="@ViewBag.qid" hidden />
+                        <div class="form-group">
+                            <input type="submit" value="إضافة" class="btn btn-primary btn-lg btn-block" onclick="addRoomToPage()" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+</section>
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+
+                <div class="card-header" style=" display: flex;
+  justify-content: space-between;">
+@*                    <a asp-asp-controller="AddCustomer" asp-action="OrderDetails" asp-route-id="get_id" onclick="setRouteParameter()"> <i class="fa fa-arrow-left fa-lg"></i></a>
+*@
+<a
+    action="action"
+    onclick="window.history.go(-1); return false;"
+    type="submit"
+    value="Cancel"
+><i class="fa fa-arrow-left fa-lg"></i></a>
+
+                </a>
+                </div>
+
+                <div class="card-body">
+
+                    <form id="formSubmission" method="post"  style=" width: 50vw;  margin: auto;">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input id="quid" asp-for="QoutationId" type="hidden" />
+                        <div class="row mb-4">
+                             <div class="col">
+                                <div class="form-outline">
+                                    <label class="control-label"> الغرف</label>
+
+                                    <select class="form-control" id="room" asp-for="roomId">
+                                        <option>الرجاء اختيار الغرفة </option>
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label class="control-label"> المنتج الأساسي</label>
+
+                                    <select class="form-control chosen-select chosen-rtl" asp-for="MainItemId" id="mainitem" asp-items="ViewBag.MainItem" onchange="get_types()">
+                                        <option>الرجاء اختيار المنتج الأساسي </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label class="control-label"> الفئة</label>
+
+                                    <select class="form-control" id="cat"  onchange="get_next()">
+                                        <option>الرجاء اختيار النوع </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label class="control-label"> الفئة الفرعية</label>
+
+                                    <select id="sub_cat" class="form-control" onchange="get_item()">
+                                        <option>الرجاء اختيار الفئة الفرعية</option>
+
+                                    </select>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label class="control-label"> المنتج</label>
+                                    <select asp-for="ItemId" id="item" class="form-control chosen-select chosen-rtl" onchange="get_color()">
+
+
+                                        <option>الرجاء اختيار المنتج</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label class="control-label"> اللون</label>
+
+                                    <select  asp-for="colorname"  id="itemcolor" class="form-control" >
+
+
+                                        <option value="0">اختيار لون المنتج</option>
+
+
+                                    </select>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4" hidden>
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label class="control-label"> نوع الخصم</label>
+
+                                    <select asp-for="DiscountType" id="disType" class="form-control">
+
+
+                                        <option value="0">نسبة</option>
+                                        <option value="1">قيمة</option>
+
+
+
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label class="control-label"> قيمة الخصم</label>
+                                    <input  asp-for="Discount" class="form-control" id="Dicount" value="0" />
+
+
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="row mb-4">
+                        <div class="col">
+                            <div class="form-outline">
+                                <label class="control-label"> الكمية</label>
+
+                                <input asp-for="Quantity" class="form-control" id="quan" onclick="getOptionColor()"  />
+
+                            </div>
+                        </div>
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label class="control-label"> السعر</label>
+                                    <input readonly  asp-for="Price" class="form-control" id="p" />
+
+
+                                </div>
+                            </div>
+                      
+                            </div>
+
+                        <br />
+
+
+
+
+
+
+                        <div class="form-outline mb-4">
+
+
+
+                            <input class="form-control" id="name1" type="hidden" />
+
+                            <input class="form-control" id="Finalprice" type="hidden" />
+                            <input class="form-control" id="Qid" type="hidden" />
+
+
+
+
+
+
+                        </div>
+
+
+
+
+                        <button  id="submitButton" type="button" class="btn btn-primary btn-lg btn-block" >
+                            إضافة
+                        </button>
+
+
+                    </form>
+
+
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js" integrity="sha512-rMGGF4wg1R73ehtnxXBt5mbUfN9JUJwbk21KMlnLZDJh7BkPmeovBuddZCENJddHYYMkCh9hPFnPmS9sspki8g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-te/1.4.0/jquery-te.min.js" integrity="sha512-813LH2NdwwzXnVfsmzSuAyyit5bRFdh997hN9Vzm0cdx3LdZV7TZNNb2Ag0dgJPD3J1Xn1Alg2YW70id+RtLrw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+        $("#submitButton").on('click', function(e){
+       e.preventDefault();
+        
+            var RID = document.getElementById("room").value;
+            var qID = document.getElementById("quid").value;
+            var quan1 = document.getElementById('quan').value;
+            var main = document.getElementById('mainitem').value;
+            var item = document.getElementById('item').value;
+            var itemColor = document.getElementById('itemcolor').value;
+            console.log(itemColor);
+            var price = document.getElementById('p').value;
+                       // alert(RID+'....'+qID+'....'+quan1+'....'+main+'....'+item+'....'+itemColor+'....'+price);
+            $.get("/ProductManager/addneworder", { ItemId: item, QoutationId: qID, Quantity: quan1, Price: price, roomId: RID, colorname: itemColor, MainItemId: main }, function (data) {
+                Swal.fire(
+                    'تم إضافة المنتج بنجاح',
+                    '',
+                    'success'
+                );
+            }
+            );
+
+
+    });
+      
+
+        //function setRouteParameter() {
+        //    var newhref = $("#addActivityPrice").attr('href') + '/' + g_id;
+        //    $("#addActivityPrice").attr("href", newhref);
+        //}
+
+
+         $(document).ready(function() {
+            get_room();
+
+              
+       
+
+        });
+
+        function roomdiscount() {
+            var RID = document.getElementById("room").value;
+            // alert(RID);
+            $.get("/ProductManager/RoomDiscount", { roomId: RID }, function (data) {
+                //  console.log(data);
+
+                // alert(data.type);
+                // alert(data.value);
+
+                document.getElementById("Dicount").value = data.value;
+                //  document.getElementById("disType").text = data[i].discountType;
+                if (data.type == "نسبة") {
+                    document.getElementById("disType").value = 0;
+                }
+                else {
+                    document.getElementById("disType").value = 1;
+                }
+
+                // document.getElementById("per_option").selected = "true";
+
+
+
+
+
+            });
+
+        }
+        function get_types() {
+           // var main = document.getElementById('mainitem').value;
+
+            // alert(cat_val);
+            $.get("/ProductManager/getTypes", function (data) {
+                console.log(data);
+                var select = document.getElementById("cat");
+                select.innerHTML = "  <option>الرجاء اختيار نوع المنتج</option>";
+                // var option="";
+                for (var i = 0; i < data.length; i++) {
+                    // alert(data[i].subTypeArName);
+                    var option = document.createElement("option");
+                    option.text = data[i].typeArName;
+                    option.value = data[i].typeId;
+                    select.appendChild(option);
+                    //   document.getElementById('cat').innerHTML()
+
+                }
+
+
+
+
+
+            });
+
+
+
+
+
+
+        }
+
+
+        function addRoomToPage(){
+
+
+            var name1 = document.getElementById('name1').value;
+            var note1 = document.getElementById('note1').value;
+            var discounttype1 = 0;//document.getElementById('discounttype1').value;
+            var discount1 = 0;//document.getElementById('discount1').value;
+            var url = document.URL;
+            var stuff = url.split('/');
+            var id = stuff[stuff.length - 1];
+            $.post("/ProductManager/AddRoom", {
+
+                name: name1, note: note1, qid: id, discount: discount1, discountType: discounttype1
+            }, function (data) {
+
+
+
+            });
+
+        }
+        function open_r() {
+            if (document.getElementById("open_add_r").style.display === "none")
+            {document.getElementById("open_add_r").style.display = "block";
+                document.getElementById("plus_id").style.display = "none";
+                document.getElementById("minus_id").style.display = "block";
+            }
+            else{
+                document.getElementById("open_add_r").style.display = "none";
+                document.getElementById("plus_id").style.display = "block";
+                document.getElementById("minus_id").style.display = "none";
+            };
+            // document.getElementById("open_add_r").style('display': 'block');
+        }
+                function get_room() {
+            var url = document.URL;
+            var stuff = url.split('/');
+            var id = stuff[stuff.length - 1];
+            // alert(cat_val);
+            $.get("/ProductManager/GetRoom", { q: id }, function (data) {
+                console.log(data);
+                var select = document.getElementById("room");
+                select.innerHTML = "  <option>الرجاء اختيار الغرفة</option>";
+                // var option="";
+                for (var i = 0; i < data.length; i++) {
+                    // alert(data[i].subTypeArName);
+                    var option = document.createElement("option");
+                    option.text = data[i].roomName;
+                    option.value = data[i].id;
+                    select.appendChild(option);
+                    //   document.getElementById('cat').innerHTML()
+
+                }
+
+
+
+
+            });
+
+
+
+
+            
+
+        }
+
+
+         function get_next() {
+
+            var url = document.URL;
+            var stuff = url.split('/');
+            var id = stuff[stuff.length - 1];
+            document.getElementById('quid').value = id;
+            var cat_val = document.getElementById('cat').value;
+            // alert(cat_val);
+            $.get("/ProductManager/Getsub", { cid: cat_val }, function(data) {
+                console.log(data);
+                var select = document.getElementById("sub_cat");
+                select.innerHTML = "  <option>الرجاء اختيار الفئة الفرعية</option>";
+                // var option="";
+                for (var i = 0; i < data.length; i++) {
+                    // alert(data[i].subTypeArName);
+                    var option = document.createElement("option");
+                    option.text = data[i].subTypeArName;
+                    option.value = data[i].subTypeId;
+                    select.appendChild(option);
+                    //   document.getElementById('cat').innerHTML()
+
+                }
+
+            });
+
+        }
+
+
+
+
+
+        function get_item() {
+         
+            var cat_val1 = document.getElementById('sub_cat').value;
+            $(".chosen-select").chosen("destroy");
+
+            $.get("/ProductManager/GetItem", { subid: cat_val1 }, function (data) {
+                console.log(data);
+                var select = document.getElementById("item");
+                select.innerHTML = "  <option>الرجاء اختيار المنتج</option>";
+
+                for (var i = 0; i < data.length; i++) {
+                    // alert(data[i].ItemArName);
+                    var option = document.createElement("option");
+                    option.text = data[i].itemArName;
+                    option.value = data[i].itemId;
+                    select.appendChild(option);
+                    //   document.getElementById('cat').innerHTML()
+
+                }
+           $(".chosen-select").chosen({ width: "100%" });
+
+
+            });
+
+
+        }
+
+        function getOptionColor() {
+            //select = document.getElementById('itemcolor');
+            //result = select.value;
+
+            var color = document.getElementById('itemcolor').value;
+            var item = document.getElementById('item').value
+           // alert(color);
+
+            $.get("/ProductManager/GetPrice", { item: item, color: color }, function (data) {
+                document.getElementById('p').value = data;
+
+             //   alert(data);
+
+            });
+           
+            //console.log(result);
+        }
+        function getItemId() {
+            select = document.getElementById('item');
+            result = select.value;
+            // console.log(result);
+        }
+        function get_color() {
+            var cat_val11 = document.getElementById('cat').value;
+            // alert(cat_val);
+            $.get("/ProductManager/GetItemColor", { ItemTypeid: cat_val11 }, function (data) {
+                console.log(data);
+                var select = document.getElementById("itemcolor");
+                select.innerHTML = "  <option>الرجاء اختيار لون المنتج</option>";
+
+                for (var i = 0; i < data.length; i++) {
+
+                    var option = document.createElement("option");
+                    option.text = data[i].colorName;
+                    option.value = data[i].colorId;
+                    select.appendChild(option);
+
+
+                }
+
+            });
+            getItemId();
+
+        }
+
+        function get_id() {
+            var id = baseUrl.substring(baseUrl.lastIndexOf('=') + 1);
+            alert(id)//503
+
+        }
+
+    </script>
+        
+
+    }

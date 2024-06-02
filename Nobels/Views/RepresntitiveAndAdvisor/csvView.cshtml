@@ -1,0 +1,45 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Employee> SignInManager
+@inject UserManager<Employee> UserManagerc
+@{
+    Layout = "_LayoutRepresntitiveAndAdvisor";
+}
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+
+                <div class="card-header" style=" display: flex;
+  justify-content: space-between;">
+                  
+
+                    <form asp-controller="Test" method="post" asp-action="Export">
+                        <button type="submit" class="btn btn-primary "> تحميل أسعار المنتجات</button>
+                    </form>
+                </div>
+
+                <div class="card-body">
+                    <form asp-controller="Test" asp-action="ImportFromExcel" style=" width: 50vw;  margin: auto;" enctype="multipart/form-data" method="post">
+
+
+
+                        <!-- Text input -->
+                        <div class="form-outline mb-4" >
+                            <input type="file" name="formFile" />
+                           
+                        </div>
+
+                      
+
+
+                        <button type="submit" class="btn btn-primary btn-lg btn-block">
+                            إضافة أسعار المنتجات
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>

@@ -1,0 +1,316 @@
+﻿@model IEnumerable<Nobels.Models.productionClass>
+@{
+    Layout = "_LayoutRepresntitiveAndAdvisor";
+}
+@{
+    var instUpdate = (List<InstallationUpdate>)ViewData["MyData"]; // Cast the list
+}
+<div class="col-md-12  row mt-4">
+    <div class="col-md-12 ">
+        <h3 class="" style="text-align: center;">متابعة حالة التركيب للعرض  @ViewBag.quid  </h3>
+    </div>
+    <form asp-action="track_trkebat_formAction" style="    display: contents;" id="Createform">
+        <div class="col-md-4 ">
+            <p class="row">
+                <span class="col-6">رقم أمر المبيعات : </span>
+                <span class="col-6">@ViewBag.code</span>
+            </p>
+            <p class="row">
+                <span class="col-6">قيمة العرض : </span>
+                <span class="col-6">10000000</span>
+            </p>
+          
+           <p class="row">
+                <span class="col-6">العميل : </span>
+                <span class="col-6">@ViewBag.customer  </span>
+            </p>
+            
+        </div>
+        <div class="col-md-4 ">
+            
+            <!-- <p class="row">
+                <span class="col-6">المعرض</span>
+                <span class="col-6">001</span>
+            </p> -->
+            <p class="row">
+                <span class="col-6">تاريخ بدء التركيب : </span>
+                <span class="col-6">@ViewBag.date</span>
+            </p>
+            <p class="row">
+                <span class="col-6">تاريخ العرض  : </span>
+                <span class="col-6">@ViewBag.Qdate</span>
+            </p>
+        </div>
+        <div class="col-md-4">
+            <p class="row">
+                <span>
+                    <span class="col-6">المدينة : </span>
+                    <span class="col-6">@ViewBag.city</span>
+                </span>
+            </p>
+            <p class="row">
+                <span class="mx-3">
+                    <span class="col-6">الحي : </span>
+                    <span class="col-6">@ViewBag.neig</span>
+                </span>
+            </p>
+            <p class="row">
+                <span>
+                    <span class="col-6">الشارع  : </span>
+                    <span class="col-6">@ViewBag.street</span>
+                </span>
+            </p>
+            <p class="row">
+                <span>
+                    <span class="col-6">المنزل  : </span>
+                    <span class="col-6">@ViewBag.house</span>
+                </span>
+            </p>
+        </div>
+        <div class="col-md-12 ">
+            <h3 class="" style="text-align: center;">الطلب حالياً-قيد التركيب </h3>
+        </div>
+        <div class="col-md-12 mt-4">
+
+            <div class="row mb-3">
+                <label class="col-auto " for="status">تحديث الحالة</label>
+                <select name="status" id="status" class="form-control col-auto col-lg-4"
+                        onchange="state_change(this)" >
+                    <option value="0" disabled>الرجاء اختيار حالة الطلب</option>
+                    @if ((instUpdate.Where(i => i.UpdateString.Contains("تسليم الموقع")).Any())){
+                        <option value="4" disabled style="background:#ccc;"> تسليم الموقع</option>
+                        <option value="1" disabled style="background:#ccc;">إرسال المواد الخام إلى الموقع</option>
+                        <option value="2" disabled style="background:#ccc;"> إيقاف التركيب</option>
+                        <option value="3" disabled style="background:#ccc;"> الانتهاء من الـتركيب</option>
+                    }
+                    else{
+                        
+                        @if (instUpdate.Where(i => i.UpdateString.Contains("إرسال المواد الخام إلى الموقع")).Any())
+                        {
+                            <option value="1" disabled style="background:#ccc;">إرسال المواد الخام إلى الموقع</option>
+                        }
+                   else {<option value="1" >إرسال المواد الخام إلى الموقع</option>}
+                    @if (instUpdate.Where(i => i.UpdateString.Contains("إيقاف التركيب")).Any())
+
+                    {
+                            <option value="2" disabled style="background:#ccc;"> إيقاف التركيب</option>
+                    }
+                    else{
+                        <option value="2" > إيقاف التركيب</option>
+                    }
+                    @if ((instUpdate.Where(i => i.UpdateString.Contains("الانتهاء من الـتركيب")).Any()) || (!instUpdate.Where(i => i.UpdateString.Contains("إرسال المواد الخام إلى الموقع")).Any()))
+
+                        {
+                            <option value="3" disabled style="background:#ccc;"> الانتهاء من الـتركيب</option>
+                        }
+                    else
+                    {
+                        <option value="3"> الانتهاء من الـتركيب</option>
+                    }
+                    @if ( (instUpdate.Where(i => i.UpdateString.Contains("الانتهاء من الـتركيب")).Any()))
+
+                    {<option value="4" > تسليم الموقع</option>}
+                        else
+                        {
+                            <option value="4" disabled style="background:#ccc;"> تسليم الموقع</option>
+                        }
+                   
+                    }
+                  
+
+                </select>
+                <label class="col-auto " for="">التحديثات السابقة</label>
+                <div class="bg-white p-2 border rounded col-auto col-lg-4 "
+                     style="height: 20rem ;    height: 8rem;overflow: hidden scroll;border-color: #d1d3e2 !important;">
+@*                    <p class="" style="border-bottom: 1px dashed #d1d3e2;"> الحالة,التاريخ</p>
+*@                    
+                    @foreach (var i in @instUpdate)
+                    {
+                        var date = i.UpdatedDate.Value.ToShortDateString();
+                        <p style="border-bottom: 1px dashed #d1d3e2;">  @i.UpdateString &nbsp;&nbsp;,@date</p>
+
+                    }
+
+
+
+                </div>
+               
+            </div>
+            <div class="mb-3">
+                <p>ملاحظات سابقة</p>
+                <div class="bg-white p-2 border rounded "
+                     style="height: 20rem ;    height: 8rem;overflow: hidden scroll;border-color: #d1d3e2 !important;">
+@*                    <p class="" style="border-bottom: 1px dashed #d1d3e2;">ملاحظة ,اسم </p>
+*@                    @foreach (var item in Model)
+                    {
+                        <p style="border-bottom: 1px dashed #d1d3e2;">  @item.name &nbsp;&nbsp;,@item.note</p>
+                        
+                    }
+                    
+                    
+                   
+                </div>
+            </div>
+            <div class="mb-3">
+                <label id="notes_label" for="notes">إضافة ملاحظة</label>
+                <textarea name="notes" id="notes" class="form-control" cols="10" rows="4"
+                          placeholder="ملاحظات"></textarea>
+            </div>
+            <div class="row">
+                <label  class="col-auto align-self-center">
+                    نسبة الإنجاز الحالية
+                </label>
+               
+                <span id="oldprogress" class="col-auto align-self-center">@ViewBag.progress%</span>
+            </div>
+            <div class="row">
+                <label for="progress" class="col-auto align-self-center">
+                    نسبة الانجاز الجديدة
+                </label>
+                @if (ViewBag.maxProgressValue ==100)
+                {
+                    <input type="number" name="progress" id="progress" placeholder="@ViewBag.progress" min="@ViewBag.progress" max="100"
+                       class="form-control col-1"/>}
+                       else{
+                    <input type="number" name="progress" id="progress" placeholder="@ViewBag.progress" min="@ViewBag.progress" max="99"
+                       class="form-control col-1"  />
+                       }
+                <span class="col-auto align-self-center">%</span>
+            </div>
+        </div>
+        <input name="reqId" id="reqId" value="@ViewBag.reqid" hidden />
+     
+        <div class="col-md-12 my-2 w-100">
+            <button class="btn btn-submit" type="button" onclick="go()">تحديث</button>
+            
+        </div>
+        <div class="col-md-12 my-2 w-100">
+            
+            <button class="btn btn-submit" type="button" onclick="progressCheck()">إغلاق الملف</button>
+        </div>
+
+
+    </form>
+</div>
+
+
+
+@section Scripts
+      
+      {
+    <script>
+        var date = new Date(); // Now
+        date.setDate(date.getDate() + 30); // Set now + 30 days as the new date
+
+        $(function () {
+            $('[type="date"]').prop('min', function () {
+                return date.toJSON().split('T')[0];
+            });
+        });
+
+        function state_change(e) {
+            val = $(e).val();
+            if (val == 2) {
+                var myInput = document.getElementById('progress');
+
+                myInput.value = '';
+                $('#progress').prop('disabled', true);
+                $('#notes_label').text('سبب الإيقاف');
+
+            }
+            else {
+                $('#progress').prop('disabled', false);
+                $('#notes_label').text('إضافة ملاحظة');
+            }
+            if (val == 1) {
+                const myInput = document.getElementById('progress');
+
+                myInput.setAttribute('max', '99');
+
+            }if (val == 4) {
+                var myInput = document.getElementById('progress');
+                 document.getElementById('progress').value=100;
+
+                myInput.setAttribute('max', '100');
+                $('#progress').prop('disabled', true);
+               //console.log(document.getElementById('progress').value);
+
+            }
+           
+        }
+
+       function progressCheck(){
+            var newprogress = document.getElementById('progress').value;
+            //var oldprogress = document.getElementById('oldprogress').innerHTML;
+            //var oldprog1=oldprogress.split('%');
+            if(newprogress<100){
+                Swal.fire({
+                    icon: 'error',
+                    title: '  لا يمكنك إغلاق الملف لأن الإنجاز غير مكتمل  ',
+                    showCloseButton: true
+
+                });
+
+            }
+        }
+        function go() {
+            var form = document.getElementById("progress").value;
+           
+            var select = document.getElementById("status").value;
+            var x = document.getElementById("progress").max;
+            console.log(form);
+            if (select==2)
+            {Swal.fire({
+                    icon: 'warning',
+                    title: 'هل أنت متأكد من إيقاف التركيب ؟',
+                    text: 'قم بالتأكيد',
+                    footer: '<button class="swal2-confirm swal2-styled" type="submit" form="Createform">تحديث </button>',
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                    showCloseButton: true
+                });
+
+            }
+            else{
+            if (form !=""&&select!=0) {
+
+                if(form>x){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'لا يمكنك إدخال نسبة إنجاز أصغر من  '+x,
+                        showCloseButton: true
+
+                    });
+                }
+
+                else{
+ Swal.fire({
+                    icon: 'warning',
+                    title: 'هل أنت متأكد من التعديل ؟',
+                    text: 'قم بالتأكيد',
+                    footer: '<button class="swal2-confirm swal2-styled" type="submit" form="Createform">تحديث </button>',
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                    showCloseButton: true
+                });
+                }
+               
+            }
+            else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'الرجاء إدخال نسبة الإنجاز الجديدة وتحديث الحالة ',
+                    showCloseButton: true
+
+                });
+
+            }
+            }
+        }
+
+    </script>
+
+      
+      }
+
+

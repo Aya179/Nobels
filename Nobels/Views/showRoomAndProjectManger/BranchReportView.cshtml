@@ -1,0 +1,321 @@
+﻿@model IEnumerable<Nobels.Models.BillModel>
+@{
+    Layout = "_LayoutshowRoomAndProjectManger";
+}
+
+<style>
+    .page-header img {
+        width: 15%;
+        float: right;
+    }
+
+    .page-header {
+        margin: 0 0 1rem;
+        padding-bottom: 1rem;
+        padding-top: .5rem;
+        border-bottom: 1px dotted #e2e2e2;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+        -ms-flex-align: center;
+        align-items: center;
+    }
+</style>
+
+
+
+
+
+<div class="page-content container">
+    <div class="page-header text-blue-d2">
+        <input id="bill5" type="hidden" />
+
+
+        <img class="" src="~/vendor/nobles1 copy.jpg">
+        
+    </div>
+    </div>
+
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+
+
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+
+                <div class="card-header" style=" display: flex;
+  justify-content: space-between;">
+                <p>مبيعات  هذاالفرع</p>
+
+
+
+                </div>
+
+                <div class="card-body">
+
+                   
+
+
+                            <div class="row mb-4" style=" width: 50vw;  margin: auto;">
+
+                        <div class="col">
+                            <div class="form-outline">
+                                <label class="control-label"> من تاريخ</label>
+
+                                <input class="form-control" id="start" type="date"/>
+                            
+
+
+
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-outline">
+                                <label class="control-label"> إلى تاريخ</label>
+
+                                <input class="form-control" id="end" type="date" />
+
+
+
+
+                            </div>
+                        </div>
+
+
+
+                                <div class="col">
+                                    <div class="form-outline">
+
+                                        <br />
+                                        <button class="btn btn-primary btn-lg btn-block" type="submit" style="width: 50px;" onclick="Search()">
+                                            <i class="fa fa-search" ></i>
+                            </button>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+
+                    <table class="table table-striped" id="dep_table">
+
+                        <thead style="white-space: nowrap;">
+                            <tr>
+                                <th style="text-align: center;" scope="col">
+                                    رقم العرض
+                                </th>
+                                <th style="text-align: center;" scope="col">
+                                    الزبون
+                                </th>
+                                <th style="text-align: center;" scope="col">
+                                    الإجمالي
+                                </th>
+                                <th style="text-align: center;" scope="col">
+                                    التاريخ
+                                </th>
+
+
+
+                            </tr>
+                        </thead>
+                        <tbody id="table">
+</tbody>
+
+
+
+
+                    </table>
+
+
+
+
+
+                </div>
+
+                <div class="card-footer">
+
+                    <button type="button" onclick="generatePDF()" class="btn-sm btn-success pull-right">Export to PDF</button>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+
+@section Scripts {
+
+        <script>
+
+
+           function Search(){
+
+
+          //  var BId = document.getElementById('Branch').value;
+            var start = document.getElementById('start').value;
+            var end = document.getElementById('end').value;
+
+           // alert(start);
+           // alert(BId);
+
+            $.get("/Reports/BranchReport", { startdate: start, enddate:end }, function (data) {
+
+                var table_tr = "";
+
+
+                for (var i = 0; i < data.length; i++) {
+
+                    table_tr += `
+                             <tr>
+                                               <td style="text-align: center;"> `+ data[i].id + ` </td>
+                                                      <td style="text-align: center;"> `+ data[i].name + ` </td>
+                                                      <td style="text-align: center;"> `+ data[i].total + ` </td>
+                                                               <td style="text-align: center;"> `+ data[i].date + ` </td>
+
+
+
+
+
+
+
+                               </tr>`;
+
+                }
+
+
+
+
+                document.getElementById('table').innerHTML = table_tr;
+
+
+            });
+
+           }
+
+
+
+
+            $(function () {
+                $('#dep_table').DataTable({
+                    "lengthMenu": [[5, 10, 15, 20, 25, -1], [5, 10, 15, 20, 25, "All"]],
+                    "responsive": true,
+                    "autoWidth": true,
+                    "language": {
+                        "sProcessing": "جارٍ التحميل...",
+                        "sLengthMenu": "أظهر _MENU_ مدخلات",
+                        "sZeroRecords": "لم يتم العثور على أية نتائج",
+                        "sInfo": "إظهار _START_ إلى _END_ من أصل _TOTAL_ مدخل",
+                        "sInfoEmpty": "يعرض 0 إلى 0 من أصل 0 سجل",
+                        "sInfoFiltered": "(منتقاة من مجموع _MAX_ مُدخل)",
+                        "sInfoPostFix": "",
+                        "sSearch": "البحث:",
+                        "sUrl": "",
+                        "oPaginate": {
+                            "sFirst": "الأول",
+                            "sPrevious": "السابق",
+                            "sNext": "التالي",
+                            "sLast": "الأخير"
+                        }
+                    }
+                });
+            });
+
+
+
+
+            function generatePDF() {
+
+                // Choose the element id which you want to export.
+                var element = document.getElementById('dep_table');
+
+                var opt = {
+                    margin: 0.5,
+                    filename: 'Report.pdf',
+                    image: { type: 'jpeg', quality: 1 },
+                    html2canvas: { scale: 1 },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape', precision: '12' }
+
+                    //jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait', precision: '12' }
+                };
+
+                // choose the element and pass it to html2pdf() function and call the save() on it to save as pdf.
+                html2pdf().set(opt).from(element).save();
+            }
+
+
+
+
+
+
+        //function generateExcel() {
+        //    var tab_text = "<table border='2px'><tr bgcolor='#1c9b54'>";
+        //    var textRange; var j = 0;
+        //    tab = document.getElementById('dep_table'); // id of table
+
+        //    for (j = 0; j < tab.rows.length; j++) {
+        //        tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
+        //        //tab_text=tab_text+"</tr>";
+        //    }
+
+        //    tab_text = tab_text + "</table>";
+        //    tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+        //    tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
+        //    tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+
+        //    var ua = window.navigator.userAgent;
+        //    var msie = ua.indexOf("MSIE ");
+
+        //    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+        //    {
+        //        txtArea1.document.open("txt/html", "replace");
+        //        txtArea1.document.write(tab_text);
+        //        txtArea1.document.close();
+        //        txtArea1.focus();
+        //        sa = txtArea1.document.execCommand("SaveAs", true, "Say Thanks to Sumit.xls");
+        //    }
+        //    else                 //other browser not tested on IE 11
+        //        sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+
+        //    return (sa);
+        //}
+
+
+
+
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </script>
+
+
+
+
+
+}

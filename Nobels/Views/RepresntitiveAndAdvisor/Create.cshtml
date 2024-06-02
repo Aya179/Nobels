@@ -1,0 +1,251 @@
+﻿@model Nobels.Models.Customer
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "_LayoutRepresntitiveAndAdvisor";
+}
+@*@if (ViewBag.Message != null)
+{
+    <script>alert("عدم قبول إضافة العميل لوجود رقم الهاتف مسبقاً");</script>
+}
+*@
+                                    
+           
+<section>
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+       
+                <div class="card-header" style=" display: flex;
+  justify-content: space-between;">
+                    <a asp-action="Index"> <i class="fa fa-arrow-left fa-lg"></i></a>
+                    <p>إنشاء عميل</p>
+
+
+               </div>
+
+        <div class="card-body">
+                    <form asp-action="Create" style=" width: 50vw;  margin: auto;" role="form" method="post" id="myform">
+              <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- 2 column grid layout with text inputs for the first and last names -->
+            <div class="row mb-4">
+                            <div class="col">
+                                <div class="form-outline mb-4">
+                                    <div class="form-check">
+                                        <label asp-for="Gender" class="form-label" for="form6Example6"></label>
+
+                                        <div class="custom-control custom-radio">
+                                            <div class="radio-1 inl ">
+                                                <input asp-for="Gender" class="custom-control-input" id="male" value="سيد" type="radio" checked>
+                                                <label for="male" class="custom-control-label">سيد</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            </div>
+                                            <div class="radio-2">
+                                                <input asp-for="Gender" class="custom-control-input" id="female" value="سيدة" type="radio">
+                                                <label for="female" class="custom-control-label">سيدة</label>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+            </div>
+            <div class="row mb-4">
+              <div class="col">
+                <div class="form-outline">
+                                    <label asp-for="ArabicName" class="control-label"></label>
+                                    <label style="color:red;">*</label>
+                                    <input asp-for="ArabicName" class="form-control" />
+                                    <span asp-validation-for="ArabicName" class="text-danger"></span>
+                </div>
+              </div>
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label asp-for="Phone" class="control-label"></label>
+                                    <label style="color:red;">*</label>
+                                    <div class="div_phone">
+                                        <input asp-for="Phone" class="form-control input_phone" type="text" id="phone"/>
+                                        <span class="span_phone">05</span>
+                                    </div>
+                                    <span asp-validation-for="Phone" class="text-danger"></span>
+                                </div>
+
+
+
+
+
+
+
+                            </div>
+
+             
+            </div>
+
+
+             <div class="row mb-4">
+              <div class="col">
+                   <div class="form-outline">
+                                    <label asp-for="EnglishName" class="control-label"></label>
+                                    <input asp-for="EnglishName" class="form-control" />
+                                    <span asp-validation-for="EnglishName" class="text-danger"></span>
+
+                                </div>
+                <div class="form-outline" hidden>
+                                    <label asp-for="Address" class="control-label"></label>
+                            <input asp-for="Address" class="form-control" value="-" />
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+               
+              </div>
+              <div class="col">
+                <div class="form-outline">
+                                    <label asp-for="PhonNumber" class="control-label"></label>
+                                    <div class="div_phone"> 
+                            <input asp-for="PhonNumber" class="form-control input_phone" type="text"  />
+                            <span class="span_phone">05</span> 
+                            </div>
+                            <span asp-validation-for="PhonNumber" class="text-danger"></span>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="row mb-4">
+                            <div class="col">
+                                 <div class="form-outline mb-4">
+                            <label asp-for="Email" class="control-label"></label>
+                            <input asp-for="Email" class="form-control" type="email"/>
+                            <span asp-validation-for="Email" class="text-danger" ></span>
+            </div>
+                            </div>
+              <div class="col">
+                  
+                                <div class="form-outline mb-4">
+                                    <label asp-for="CityId" class="control-label"></label>
+                                    <label style="color:red;">*</label>
+                                    <select asp-for="CityId" class="form-control" asp-items="ViewBag.CityId"></select>
+                                </div>
+                 
+
+              </div>
+            </div>
+
+            <!-- Text input -->
+
+
+                        <div class="form-outline"hidden>
+                            <label asp-for="SecondAddress" class="control-label"></label>
+                            <label style="color:red;">*</label>
+                            <input asp-for="SecondAddress" class="form-control"  value="-"/>
+                            <span asp-validation-for="SecondAddress" class="text-danger"></span>
+
+                        </div>
+
+            <!-- Email input -->
+           
+             <div class="row mb-4">
+              <div class="col">
+                <div class="form-outline">
+                                    <label  class="control-label">حي</label>
+                                    <label style="color:red;">*</label>
+                                    <input name="neighborhood" class="form-control" type="text" />
+                                    <span class="text-danger"></span>
+                </div>
+              </div>
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label  class="control-label">شارع</label>
+                                    <label style="color:red;">*</label>
+                                    
+                                        <input name="street" class="form-control" type="text" />
+                                       
+                                  
+                                    <span  class="text-danger"></span>
+                                </div>
+
+                            </div>
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label  class="control-label">رقم البيت</label>
+                                    <label style="color:red;">*</label>
+                                    
+                                        <input name="houseNumber" class="form-control" type="text" />
+                                       
+                                  
+                                    <span  class="text-danger"></span>
+                                </div>
+
+                            </div>
+
+             
+            </div>
+              <div class="row mb-4">
+              <div class="col">
+                    <div class="form-outline mb-4">
+                            <label asp-for="Notes" class="control-label"></label>
+                            <input asp-for="Notes" class="form-control" />
+                            <span asp-validation-for="Notes" class="text-danger"></span>
+            </div>
+               
+              </div>
+              
+            </div>
+
+
+
+
+
+                        <a class="btn btn-primary btn-lg btn-block" onclick="Create_func()">
+                            إضافة عميل
+                        </a>
+
+            
+          </form>
+        </div>
+      </div>
+
+    </div>
+    
+  </div>
+</section>
+<button class="btn btn-primary btn-lg btn-block" type="submit" id="subbutton" form="myform" hidden >
+    إضافة عميل
+</button>
+
+<!-- Credit card form -->
+
+
+@section Scripts {
+    
+    <script>
+       function Create_func(){
+            var myInput = document.getElementById("phone").value;
+            let result = "05".concat(myInput);
+            console.log(result);
+            $.get("/RepresntitiveAndAdvisor/IsPhoneExist", { phone: result }, function (data) {
+               
+                console.log(data);
+                if(data!="add"){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'عدم قبول إضافة العميل لوجود رقم الهاتف مسبقاً!',
+                        text: 'الذهاب لصفحة التعديل',
+                    }).then(function() {
+                        window.location = "/RepresntitiveAndAdvisor/Edit/"+data+"";
+                });}
+                else{
+                    document.getElementById("subbutton").click();
+                }
+
+
+
+            });
+        }
+        
+       
+        </script>
+       
+}

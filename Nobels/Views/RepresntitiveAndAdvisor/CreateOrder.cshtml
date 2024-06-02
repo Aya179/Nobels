@@ -1,0 +1,132 @@
+﻿
+@{
+    ViewData["Title"] = "CreateOrder";
+}
+
+@*<h1>CreateOrder</h1>*@
+@{
+   
+    Layout = "_LayoutRepresntitiveAndAdvisor";
+}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.min.css" />
+
+<section>
+    <div class="row ">
+        <div class="col-12">
+            <div class="card mb-4 col ">
+
+
+
+                <div class="card-header" style=" display: flex;justify-content: space-between;">
+                    <a asp-action="CreateCustomer" > <i class="fa fa-plus">إنشاء عميل جديد</i></a>
+                   @* <p>إنشاء عرض جديد</p>*@
+
+
+                </div>
+                <div class="card-body d-flex justify-content-center">
+                    <form asp-action="CreateOrder" style=" width: 50vw; ">
+
+
+
+
+                        <div class="form-outline mb-4">
+                            <label for="item_name"> الزبائن</label>
+                            <select name="chosen" id="chosen" class="form-control chosen-select form-control-chosen chosen-rtl"  onchange="create()" >
+                                                          </select>
+                           </div>
+
+
+                   
+
+
+                        <button onclick="go()"  class="btn btn-primary btn-lg btn-block"  id="mybtn" disabled>
+                           إضافة عرض 
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</section>
+@section Scripts {
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js" integrity="sha512-rMGGF4wg1R73ehtnxXBt5mbUfN9JUJwbk21KMlnLZDJh7BkPmeovBuddZCENJddHYYMkCh9hPFnPmS9sspki8g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-te/1.4.0/jquery-te.min.js" integrity="sha512-813LH2NdwwzXnVfsmzSuAyyit5bRFdh997hN9Vzm0cdx3LdZV7TZNNb2Ag0dgJPD3J1Xn1Alg2YW70id+RtLrw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+    
+        $(document).ready(function () {
+            
+              $(".chosen-select").chosen({ width: "100%" });
+
+            $.get("/RepresntitiveAndAdvisor/GetClients", function (data) {
+                console.log(data);
+                
+                var select = document.getElementById("chosen");
+
+
+
+                select.innerHTML = "  <option  >الرجاء اختيار الزبون</option>";
+
+                for (var i = 0; i < data.length; i++) {
+
+
+                    var option = document.createElement("option");
+                    if (data[i].phone != null) {
+
+                        option.text = data[i].englishName + "(" + data[i].phone+")";
+
+                        option.value = data[i].id;
+                        select.appendChild(option);
+
+
+
+
+                    }
+                    else {
+                        option.text = data[i].englishName;
+                        option.value = data[i].arabicName;
+                        select.appendChild(option);
+                    }
+
+                   
+
+
+
+
+
+
+                }
+               
+
+
+            });
+            });
+        function create()
+        {
+            var id = document.getElementById("chosen").value;
+            console.log(id);
+         if (id!=0)
+         {
+            document.getElementById("mybtn").disabled = false;
+          
+         }
+        }
+      function go()
+      {
+                var id = document.getElementById("chosen").value;
+          
+
+            window.open('@Url.Action("CreateQuatationRooms", "RepresntitiveAndAdvisor")/' + id, '_blank');
+         
+
+      }
+    </script>
+}

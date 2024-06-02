@@ -1,0 +1,237 @@
+﻿@model IEnumerable<Nobels.Models.BillModel>
+@{
+    Layout = "_LayoutRepresntitiveAndAdvisor";
+
+}
+
+     <div class="row" style="margin-top:10px;">
+    <div class="col-12">
+
+
+        <div class="card">
+
+          <div class="card-header">
+
+
+
+                <a href="/QutationCheck/OrderDetailsUpdate/@ViewBag.qId"> تعديل العرض </a>
+                <h3 class="card-title float-right">
+                    تفاصيل العرض
+                </h3>
+                <a asp-action="Index"> <i class="fa fa-arrow-left fa-lg"></i></a>
+
+
+          
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped" id="dep_table">
+
+                        <thead style="white-space: nowrap;">
+                            <tr>
+                                <th style="text-align: center;">
+                                    @Html.DisplayNameFor(model => model.Customer)
+                                </th>
+                                <th style="text-align: center;">
+                                    @Html.DisplayNameFor(model => model.roomName)
+                                </th>
+                                <th style="text-align: center;">
+                                    @Html.DisplayNameFor(model => model.MainItemName)
+                                </th>
+                                <th style="text-align: center;">
+                                    @Html.DisplayNameFor(model => model.itemname)
+                                </th>
+
+                                <th style="text-align: center;">
+                                    @Html.DisplayNameFor(model => model.quantity)
+                                </th>
+                                <th style="text-align: center;">
+                                    @Html.DisplayNameFor(model => model.Unitprice)
+                                </th>
+                                <th style="text-align: center;" hidden>
+                                    @Html.DisplayNameFor(model => model.discountValue)
+                                </th>
+                                 <th style="text-align: center;" hidden>
+                                    @Html.DisplayNameFor(model => model.percentType)
+                                </th>
+                                 <th style="text-align: center;">
+                                    @Html.DisplayNameFor(model => model.totalValue)
+                                </th>
+
+
+
+
+
+
+
+                                <th>
+
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td style="text-align: center;">
+                                        @Html.DisplayFor(modelItem => item.Customer)
+                                    </td>
+                                        <td style="text-align: center;">
+                                        @Html.DisplayFor(modelItem => item.roomName)
+                                        </td>
+                                        <td style="text-align: center;">
+                                        @Html.DisplayFor(modelItem => item.MainItemName)
+                                        </td>
+                                    <td style="text-align: center;">
+                                        @Html.DisplayFor(modelItem => item.itemname)
+                                    </td>
+
+                                    <td style="text-align: center;">
+                                        @Html.DisplayFor(modelItem => item.quantity)
+                                    </td>
+                                    <td style="text-align: center;">
+                                        @Html.DisplayFor(modelItem => item.Unitprice)
+                                    </td>
+                                    <td style="text-align: center;" hidden>
+                                        @Html.DisplayFor(modelItem => item.discountValue)
+                                    </td>
+                                    <td style="text-align: center;" hidden>
+                                        @Html.DisplayFor(modelItem => item.percentType)
+                                    </td>
+                                    <td style="text-align: center;">
+                                        @Html.DisplayFor(modelItem => item.totalValue)
+                                    </td>
+                                    
+                                </tr>
+                            }
+                        </tbody>
+
+
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="card">
+<div class="card-header">
+    <h3 class="card-title">
+       التعديلات على العرض
+    </h3>
+    
+</div>
+
+ <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped" id="dep_table1">
+
+                        <thead style="white-space: nowrap;">
+                            <tr>
+                                <th style="text-align: center;">
+                                   رقم العرض
+                                </th>
+                                <th style="text-align: center;">
+                                    التعدبلات على العرض
+                                </th>
+
+
+
+
+
+                            </tr>
+                        </thead>
+                        <tbody id="table">
+
+                        </tbody>
+
+
+
+                    </table>
+
+                </div>
+            </div>
+            </div>
+
+
+@section Scripts {
+
+
+    <script>
+
+
+        
+    function show()
+    {
+        var url = document.URL;
+                var stuff = url.split('/');
+                var id = stuff[stuff.length - 1];
+       // alert(id);
+            $.get("/FinancialOffice/ShowQuotationUpdate", { quotationId: id }, function (data) {
+
+                  var table_tr="";
+
+
+                 for (var i = 0; i < data.length; i++) {
+
+                      table_tr+=`
+                         <tr>
+                          <td style="text-align: center;"> `+ data[i].qoutationId+ ` </td>
+                           <td  style="text-align: center;">` + data[i].updates+`  </td>
+
+
+
+
+
+                           </tr>`;
+
+                      }
+
+
+
+
+             document.getElementById('table').innerHTML = table_tr;
+
+
+                    });
+    }
+
+
+
+
+    $(document).ready(function() {
+        show();
+
+
+    });
+    </script>
+        <script>
+
+            $(function () {
+                $('#dep_table').DataTable({
+                    "lengthMenu": [[5, 10, 15, 20, 25, -1], [5, 10, 15, 20, 25, "All"]],
+                    "responsive": true,
+                    "autoWidth": true,
+                    "language": {
+                        "sProcessing": "جارٍ التحميل...",
+                        "sLengthMenu": "أظهر _MENU_ مدخلات",
+                        "sZeroRecords": "لم يتم العثور على أية نتائج",
+                        "sInfo": "إظهار _START_ إلى _END_ من أصل _TOTAL_ مدخل",
+                        "sInfoEmpty": "يعرض 0 إلى 0 من أصل 0 سجل",
+                        "sInfoFiltered": "(منتقاة من مجموع _MAX_ مُدخل)",
+                        "sInfoPostFix": "",
+                        "sSearch": "البحث:",
+                        "sUrl": "",
+                        "oPaginate": {
+                            "sFirst": "الأول",
+                            "sPrevious": "السابق",
+                            "sNext": "التالي",
+                            "sLast": "الأخير"
+                        }
+                    }
+                });
+            });</script>
+}

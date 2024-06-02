@@ -1,0 +1,863 @@
+@{
+    Layout = "_LayoutRepresntitiveAndAdvisor";
+}
+
+<style>
+    .disabled {
+  background-color: #eee;
+  cursor: not-allowed;
+}
+</style>
+<div class="row justify-content-center">
+    <div class="col-md-12  mt-4">
+
+        <!-- <div class="w-100 col-12">
+            <div id="calendar">
+                <div id="calendar_header"><i class="fa-chevron-left fa "></i>
+                    <h1></h1><i class="fa-chevron-right fa "></i>
+                </div>
+                <div id="calendar_weekdays"></div>
+                <div id="calendar_content"></div>
+            </div>
+        </div> -->
+        <div class="mb-3">
+            <h4 style="text-align: center;">   جدولة طلب التركيب العائد للعرض  @ViewBag.quoID</h4>
+        </div>
+        <div>
+            
+            <p>
+                <span>
+                    <span> العميل: </span>
+                    <span>@ViewBag.customer</span>
+                </span>
+                <span class="mx-3">
+                    <span>رقم أمر المبيعات  : </span>
+                    <span>@ViewBag.code</span>
+                    
+                </span>
+                <span>
+                    <span>تاريخ العرض :</span>
+                    <span>@ViewBag.QuotionDate</span>
+                    
+                </span>
+            </p>
+            <p>
+                <span>
+                    <span>التاريخ المقترح للتركيب </span>
+                    <span>@ViewBag.DesiredDate</span>
+                </span>
+                <span class="mx-3">
+                    <span>تاريخ استلام المستودع  : </span>
+                    <span id="pallets">@ViewBag.palletsdate</span>
+                </span>
+                <span>
+                    <span>تاريخ الشحن : </span>
+                    @if(ViewBag.ShipmentDate!=null)
+                    {<span>@ViewBag.ShipmentDate</span>}
+                   else {<span>-</span>}
+
+                </span>&nbsp;&nbsp;
+                <span hidden>
+                    <span>تاريخ تسليم فريق التركيبات  : </span>
+                    @if(ViewBag.TeamReceiveDate!=null)
+                    {<span>@ViewBag.TeamReceiveDate</span>}
+                   else {<span>-</span>}
+
+                </span>
+            </p>
+            <p>
+                <span>
+                    <span>المدينة : </span>
+                    <span>@ViewBag.city</span>
+                </span>
+                <span class="mx-3">
+                    <span>الحي : </span>
+                    <span>@ViewBag.neigh </span>
+                </span>
+                <span>
+                    <span>الشارع  : </span>
+                    <span>@ViewBag.street</span>&nbsp;&nbsp;
+
+                 
+                </span> 
+                <span>
+                    <span>المنزل  : </span>
+                    <span>@ViewBag.house</span>
+
+                 
+                </span>
+            </p>
+           
+
+           
+            <div class="col-md-8 mx-auto w-100  row" style="    justify-content: space-around;" hidden>
+
+                <SELECT class="form-control col-3 mx-1" id="day" name="dd"
+                        onchange="change_week(this)" >
+                         <option value="" hidden>الأسبوع</option>
+                    @for (var item=ViewBag.numberofweek;item<=5;item++ ){
+                        if (@ViewBag.numberofweek == item)
+                        {
+                            <option value="@item" selected>@item</option>
+                        }
+                        else{
+                            <option value="@item">@item</option>
+                        }
+
+                    }
+                   
+                    
+                </SELECT>
+
+                <SELECT class="form-control col-3 mx-1" id="month" name="mm"
+                        onchange="change_month(this)" defaultMax="12" defaultMin="@ViewBag.monthnubmer">
+                    <option value="" hidden>الشهر</option>
+                  @*  <option value="01">كانون الثاني</option>
+                    <option value="02">شباط</option>
+                    <option value="03">آذار</option>
+                    <option value="04">نيسان</option>
+                    <option value="05">أيار</option>
+                    <option value="06">حزيران</option>
+                    <option value="07">تموز</option>
+                    <option value="08">آب</option>
+                    <option value="09">أيلول</option>
+                    <option value="10">تشرين الأول</option>
+                    <option value="11">تشرين الثاني</option>
+                    <option value="12">كانون الأول</option>*@
+
+                    <option value="01" >يناير</option>
+                    <option value="02" > فبراير</option>
+                    <option value="03" >مارس</option>
+                    <option value="04" >أبريل</option>
+                    <option value="05" >مايو</option>
+                    <option value="06" >يونيو</option>
+                    <option value="07" >يوليو</option>
+                    <option value="08" > اغسطس</option>
+                    <option value="09" >سبتمبر</option>
+                    <option value="10" >اكتوبر</option>
+                    <option value="11" > نوفمبر</option>
+                    <option value="12" >ديسمبر</option>
+
+                   
+                </SELECT>
+
+                <SELECT class="form-control col-3 mx-1" id="year" name="yyyy"
+                        onchange="change_year(this)" >
+                    <option value="" hidden>السنة</option>
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                    <option value="2027">2027</option>
+                    <option value="2028">2028</option>
+                    <option value="2029">2029</option>
+                    <option value="2030">2030</option>
+                    <option value="2031">2031</option>
+                    <option value="2032">2032</option>
+                    <option value="2033">2033</option>
+                </SELECT>
+
+
+            </div>
+            <div class="mt-3">
+                <!-- <div class="w-100" id="calendar_header">
+                    <i class="fa-chevron-left fa " onclick="next_week()"></i>
+                    <h4 id="date" style="text-align: center;"></h4>
+                    <i class="fa-chevron-right fa " onclick="prev_week()"></i>
+                </div> -->
+                <!-- <div style="width: 13%; border-top-left: 1px solid #e3e6f0;;    align-self: end;text-align: center;"
+                        id="t_label">
+                        الفريق</div> -->
+                <div class="w-75 mx-auto" style="    height: 350px;
+    overflow: auto;">
+                    <div id='calendar' class="w-100"></div>
+
+                    <table id="schedule" class="table table-bordered ">
+
+                        <tbody id="data-table">
+                            <!-- <tr>
+                                <td class="">الفريق1</td>
+                                <td class="bg-success"></td>
+                                <td class="bg-success"></td>
+                                <td class="bg-success"></td>
+                                <td class="bg-success"></td>
+                                <td class="bg-success"></td>
+
+                                <td class="bg-success"></td>
+                            </tr>
+                            <tr>
+                                <td class="">الفريق2</td>
+
+                                <td class="bg-success"></td>
+                                <td class="bg-success"></td>
+                                <td class="bg-success"></td>
+                                <td class="bg-success"></td>
+                                <td class="bg-success"></td>
+                                <td class="bg-success"></td>
+                            </tr>
+                            <tr>
+                                <td class="">الفريق3</td>
+                                <td class="bg-success"></td>
+                                <td class="bg-success"></td>
+                                <td class="bg-success"></td>
+                                <td class="bg-success"></td>
+                                <td class="bg-success"></td>
+                                <td class="bg-success"></td>
+
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <p>تاريخ بدء التركيب : <span id="expect_date"></span></p>
+            
+            <p>مسند إلى : <span id="expect_team"></span></p>
+            <p class="row">
+                <span class="col-auto align-self-center">المدة المتوقعة للتركيب </span><input type="number" class="form-control  col-2" min="1" max="100" name="" id="expectedDuration">
+                <span class="col-auto">يوم</span>
+                <input class="col-auto" id="teamiid" hidden />
+            </p>
+            <p class="row">
+                <span class="col-auto align-self-center">
+                    المدفوع من قيمة أمر المبيعات:
+                </span> @*<input class="form-control col-2" type="text" name="" id="" value="2023-9-01" >*@%
+            </p>
+
+        </div>
+        <div class="col-md-12 my-2 row justify-content-center">
+            <a class="btn btn-submit mx-2" @*asp-controller="trkebat" asp-action="scheduled_succesfully" type="submit"*@ onclick="sched()">
+                جدولة
+            </a>
+
+            <button class="btn btn-danger mx-2" data-target="#rejectModal" data-toggle="modal" type="button" style="border-radius: 20px;">
+                رفض
+            </button>
+        </div>
+    </div>
+</div>
+<!-- reject Modal -->
+<div id="rejectModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true" style="    opacity: 100%;">
+    <div class="modal-dialog  modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header ">
+
+                <h4>متأسفون لرفضك.</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                        style="    margin: -1rem auto -1rem -1rem;">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>اكتب لنا السبب</p>
+                <textarea class="form-control" name="" id="" cols="30" rows="2"></textarea>
+            </div>
+            <div class="modal-footer justify-content-center">
+
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">إلغاء</button>
+                <button class="btn bg-danger text-white"
+                        data-dismiss="modal">
+                    تأكيد الرفض
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>
+ @section Scripts
+      
+      {
+
+    <script type="text/javascript">
+        const input = document.getElementById("expectedDuration");
+        input.addEventListener("input", function () {
+            const value = parseFloat(input.value);
+            if (value <= 0 || isNaN(value)) {
+                input.value = "";
+                //alert("0");
+                return false;
+            }
+        });
+         var data;
+          var cell ;
+      
+        //var data = [
+        //    ['team1', '2023-8-7', 3],
+        //    ['team2', '2023-8-5', 3],
+        //    ['team2', '2023-8-8', 1],
+        //    ['team2', '2023-8-9', 1],
+        //    ['team3', '2023-8-8', 2],
+        //    ['team1', '2023-8-19', 4],
+        //    ['team1', '2023-8-15', 3],
+        //    ['team2', '2023-8-13', 3],
+        //    ['team2', '2023-8-19', 3],
+        //    ['team3', '2023-8-12', 2],
+        //    ['team3', '2023-8-17', 1],
+
+        //    ['team4', '2023-8-16', 3],
+        //]
+        var calendarEl = document.getElementById('calendar');
+        var calendar;
+        var startDayWeek, endDayWeek, firstDay, lastDay;
+        var year, month, week, day, date;
+        document.addEventListener('DOMContentLoaded', function () {
+
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridWeek',
+
+                titleFormat: { month: 'long', day: '2-digit', year: 'numeric', },
+
+                headerToolbar: {
+                    start: 'prev,next', // will normally be on the left. if RTL, will be on the right
+                    center: 'title',
+                    end: 'today' // will normally be on the right. if RTL, will be on the left
+                },
+                firstDay: 6,
+                locale: 'ar',
+                direction: 'rtl',
+                // height: 90,
+                hiddenDays: [5],
+
+                datesSet: function (view, element) {
+                    startDayWeek = calendar.view.activeStart;
+                    endDayWeek = calendar.view.activeEnd;
+
+                    firstDay = new Date(startDayWeek);
+                    lastDay = new Date(endDayWeek);
+                    dayStartWeek = firstDay.toDateString();
+                    dayEndWeek = lastDay.toDateString();
+                   // console.log(dayStartWeek + ' start ' + dayEndWeek);
+                    //  alert('view ' + firstDay);
+
+                },
+            });
+            calendar.render();
+
+        });
+        var teams = [];
+
+
+        var objSize = function (obj) {
+            var count = 0;
+
+            if (typeof obj == "object") {
+
+                if (Object.keys) {
+                    count = Object.keys(obj).length;
+                } else if (window._) {
+                    count = _.keys(obj).length;
+                } else if (window.$) {
+                    count = $.map(obj, function () { return 1; }).length;
+                } else {
+                    for (var key in obj) if (obj.hasOwnProperty(key)) count++;
+                }
+
+            }
+
+            return count;
+        };
+
+        function calendar_display() {
+
+
+
+            //let length=objSize(data);
+            // alert(data.length)
+            teams = [];
+            $('#data-table').html('');
+            for (let i = 0; i < data.teams.length; i++) {
+
+                let html_tr = ' <tr><td class="">' + data.teams[i].name + '</td>';
+                html_tr += ' <td class="bg-success text-success">' + data.teams[i].id + '</td><td class="bg-success text-success">' + data.teams[i].id + '</td><td class="bg-success text-success">' + data.teams[i].id + '</td><td class="bg-success text-success">' + data.teams[i].id + '</td><td class="bg-success text-success">' + data.teams[i].id + '</td><td class="bg-success text-success">' + data.teams[i].id + '</td></tr>';
+                $('#data-table').append(html_tr);
+            }
+            // alert('jjj1');
+            // alert(data.teamstasks.length);
+            for (let i = 0; i < data.teamstasks.length; i++) {
+                // alert('jjj1');
+               // console.log(data.teamstasks);
+                let mydate = new Date(data.teamstasks[i].installationDate);
+                mydate.setHours(0);
+
+
+                if ($.inArray(data.teamstasks[i].teamid, teams) > -1) {
+                    //tr_parent = $('td:contains(' + data.teamstasks[i].teamName + ')').parent();
+                    tr_parent = $('td').filter(
+                        function (index) {
+                            return $(this).text() == '' + data.teamstasks[i].teamName + '';
+                        }
+                    ).parent();
+
+                    // console.log(tr_parent.children('li:nth-child(3)'));
+                    for (let z = 0; z < 6; z++) {
+
+                        //check if startday of mission is the same as the passed day
+
+                        let tomorrow = new Date(firstDay);
+                        tomorrow.setDate(firstDay.getDate() + z);
+
+                        diffDays = parseInt((firstDay - mydate) / (1000 * 60 * 60 * 24), 10);
+                        mydate_next = new Date(mydate);
+                        mydate_next.setDate(mydate.getDate() + (diffDays));
+
+                        if (mydate.getTime() === tomorrow.getTime()) {
+
+                            td_child = tr_parent.children('td:nth-child(' + (z + 2) + ')')
+                         
+                            td_child.removeClass('bg-success');
+                            td_child.removeClass('text-success');
+                            td_child[0].innerHTML = 'بدء';
+
+
+                            for (let x = 0; x < (data.teamstasks[i].duration - 1); x++) {
+
+                                if (z == 5)
+                                    break;
+                                //console.log(z);
+
+                                td_next_child = tr_parent.children('td:nth-child(' + (z + 2 + 1) + ')')
+                               
+                                td_next_child.removeClass('bg-success');
+                                td_next_child.removeClass('text-success');
+                                td_next_child[0].innerHTML = 'استكمال';
+                                z++;
+
+                            }
+                        }
+
+                        else if (mydate_next.getTime() === tomorrow.getTime() && mydate.getTime() < tomorrow.getTime() && diffDays <= data.teamstasks[i].duration) {
+                            td_child = tr_parent.children('td:nth-child(' + (z + 2) + ')')
+                          
+                            td_child.removeClass('bg-success');
+                            td_child.removeClass('text-success');
+                            td_child[0].innerHTML = 'استكمال';
+
+                            // st = ' <td class="">استكمال</td>';
+                            // html_tr = html_tr + st;
+                            for (let x = 0; x < (data.teamstasks[i].duration - diffDays); x++) {
+                                if (z == 5)
+                                    break;
+                                // st = ' <td class="">استكمال</td>';
+                                // html_tr = html_tr + st;
+                                td_next_child = tr_parent.children('td:nth-child(' + (z + 2 + 1) + ')')
+                                td_next_child.removeClass('bg-success');
+                                td_next_child.removeClass('text-success');
+                                td_next_child[0].innerHTML = 'استكمال';
+                                z++;
+
+
+                            }
+
+                        }
+
+                    }
+
+                }
+                else {
+
+                    //tr_parent = $('td:contains(' + data.teamstasks[i].teamName + ')').parent();
+                    tr_parent = $('td').filter(
+                        function (index) {
+                            return $(this).text() == '' + data.teamstasks[i].teamName + '';
+                        }
+                    ).parent();
+
+                    //let html_tr = ' <tr><td class="">' + data.teamstasks[i].teamName + '</td>';
+
+                    let st = '';
+                    for (let z = 0; z < 6; z++) {
+
+                        //check if startday of mission is the same as the passed day
+
+                        let tomorrow = new Date(firstDay);
+                        tomorrow.setDate(firstDay.getDate() + z);
+                        diffDays = parseInt((firstDay - mydate) / (1000 * 60 * 60 * 24), 10);
+                        mydate_next = new Date(mydate);
+                        mydate_next.setDate(mydate.getDate() + (diffDays));
+                        // var start = moment(firstDay);
+                        // var end = moment(mydate);
+                        // diffffffffff = end.diff(start, "days")
+
+                        // console.log('tm' + tomorrow);
+                        // console.log('dd ' + mydate);
+                        // console.log('dd nx ' + mydate_next);
+                        // console.log('diffr day ' + diffDays);
+                        // console.log('diffree ' + (firstDay - mydate));
+                        // console.log('first day ' + firstDay);
+                        // console.log('moment: ' + diffffffffff);
+
+
+                        if (mydate.getTime() === tomorrow.getTime()) {
+                            // alert(teams);
+                            td_child = tr_parent.children('td:nth-child(' + (z + 2) + ')')
+                            td_child.removeClass('bg-success');
+                            td_child.removeClass('text-success');
+                            td_child[0].innerHTML = 'بدء';
+                            teams.push(data.teamstasks[i].teamid);
+                            // st = ' <td class="">بدء</td>';
+                            //  html_tr = html_tr + st;
+
+
+                            for (let x = 0; x < (data.teamstasks[i].duration - 1); x++) {
+                                if (z == 5) {
+
+                                    break;
+                                }
+
+                                td_next_child = tr_parent.children('td:nth-child(' + (z + 2 + 1) + ')')
+                                td_next_child.removeClass('bg-success');
+                                td_next_child.removeClass('text-success');
+                                td_next_child[0].innerHTML = 'استكمال'; z++;
+
+                                // st = ' <td class="">استكمال</td>';
+                                //  html_tr = html_tr + st;
+
+
+                            }
+
+                        }
+
+                        else if (mydate_next.getTime() === tomorrow.getTime() && mydate.getTime() < tomorrow.getTime() && diffDays <= data.teamstasks[i].duration) {
+                            // alert(teams);
+                            teams.push(data.teamstasks[i].teamid);
+                            td_child = tr_parent.children('td:nth-child(' + (z + 2) + ')')
+                            td_child.removeClass('bg-success');
+                            td_child.removeClass('text-success');
+                            td_child[0].innerHTML = 'استكمال';
+                            // st = ' <td class="">استكمال</td>';
+                            // html_tr = html_tr + st;
+                            for (let x = 0; x < (data.teamstasks[i].duration - diffDays); x++) {
+                                if (z == 5)
+                                    break;
+                                //  st = ' <td class="">استكمال</td>';
+                                //  html_tr = html_tr + st;
+                                td_next_child = tr_parent.children('td:nth-child(' + (z + 2 + 1) + ')')
+                                td_next_child.removeClass('bg-success');
+                                td_next_child.removeClass('text-success');
+                                td_next_child[0].innerHTML = 'استكمال';
+                                z++;
+
+
+                            }
+
+
+                        }
+                        else {
+
+                            // st = ' <td class="bg-success text-success">' + data.teamstasks[i].teamid + '</td>';
+                            //  html_tr = html_tr + st;
+
+                        }
+
+
+                    }
+                    if ($.inArray(data.teamstasks[i].teamid, teams) > -1) {
+                        //  html_tr = html_tr + '</tr> ';
+
+                        //   $('#data-table').append(html_tr);
+                    }
+
+                }
+
+                // }
+
+            }
+
+        } 
+        
+        function selectDisplay() {
+
+            // Get the select element
+ 
+            const selectElement = document.getElementById("month");
+
+            // Get the defaultMax and defaultMin values
+
+            const defaultMax = Number(selectElement.getAttribute("defaultMax"));
+           
+            const defaultMin = Number(selectElement.getAttribute("defaultMin"));
+            
+
+
+            // Disable the options outside the range
+
+            for (let i = 0; i < selectElement.options.length; i++) {
+                const option = selectElement.options[i];
+                if (Number(option.value) < defaultMin || Number(option.value)> defaultMax) {
+                    option.hidden = true;
+                    
+                } else {
+                    option.hidden = false;
+                    
+
+                }
+            }
+
+        }
+
+        $(document).ready(function () {
+  
+            selectDisplay();
+            $("input").val('');
+            $("select").val('');
+
+            //calendar.gotoDate("2018-01-04");
+            // $('#calendar').find('tbody').remove();
+
+            tabb = $('.fc-col-header').find('thead').find('tr');
+            var x = document.createElement("TH");
+            var t = document.createTextNode("الفريق");
+            x.appendChild(t);
+            // console.log(tabb);
+            tabb[0].prepend(x);
+            tabb.find('tr').equalWidthChildren();
+            // $('#schedule').find('tr').width(tabb.width());
+            var url = document.URL;
+            var stuff = url.split('=');
+            var id = stuff[stuff.length - 1];
+           // console.log(id);
+            $.ajax({
+            url: "/trkebat/add_schedule_trekb_requestApi",
+            type: 'GET',
+                data: {
+                   reqId : id,
+                    
+                },
+            success: function (res) {
+                data = res;
+                //console.log(res[0].teamName);
+                //console.log(data.length);
+                calendar_display();$('#schedule').find('td').width(tabb.find('th').width())
+                //   alert(res);
+            }
+        });
+            
+        })
+
+
+
+        $('body').on('click', 'button.fc-prev-button', function () {
+            // console.log('first' + firstDay);
+            // teams = [];
+            // $('#data-table').html('');
+            calendar_display();
+            $('#schedule').find('td').width(tabb.find('th').width())
+        });
+
+        $('body').on('click', 'button.fc-next-button', function () {
+            // console.log('first' + firstDay);
+            // teams = [];
+            // $('#data-table').html('');
+
+            calendar_display();
+            $('#schedule').find('td').width(tabb.find('th').width())
+        });
+
+
+        //to get the cell col and team name
+        $('body').on('click', 'table#schedule td.bg-success', function (event) {
+            // alert('clicked');
+            $(cell).addClass("text-success");
+            $(cell).addClass("bg-success");
+
+            $(cell).removeClass("text-info");
+            $(cell).removeClass("bg-info");
+
+            console.log(event);
+            cell = event.target;
+            $(cell).removeClass("text-success");
+            $(cell).removeClass("bg-success");
+
+            $(cell).addClass("text-info");
+            $(cell).addClass("bg-info");
+
+            col = cell.cellIndex;
+            
+
+            team_name = cell.parentNode.firstChild.innerHTML;
+            team_id = $(cell).text();
+            $('#teamiid').val(team_id);
+           // console.log(team_id);
+            let tomorrow = new Date(firstDay);
+            tomorrow.setDate(firstDay.getDate() + (col - 1));
+            date = tomorrow.getFullYear() + '-' + (tomorrow.getMonth() + 1) + '-' + tomorrow.getDate();
+            var message = "@ViewBag.palletsdate";
+           
+         let palletsDateJS=new Date(message);
+         
+       let currentDate = new Date().toISOString().split('T')[0];
+       let cu=new Date(currentDate);
+       let select=new Date(date);
+            var palletsDateJS1 = palletsDateJS.getFullYear() + '-' +((palletsDateJS.getMonth() + 1)).toString().padStart(2, "0") + '-' + ( palletsDateJS.getDate()).toString().padStart(2, "0");
+            var currentDate1 = cu.getFullYear() + '-' +((cu.getMonth() +1)).toString().padStart(2, "0") + '-' + ( cu.getDate()).toString().padStart(2, "0");
+            var selected1Date =new Date(date);
+             var selectedDate=selected1Date.getFullYear() + '-' +((selected1Date.getMonth()+1 )).toString().padStart(2, "0") + '-' + ( selected1Date.getDate()).toString().padStart(2, "0");
+           
+           
+            console.log("pallletsDateiS:"+palletsDateJS1);
+            console.log("currentDateFromJsiS:"+currentDate1);
+           
+            console.log("selectedDateIs:"+selectedDate);
+
+           
+              if (selectedDate < palletsDateJS1 && selectedDate >= currentDate1)
+            {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'لا يمكن اختيار تاريخ للتركيب أقل تماماً من تاريخ استلام pallets' + palletsDateJS1,
+
+                });
+            }
+
+            else if (((selectedDate) < (currentDate1)) && ((selectedDate) >= (palletsDateJS1))) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'لا يمكن اختيار تاريخ للتركيب أقل تماماً من التاريخ الحالي ' + currentDate1,
+
+
+                });
+            }
+            else if (selectedDate < currentDate1 && selectedDate < palletsDateJS1) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'لا يمكن اختيار تاريخ للتركيب أقل تماماً من التاريخ الحالي وتاريخ استلام pallets ' + palletsDateJS1,
+
+
+                });
+            }
+            
+else{
+    $('#expect_date').text(date);
+
+            $('#expect_team').text(team_name);
+
+}
+
+
+          
+            
+        });
+
+
+
+        function change_month(e) {
+            month = $(e).val();
+
+            if (year != undefined && month != undefined && week != undefined) {
+                display_date();
+            }
+        }
+
+        function change_year(e) {
+            year = $(e).val();
+            if (year != undefined && month != undefined && week != undefined) {
+                display_date();
+            }
+        }
+
+        function change_week(e) {
+            week = $(e).val();
+            if (year != undefined && month != undefined && week != undefined) {
+                display_date();
+            }
+        }
+
+        function display_date() {
+            let first_date = year + '-' + month + '-01';
+            // console.log(first_date);
+            // console.log("selected Date:", moment(first_date).toString())
+            dddtae = moment(first_date);
+            firstday_ofselectedmonth_week_num = dddtae.week();
+            // console.log(firstday_ofselectedmonth_week_num);
+            selected_week = dddtae.week(firstday_ofselectedmonth_week_num + (week - 1)).format("YYYY-MM-DD");
+            //console.log(selected_week);
+
+            // date = selected_week.get('year') + '-0' + selected_week.get('date') + '-0' + selected_week.get('date');
+            // console.log(date);
+            calendar.gotoDate(selected_week);
+            calendar_display();
+            $('#schedule').find('td').width(tabb.find('th').width())
+
+        }
+
+        function sched(){
+            var datespan = document.getElementById("expect_date");
+            var teamspan = document.getElementById("expect_team");
+            var input = document.getElementById('expectedDuration');
+            var teamid =document.getElementById('teamiid').value;
+//alert(datespan.innerHTML );
+
+            if (!datespan.innerHTML || input.value.trim() === '') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'يجب اختيار التاريخ والمدة المتوقعة أولاً ! ',
+
+
+                });
+                        
+}
+            else if(input.value.trim() != ''){
+                $.get("/trkebat/CheckingOverlap", {
+                    selecteddate: datespan.innerHTML, duration: input.value, teamId: teamid
+                }, function (data) {
+                    //console.log(data);
+                    if (data == "overlap"){
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'لا يمكنك اختيار هذا التاريخ ! ',
+
+
+                        });
+                    }
+                    else if (data == "isfriday") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'لا يمكنك اختيار هذا التاريخ ! ',
+
+
+                        });
+                    }
+                    else{
+                        var url = document.URL;
+                        var paramValue = url.split("=")[1];
+                        //console.log(paramValue);
+
+
+                        Swal.fire({
+                            title: '!هل أنت متأكد من جدولة هذا الطلب',
+                            icon: 'info',
+                            showCancelButton: true,
+                            cancelButtonText: 'إلغاء',
+                            confirmButtonText: 'جدولة'
+                        }).then((result) => {
+                            if (result['isConfirmed']) {
+                                $.post("/trkebat/add_schedule_trekb_requestApiFrom", {
+                                    selecteddate: datespan.innerHTML, duration: input.value, reqId: paramValue, teamId: teamid
+                                }, function (data) {
+
+
+
+
+                                    window.location.replace("scheduled_succesfully?reqId=" + paramValue);
+
+
+                                });
+
+
+                            }
+                        });
+
+                    }
+                   
+               
+
+                });
+               
+            }
+
+}
+        
+        </script>
+
+}

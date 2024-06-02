@@ -1,0 +1,564 @@
+@{
+    Layout = "_LayoutRepresntitiveAndAdvisor";
+}
+<style>
+    .dataTables_wrapper .dataTables_filter {
+        float: right;
+        text-align: right;
+        visibility: hidden;
+    }
+
+     tbody{
+        text-align: center;
+        
+    
+     }
+
+    table {
+        width: 95vw;
+        max-width: 95vw;
+        white-space: nowrap;
+        overflow: auto;
+          
+        
+    }
+
+
+  /*  td, th {
+       width: 100px;
+    }*/
+   
+</style>
+<div class="col-md-12  row mt-4">
+    <div class="col-md-12 ">
+        <h3 class="title" style="text-align: center;">جدولة طلبات التركيب </h3>
+        <!-- <p class="title" >هذه الصفحة مهمة جدا</p> -->
+    </div>
+    <div class="col-md-12 row justify-content-center w-100 my-3 ">
+        <div class="col-2" >
+            <input class="form-check-input" type="radio" name="radio" id="f_all" value="0"
+                   onchange="chnage_filter(this)"checked >
+            <label class="form-check-label" for="">الكل</label>
+        </div>
+        <div class="col-2" >
+            <input class="form-check-input" type="radio" name="radio" id="f_unsch"
+                   onchange="chnage_filter(this)" value="1" >
+            <label class="form-check-label" for="">غير مجدول</label>
+        </div>
+        <div class="col-2" >
+            <input class="form-check-input" type="radio" name="radio" id="f_prim"
+                   onchange="chnage_filter(this)" value="2">
+            <label class="form-check-label" for="">مجدول </label>
+        </div>
+    </div>
+    <div class="col-md-12 mb-3">
+        <SELECT class="form-control col-3 mx-auto" id="district" name="district"
+                onchange="change_district(this)" asp-items="ViewBag.City">
+            <option value="" hidden>المدينة</option>
+            <option value="0">الكل</option>
+           
+        </SELECT>
+    </div>
+    <div class="col-md-6 mx-auto  my-4">
+        <input class="form-control" type="search" name="search" id="search"
+               placeholder="&#xF002; العميل / رقم العرض / أمر المبيعات"
+               style="font-family: FontAwesome">
+    </div>
+    <div class="col-md-12 ">
+        <h4 class="" style="text-align: center;">
+            <span id="f_type">كافة طلبات التركيب</span>
+            المرفوعة من
+            الباعة 
+            <span id="district_display"></span>
+        </h4>
+    </div>
+
+    <div class="col-md-12 mx-auto my-3">
+        <div>
+            <table  class="table display nowrap" style="" id="example">
+                <thead>
+                    <tr>
+                        <th>رقم العرض</th>
+                        <th style="width:5%">رقم أمر المبيعات</th>
+                        <th>قيمة العرض</th>
+                        <th>العميل</th>
+
+                        <th hidden>المعرض</th>
+                        <th>المدينة</th>
+                        <th>رقم الجوال</th>
+
+                        <th>تاريخ  التركيب</th>
+
+                        <th>تاريخ الاستلام</th>
+                        <th>تاريخ العرض</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="body">
+                </tbody>
+            </table>
+        </div>
+        
+
+       
+        <!-- <h4 class="mt-3" style="text-align: center;">الرجاء اختيار أحد العروض</h4> -->
+    </div>
+    <!-- <div class="col-md-12 my-4 mx-auto w-100 "><button class="btn btn-submit"
+            type="submit">متابعة
+            الجدولة</button>
+    </div> -->
+</div>
+
+ @section Scripts
+      
+      {
+    <script>
+
+       
+        var table;
+        var filter = 0, district = 0;
+        var district_text;
+        // #myInput is a <input type="text"> element
+        $('#search').on('keyup', function () {
+            table.search(this.value).draw();
+        });
+        //new::
+        
+        function filteration() {
+
+
+            if (filter == 0 && district == 0) {
+                $('tbody tr').show();
+                $('span#f_type').text('كافة طلبات التركيب');
+
+                $('td:nth-child(6),th:nth-child(6)').show();
+               
+                $('span#district_display').text('');
+
+
+            }
+            if (filter != 0 && district == 0) {
+                
+                $('tbody tr').hide();
+
+                $('td:nth-child(6),th:nth-child(6)').show();
+               
+                $('span#district_display').text('');
+
+
+                if (filter == 1) {
+
+                    $('table > tbody  > tr').each(function (index, tr) {
+
+                        if ( $(tr).find('td:nth-child(12)').text() == 'متابعة الجدولة') {
+                            $(this).show();
+                        }
+
+                    });
+                   
+                        $('span#f_type').text('طلبات التركيب غير المجدولة ');
+                }
+                if (filter == 2) {
+                    $('table > tbody  > tr').each(function (index, tr) {
+
+                        if ($(tr).find('td:nth-child(12)').text() == 'تعديل الجدولة') {
+                            $(this).show();
+                        }
+
+                    });
+                   
+                        $('span#f_type').text('طلبات التركيب المجدولة ');
+                }
+
+
+
+            }
+
+            if (filter != 0 && district != 0 ) {
+
+
+                
+                $('tbody tr').hide();
+               
+                $('td:nth-child(6),th:nth-child(6)').hide();
+                
+
+
+
+                if (filter == 1) {
+
+                    $('table > tbody  > tr').each(function (index, tr) {
+
+                        if ($(tr).find('td:nth-child(6)').text() == district_text && $(tr).find('td:nth-child(12)').text() == 'متابعة الجدولة' ) {
+                            $(this).show();
+                        }
+
+                    });
+                        $('span#f_type').text('طلبات التركيب غير المجدولة ');
+                }
+                if (filter == 2) {
+
+                    $('table > tbody  > tr').each(function (index, tr) {
+
+                        if ($(tr).find('td:nth-child(6)').text() == district_text && $(tr).find('td:nth-child(12)').text() == 'تعديل الجدولة') {
+                            $(this).show();
+                        }
+
+                    });
+                        $('span#f_type').text('طلبات التركيب المجدولة ');
+
+                }
+                $('span#district_display').text('في ' + district_text);
+
+            }
+            if (filter == 0 && district != 0) {
+
+
+                $('tbody tr').hide();
+                $('span#f_type').text('كافة طلبات التركيب');
+                $('td:nth-child(6),th:nth-child(6)').hide();
+
+                $('table > tbody  > tr').each(function (index, tr) {
+                   
+                    if ($(tr).find('td:nth-child(6)').text() == district_text) {
+                        $(this).show();
+                    }
+
+                });
+
+                $('span#district_display').text('في ' + district_text);
+
+            }
+        }
+        function chnage_filter(e) {
+            val = $(e).val();
+            filter = val;
+            district = 0;
+            $('select#district').val(0);
+            fillTable(filter);
+            filteration();
+        }
+
+
+        function change_district(e) {
+
+
+            val = $(e).val();
+            district = val;
+
+            district_text = $(e).find('option:selected').text();
+            // alert(val + '' + district_text);
+            filteration();
+
+        }
+
+
+
+
+
+
+
+
+
+        function fillTable(RadioValue) {
+
+            $.get("/trkebat/schedule_trkeb_requestallApi1", { radioValue: RadioValue, }, function (data) {
+
+                var table_tr = "";
+
+                const currentDate = new Date().toISOString().split('T')[0];
+                // console.log(currentDate);
+                for (var i = 0; i < data.length; i++) {
+                    if (RadioValue == 0) {
+                        if (data[i].status == "unscheduled") {
+                            table_tr += `
+                                                                    <tr>
+                                                                                     <td style="text-align: center;"> `+ data[i].quotionNumberId + ` </td>
+                                                                                     <td style="text-align: center;"> `+ data[i].quotionCode + ` </td>
+
+                                                                                      <td style="text-align: center;"> 20000 </td>
+                                                                                      <td style="text-align: center;"> `+ data[i].customerArabicName + ` </td>
+                                                                                      <td style="text-align: center;" hidden>`+ data[i].branch + `</td>
+                                                                                      <td style="text-align: center;">`+ data[i].city + `</td>
+                                                                                        <td style="text-align: center;">`+ data[i].phone + `</td>
+                                                                                                <td style="text-align: center;" > - </td>
+                                                                                                <td style="text-align: center;"> `+ data[i].palletsDate.split('T')[0] + ` </td>
+                                                                                                                <td style="text-align: center;" > `+ data[i].quotationSimpleDate.split('T')[0] + ` </td>
+
+                                                                                                      <td><a href="/trkebat/add_schedule_trekb_request?instReqId=`+ data[i].intallationRequestId + ` " style="color: deepskyblue;">متابعة الجدولة</a></td>
+
+                                                                       </tr>`;
+
+                        }
+                        if (data[i].status == "temporarilyscheduled") {
+                            if (currentDate >=data[i].installationDate.split('T')[0]) {
+
+                                // console.log(data[i].installationDate.split('T')[0]);
+                                table_tr += `
+                                                                     <tr>
+                                                                                     <td style="text-align: center;"> `+ data[i].quotionNumberId + ` </td>
+                                                                                     <td style="text-align: center;"> `+ data[i].quotionCode + ` </td>
+
+                                                                                      <td style="text-align: center;"> 20000 </td>
+                                                                                      <td style="text-align: center;"> `+ data[i].customerArabicName + ` </td>
+                                                                                              <td style="text-align: center;"hidden>`+ data[i].branch + `</td>
+                                                                                      <td style="text-align: center;">`+ data[i].city + `</td>
+                                                                                               <td style="text-align: center;">`+ data[i].phone + `</td>
+                                                                                                <td style="text-align: center;" > `+ data[i].installationDate.split('T')[0] + ` </td>
+                                                                                                        <td style="text-align: center;"> `+ data[i].palletsDate.split('T')[0] + ` </td>
+                                                                                                                <td style="text-align: center;" > `+ data[i].quotationSimpleDate.split('T')[0] + ` </td>
+
+                                                                                              <td><a href="/trkebat/edit_schedule_trekb_request?instReqId=`+ data[i].intallationRequestId + ` " style="color: gray;pointer-events: none;">تعديل الجدولة</a></td>
+
+
+                                                                       </tr>`;
+                            }
+                            else {
+
+                                //console.log(data[i].installationDate.split('T')[0]);
+                                table_tr += `
+                                                                     <tr>
+                                                                                     <td style="text-align: center;"> `+ data[i].quotionNumberId + ` </td>
+                                                                                     <td style="text-align: center;"> `+ data[i].quotionCode + ` </td>
+
+                                                                                      <td style="text-align: center;"> 20000 </td>
+                                                                                      <td style="text-align: center;"> `+ data[i].customerArabicName + ` </td>
+                                                                                              <td style="text-align: center;"hidden>`+ data[i].branch + `</td>
+                                                                                      <td style="text-align: center;">`+ data[i].city + `</td>
+                                                                                         <td style="text-align: center;">`+ data[i].phone + `</td>
+                                                                                       <td style="text-align: center;" > `+ data[i].installationDate.split('T')[0] + ` </td>
+                                                                                    <td style="text-align: center;"> `+ data[i].palletsDate.split('T')[0] + ` </td>
+                                                                                     <td style="text-align: center;" > `+ data[i].quotationSimpleDate.split('T')[0] + ` </td>
+
+
+                                                                                        <td><a href="/trkebat/edit_schedule_trekb_request?instReqId=`+ data[i].intallationRequestId + ` " style="color: deepskyblue;">تعديل الجدولة</a></td>
+
+                                                                                                                
+                                                                       </tr>`;
+                            }
+
+                        }
+
+
+                    }
+                    if (RadioValue == 1) {
+                        table_tr += `
+                                                            <tr>
+                                                                             <td style="text-align: center;"> `+ data[i].quotionNumberId + ` </td>
+                                                                             <td style="text-align: center;"> `+ data[i].quotionCode + ` </td>
+
+                                                                              <td style="text-align: center;"> 20000 </td>
+                                                                              <td style="text-align: center;"> `+ data[i].customerArabicName + ` </td>
+                                                                                      <td style="text-align: center;" hidden>`+ data[i].branch + `</td>
+                                                                              <td style="text-align: center;">`+ data[i].city + `</td>
+                                                                                       <td style="text-align: center;">`+ data[i].phone + `</td>
+                                                                                <td style="text-align: center;"> - </td>
+                                                                                 <td style="text-align: center;"> `+ data[i].palletsDate.split('T')[0] + ` </td>
+                                                                                         <td style="text-align: center;" > `+ data[i].quotationSimpleDate.split('T')[0] + ` </td>
+
+                                                                                 \ <td><a href="/trkebat/add_schedule_trekb_request?instReqId=`+ data[i].intallationRequestId + ` " style="color: deepskyblue;">متابعة الجدولة</a></td>
+
+                                                               </tr>`;
+                    }
+                    if (RadioValue == 2) {
+                        if (currentDate >= data[i].installationDate.split('T')[0]) {
+                            table_tr += `
+                                                     <tr>
+                                                                     <td style="text-align: center;"> `+ data[i].quotionNumberId + ` </td>
+                                                                     <td style="text-align: center;"> `+ data[i].quotionCode + ` </td>
+
+                                                                      <td style="text-align: center;"> 20000 </td>
+                                                                      <td style="text-align: center;"> `+ data[i].customerArabicName + ` </td>
+                                                                              <td style="text-align: center;" hidden>`+ data[i].branch + `</td>
+                                                                      <td style="text-align: center;">`+ data[i].city + `</td>
+                                                                        <td style="text-align: center;">`+ data[i].phone + `</td>
+                                                                           <td style="text-align: center;"> `+ data[i].installationDate.split('T')[0] + ` </td>
+                                                                         <td style="text-align: center;"> `+ data[i].palletsDate.split('T')[0] + ` </td>
+                                                                            <td style="text-align: center;" > `+ data[i].quotationSimpleDate.split('T')[0] + ` </td>
+                                                                                   <td><a href="/trkebat/edit_schedule_trekb_request?instReqId=`+ data[i].intallationRequestId + ` " style="color: gray;pointer-events: none;">تعديل الجدولة</a></td>
+
+
+                                                       </tr>`;
+                        }
+                        else {
+                            table_tr += `
+                                                             <tr>
+                                                                             <td style="text-align: center;"> `+ data[i].quotionNumberId + ` </td>
+                                                                             <td style="text-align: center;"> `+ data[i].quotionCode + ` </td>
+
+                                                                              <td style="text-align: center;"> 20000 </td>
+                                                                              <td style="text-align: center;"> `+ data[i].customerArabicName + ` </td>
+                                                                                      <td style="text-align: center;" hidden>`+ data[i].branch + `</td>
+                                                                              <td style="text-align: center;">`+ data[i].city + `</td>
+                                                                                <td style="text-align: center;">`+ data[i].phone + `</td>
+                                                                                   <td style="text-align: center;"> `+ data[i].installationDate.split('T')[0] + ` </td>
+                                                                                 <td style="text-align: center;"> `+ data[i].palletsDate.split('T')[0] + ` </td>
+                                                                                    <td style="text-align: center;" > `+ data[i].quotationSimpleDate.split('T')[0] + ` </td>
+
+                                                                                     <td><a href="/trkebat/edit_schedule_trekb_request?instReqId=`+ data[i].intallationRequestId + ` " style="color: deepskyblue;">تعديل الجدولة</a></td>
+
+
+                                                               </tr>`;
+                        }
+
+                    }
+
+                }
+
+
+                 //scrollY: "400px",
+                 //   scrollX: false,
+
+                document.getElementById('body').innerHTML = table_tr;
+                table = $('#example').DataTable({
+                    searching: true, paging: false, info: false, scrollY: "400px",scrollX: false,  "bDestroy": true, columnDefs: [{
+                        targets: "_all",
+                        searchable: "visible"
+                    }],
+                });
+
+            });
+
+
+        }
+        //function fillTable(RadioValue) {
+
+        //    $.get("/trkebat/schedule_trkeb_requestallApi1", { radioValue: RadioValue, }, function (data) {
+                
+        //        var table_tr = "";
+
+        //        const currentDate = new Date().toISOString().split('T')[0];
+        //       // console.log(currentDate);
+        //        for (var i = 0; i < data.length; i++) {
+        //            if (RadioValue == 0) {
+        //                if (data[i].status == "unscheduled"){
+        //                    table_tr += `
+        //                                                    <tr>
+        //                                                                     <td style="text-align: center;"> `+ data[i].quotionNumberId + ` </td>
+        //                                                                     <td style="text-align: center;"> `+ data[i].quotionCode + ` </td>
+
+        //                                                                      <td style="text-align: center;"> 20000 </td>
+        //                                                                      <td style="text-align: center;"> `+ data[i].customerArabicName + ` </td>
+        //                                                                      <td style="text-align: center;" hidden>`+ data[i].branch + `</td>
+        //                                                                      <td style="text-align: center;">`+ data[i].city + `</td>
+        //                                                                       <td style="text-align: center;" hidden>`+ data[i].neighborhood + `</td>
+        //                                                                        <td style="text-align: center;">`+ data[i].phone + `</td>
+        //                                                                        <td style="text-align: center;" hidden> (غير مؤكد) </td>
+        //                                                                                <td style="text-align: center;" > - </td>
+        //                                                                                <td style="text-align: center;"> `+ data[i].palletsDate.split('T')[0] + ` </td>
+        //                                                                                                <td style="text-align: center;" > `+ data[i].quotationSimpleDate.split('T')[0] + ` </td>
+
+        //                                                                                      <td><a href="/trkebat/add_schedule_trekb_request?instReqId=`+ data[i].intallationRequestId + ` " style="color: deepskyblue;">متابعة الجدولة</a></td>
+
+        //                                                       </tr>`;
+
+        //                }
+        //                if (data[i].status == "temporarilyscheduled"){
+                           
+
+        //                       // console.log(data[i].installationDate.split('T')[0]);
+        //                        table_tr += `
+        //                                                     <tr>
+        //                                                                     <td style="text-align: center;"> `+ data[i].quotionNumberId + ` </td>
+        //                                                                     <td style="text-align: center;"> `+ data[i].quotionCode + ` </td>
+
+        //                                                                      <td style="text-align: center;"> 20000 </td>
+        //                                                                      <td style="text-align: center;"> `+ data[i].customerArabicName + ` </td>
+        //                                                                              <td style="text-align: center;"hidden>`+ data[i].branch + `</td>
+        //                                                                      <td style="text-align: center;">`+ data[i].city + `</td>
+        //                                                                               <td style="text-align: center;" hidden>`+ data[i].neighborhood + `</td>
+        //                                                                               <td style="text-align: center;">`+ data[i].phone + `</td>
+        //                                                                                                <td style="text-align: center;"hidden> (مؤكد) </td>
+        //                                                                                <td style="text-align: center;" > `+ data[i].installationDate.split('T')[0] + ` </td>
+        //                                                                                        <td style="text-align: center;"> `+ data[i].palletsDate.split('T')[0] + ` </td>
+        //                                                                                                <td style="text-align: center;" > `+ data[i].quotationSimpleDate.split('T')[0] + ` </td>
+
+
+
+        //                                                                                                        <td><a href="/trkebat/edit_schedule_trekb_request?instReqId=`+ data[i].intallationRequestId + ` " style="color: deepskyblue;">تعديل الجدولة</a></td>
+        //                                                       </tr>`;
+                            
+                           
+                          
+        //                }
+
+                        
+        //            }
+        //            if (RadioValue == 1) {
+        //                table_tr += `
+        //                                            <tr>
+        //                                                             <td style="text-align: center;"> `+ data[i].quotionNumberId + ` </td>
+        //                                                             <td style="text-align: center;"> `+ data[i].quotionCode + ` </td>
+
+        //                                                              <td style="text-align: center;"> 20000 </td>
+        //                                                              <td style="text-align: center;"> `+ data[i].customerArabicName + ` </td>
+        //                                                                      <td style="text-align: center;" hidden>`+ data[i].branch + `</td>
+        //                                                              <td style="text-align: center;">`+ data[i].city + `</td>
+        //                                                                <td style="text-align: center;" hidden>`+ data[i].neighborhood + `</td>
+        //                                                                       <td style="text-align: center;">`+ data[i].phone + `</td>
+        //                                                                       <td style="text-align: center;"hidden> (غير مؤكد) </td>
+        //                                                                <td style="text-align: center;"> - </td>
+        //                                                                 <td style="text-align: center;"> `+ data[i].palletsDate.split('T')[0] + ` </td>
+        //                                                                         <td style="text-align: center;" > `+ data[i].quotationSimpleDate.split('T')[0] + ` </td>
+
+        //                                                                 \ <td><a href="/trkebat/add_schedule_trekb_request?instReqId=`+ data[i].intallationRequestId + ` " style="color: deepskyblue;">متابعة الجدولة</a></td>
+
+        //                                               </tr>`;
+        //            }
+        //            if (RadioValue == 2) {
+                       
+        //                    table_tr += `
+        //                                     <tr>
+        //                                                     <td style="text-align: center;"> `+ data[i].quotionNumberId + ` </td>
+        //                                                     <td style="text-align: center;"> `+ data[i].quotionCode + ` </td>
+
+        //                                                      <td style="text-align: center;"> 20000 </td>
+        //                                                      <td style="text-align: center;"> `+ data[i].customerArabicName + ` </td>
+        //                                                              <td style="text-align: center;" hidden>`+ data[i].branch + `</td>
+        //                                                      <td style="text-align: center;">`+ data[i].city + `</td>
+        //                                                      <td style="text-align: center;" hidden>`+ data[i].neighborhood + `</td>
+        //                                                        <td style="text-align: center;">`+ data[i].phone + `</td>
+        //                                                          <td style="text-align: center;"hidden> (مؤكد) </td>
+        //                                                           <td style="text-align: center;"> `+ data[i].installationDate.split('T')[0] + ` </td>
+        //                                                         <td style="text-align: center;"> `+ data[i].palletsDate.split('T')[0] + ` </td>
+        //                                                            <td style="text-align: center;" > `+ data[i].quotationSimpleDate.split('T')[0] + ` </td>
+
+        //                                                                      <td><a href="/trkebat/edit_schedule_trekb_request?instReqId=`+ data[i].intallationRequestId + ` " style="color: deepskyblue;">تعديل الجدولة</a></td>
+
+        //                                       </tr>`;
+                                          
+                             
+                       
+        //            }
+
+        //        }
+
+
+
+
+        //        document.getElementById('body').innerHTML = table_tr;
+        //        table = $('#example').DataTable({
+        //            searching: true, paging: false, info: false, scrollY: "400px",
+        //            scrollX: true, "bDestroy": true,columnDefs: [{
+        //                targets: "_all",
+        //                searchable: "visible"
+        //            }],
+        //        });
+
+        //    });
+
+
+        //}
+
+        $(document).ready(function () {
+            
+
+            fillTable(0);
+            
+            $('span#f_type').text('كافة طلبات التركيب');
+
+        });
+    </script>
+
+
+}

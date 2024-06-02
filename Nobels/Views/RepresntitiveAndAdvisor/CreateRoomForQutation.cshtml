@@ -1,0 +1,402 @@
+﻿@model Nobels.Models.QutationRoom
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "_LayoutRepresntitiveAndAdvisor";
+}<style>
+     td {
+         text-align: center;
+     }
+</style>
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+
+                <div class="card-header" style=" display: flex;
+  justify-content: space-between;">
+                    <p>إضافة عنوان للعرض</p>
+                    <p>يمكن إضافة عنوان العميل نفسه أو تعديل القيم لعنوان جديد</p>
+
+                    @* <a onclick="open_r()">
+                    <i class="fa fa-minus-circle" id="minus_id" style="display:none" aria-hidden="true"></i>
+                    <i class="fa fa-plus-circle" id="plus_id" aria-hidden="true"></i>
+                    </a>*@
+                </div>
+                <input asp-for="qutationId" class="form-control" id="qid" name="qid" hidden />
+                <input class="form-control" id="cid" name="cid" value="@ViewBag.customerId" hidden />
+                <div class="card-body" id="open_add_r" @*style="display:none"*@>
+                    <form method="post" id="formSubmission" style=" width: 50vw;  margin: auto;">
+
+
+                        <div class="row mb-4">
+                            <div class="form-outline mb-4">
+                                <label class="control-label">المدينة</label>
+                                <select id="city" name="city" class="form-control" asp-items="ViewBag.CityId"></select>
+                            </div>
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label class="control-label">حي</label>
+                                    <input name="neighborhood" id="neighborhood" value="@ViewBag.neighborhood" class="form-control" type="text" />
+                                    <span class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label class="control-label">شارع</label>
+
+                                    <input name="street" id="street" value="@ViewBag.street" class="form-control" type="text" />
+
+
+                                    <span class="text-danger"></span>
+                                </div>
+
+                            </div>
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label class="control-label">رقم البيت</label>
+
+                                    <input name="houseNumber" value="@ViewBag.houseNumber" id="houseNumber" class="form-control" type="text" />
+                                    <input name="qutation" value="@ViewBag.qutationId" id="qutation" class="form-control" type="text" />
+
+
+                                    <span class="text-danger"></span>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+
+
+
+
+
+
+
+
+                        <div class="form-group">
+                            <input type="button" value="إضافة" class="btn btn-primary btn-lg btn-block0" id="mybtn" onclick="addAddressToQuotation()" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+</section>
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+
+                <div class="card-header" style=" display: flex;
+  justify-content: space-between;">
+                    <p>إنشاء غرفة</p>
+
+
+                </div>
+                <div class="card-body">
+                    <form id="formSubmission1" style=" width: 50vw;  margin: auto;">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+
+
+                        <div class="row mb-4">
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label asp-for="roomName" class="control-label"></label>
+                                    <input asp-for="roomName" class="form-control" id="name" />
+
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label asp-for="notes" class="control-label"></label>
+                                    <input asp-for="notes" class="form-control" id="note" />
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div hidden class="row mb-4">
+                            <div class="col">
+                                <div class="form-outline">
+                                    @* <label asp-for="discountType" class="control-label"></label>
+                                    <input asp-for="discounttype" class="form-control" id="discounttype"/>*@
+
+                                    <label class="control-label"> نوع الخصم</label>
+
+                                    <select id="discounttype" class="form-control">
+
+
+                                        <option value="0">نسبة</option>
+                                        <option value="1">قيمة</option>
+
+
+
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label asp-for="discount" class="control-label"></label>
+                                    <input asp-for="discount" class="form-control" value="0" id="discount" />
+
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+
+                        <div class="form-group">
+                            <input type="button" value="إضافة" class="btn btn-primary btn-lg btn-block" id="publishToTableButton" onclick="publishToTable()" disabled />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+</section>
+
+<div class="table-responsive">
+    <table class="table table-striped" id="dep_table">
+
+        <thead style="white-space: nowrap;">
+            <tr>
+                <th style="text-align: center;">
+                    اسم الغرفة
+                </th>
+
+                <th style="text-align: center;">
+                    ملاحظات
+                </th>
+               
+
+                <th style="text-align: center;">
+                    رقم العرض
+                </th>
+                <th style="text-align: center;">
+
+                </th>
+
+
+
+            </tr>
+        </thead>
+
+
+
+
+
+
+    </table>
+
+    <button type="submit" class="btn btn-submit" style="display: unset;" onclick="ADDRoom()">ذهاب لعرض السعر</button>
+
+</div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@section Scripts {
+
+
+    <script>
+        //window.addEventListener('beforeunload', (event) => {
+        //    // Cancel the event as stated by the standard.
+        //    event.preventDefault();
+        //    // Chrome requires returnValue to be set.
+        //    event.returnValue = '';
+        //});
+
+        function addAddressToQuotation() {
+
+
+            var hosenumber = document.getElementById('houseNumber').value;
+            var street = document.getElementById('street').value;
+            var neighborhood = document.getElementById('neighborhood').value;
+            var city = document.getElementById('city').value;
+            //var qid = document.getElementById('qid').value;
+            var cid = document.getElementById('cid').value;
+            var qid = document.getElementById('qid');
+
+
+            $.post("/RepresntitiveAndAdvisor/updateQuotationAddAddress", {
+
+                neighborhood: neighborhood, street: street, houseNumber: hosenumber, city: city, cid: cid/*, qid:qid*/
+            }, function (data) {
+
+                document.getElementById("mybtn").disabled = true;
+                document.getElementById("publishToTableButton").disabled = false;
+                qid.setAttribute("value", data);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'تم ',
+
+
+                });
+
+
+            });
+
+        }
+
+        function deleteRow(r) {
+            var i = r.parentNode.parentNode.rowIndex;
+            document.getElementById("dep_table").deleteRow(i);
+        }
+        function publishToTable() {
+
+
+            const roomName = document.getElementById('name').value;
+            const Notes = document.getElementById('note').value;
+
+            const qid = document.getElementById('qid').value;
+
+
+            if (roomName == "" || roomName == null) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'لا يمكنك إضافة قيمة فارغة ',
+
+
+                });
+            }
+            else {
+                const tableElement = document.getElementById('dep_table');
+
+                const trElement = document.createElement('tr');
+                const tbodyElement = document.createElement('tbody');
+                const nameel = document.createElement('td');
+
+                const noteel = document.createElement('td');
+                const qidel = document.createElement('td');
+                const control_btn = `
+                                                             <a onclick="deleteRow(this)" ><i class="fas fa-trash-alt"></i></a>
+                                                            `;
+
+
+
+                const control_btn_td = document.createElement('td');
+
+                nameel.innerHTML = roomName;
+                noteel.innerHTML = Notes;
+
+
+                qidel.innerHTML = qid;
+
+
+                control_btn_td.innerHTML = control_btn;
+
+                trElement.appendChild(nameel);
+                trElement.appendChild(noteel);
+
+
+                trElement.appendChild(qidel);
+                trElement.appendChild(control_btn_td);
+
+
+
+                tbodyElement.appendChild(trElement);
+                tableElement.appendChild(tbodyElement);
+
+                let tr = document.querySelectorAll("table tbody tr");
+                document.getElementById("formSubmission1").reset();
+
+            }
+        }
+        function ADDRoom() {
+            var myTab = document.getElementById('dep_table');
+
+            if (document.getElementById("mybtn").disabled == true && myTab.rows.length > 1) {
+
+
+
+                for (i = 1; i < myTab.rows.length; i++) {
+
+                    var objCells = myTab.rows.item(i).cells;
+
+                    var name = objCells.item(0).innerHTML;
+                    var note = objCells.item(1).innerHTML;
+                    var discountvalue = 0;
+                    var DType = "نسبة";
+                    //var qid2 = objCells.item(2).innerHTML;
+                    var qid2 = objCells.item(2).innerHTML;
+                    var qutationId=document.getElementById('qutation').value
+
+
+                    $.post("/RepresntitiveAndAdvisor/AddRoomQutation", {
+
+                        name: name, note: note, qid: qutationId, discount: discountvalue, discountType: DType
+                    }, function (data) {
+
+
+
+                    });
+                    // info.innerHTML = uder_q + '<br />';     // ADD A BREAK (TAG).
+                }
+
+                var id = document.getElementById('qutation').value;
+
+                window.location.href = '@Url.Action("cover_arabic", "RepresntitiveAndAdvisor")/' + id;
+            }
+            else if (myTab.rows.length == 1 && document.getElementById("mybtn").disabled == false) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '!الرجاء إضافة الغرف والعنوان أولاً ',
+
+
+                });
+            }
+            else if (myTab.rows.length == 1 && document.getElementById("mybtn").disabled == true) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '!الرجاء إضافة الغرف  أولاً ',
+
+
+                });
+            }
+            else if (myTab.rows.length > 1 && document.getElementById("mybtn").disabled == false) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '!الرجاء إضافة العنوان  أولاً ',
+
+
+                });
+            }
+
+
+        }
+
+    </script>
+
+
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

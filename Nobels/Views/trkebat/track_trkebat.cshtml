@@ -1,0 +1,402 @@
+@model IEnumerable<Nobels.Models.productionClass>
+
+@{
+    Layout = "_LayoutRepresntitiveAndAdvisor";
+}
+<style>
+    .dataTables_wrapper .dataTables_filter {
+        float: right;
+        text-align: right;
+        visibility: hidden;
+    }
+</style>
+
+<div class="col-md-12  row mt-4">
+    <div class="col-md-12 ">
+        <h3 class="" style="text-align: center;">متابعة التركيبات </h3>
+    </div>
+    <div class="col-md-12 row justify-content-center w-100 my-3 ">
+        <div class="col-2">
+            <input class="form-check-input" type="radio" name="radio" id="f_all" value="0"
+                   onchange="chnage_filter(this)" checked>
+            <label class="form-check-label" for="">الكل</label>
+        </div>
+        <div class="col-2">
+            <input class="form-check-input" type="radio" name="radio" id="f_unsch"
+                   onchange="chnage_filter(this)" value="1">
+            <label class="form-check-label" for="">الطلبات المفتوحة</label>
+        </div>
+        <div class="col-2">
+            <input class="form-check-input" type="radio" name="radio" id="f_prim"
+                   onchange="chnage_filter(this)" value="2">
+            <label class="form-check-label" for="">الطلبات المنتهية</label>
+        </div>
+        <div class="col-2">
+            <input class="form-check-input" type="radio" name="radio" id="f_prim"
+                   onchange="chnage_filter(this)" value="3">
+            <label class="form-check-label" for="">الطلبات تحت الصيانة</label>
+        </div>
+
+    </div>
+    <div class="col-md-6 mx-auto">
+        <div class="row">
+            <label class="col-1" for="district">المدينة</label>
+            <SELECT class="form-control col-6 mx-auto mb-2" id="district" name="district"
+                    onchange="change_district(this)" asp-items="ViewBag.City">
+                <option hidden></option>
+                <option value="0">الكل</option>
+
+            </SELECT>
+        </div>
+
+    </div>
+    <div class="col-md-8 mx-auto w-100 my-4">
+        <input class="form-control" type="search" name="search" id="search"
+               placeholder="&#xF002; رقم أمر المبيعات/العميل" style="font-family: FontAwesome">
+    </div>
+    <div class="col-md-12 ">
+        <h4 class="" style="text-align: center;">
+            <span id="f_type">كافة طلبات التركيب</span>
+
+            <span id="district_display"></span>
+
+        </h4>
+    </div>
+
+    <div class="col-md-10 mx-auto my-3">
+        <table class="table" id="example" style="white-space:nowrap;">
+            <thead>
+                <tr>
+                    <th>رقم العرض</th>
+                    <th>رقم أمر المبيعات</th>
+                    <th>تاريخ  إنشاءالعرض</th>
+
+                    <th>العميل</th>
+                    <th hidden>المعرض</th>
+                    <th>المدينة</th>
+                    <th>نسبة الإنجاز</th>
+                    <th>تاريخ بدء التركيب</th>
+
+                </tr>
+            </thead>
+            <tbody style="text-align:center;">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        @if (item.InstallationDate > DateTime.Now)
+                        {
+                            if (item.InstallationDate > DateTime.Now)
+                            {
+                                <td>@Html.DisplayFor(modelItem => item.quotionNumberId)</td>
+                                <td>@Html.DisplayFor(modelItem => item.quotionCode)</td>
+                            }
+                            else
+                            {
+                                <td>test</td>
+                            }
+
+                        }
+                        else
+                        {
+                            <td><a asp-controller="trkebat" asp-action="track_trkebat_form" asp-route-id="@item.quotionNumberId">@Html.DisplayFor(modelItem => item.quotionNumberId)</a></td>
+                            <td><a asp-controller="trkebat" asp-action="track_trkebat_form" asp-route-id="@item.quotionNumberId">@Html.DisplayFor(modelItem => item.quotionCode)</a></td>
+                        }
+
+                        @* <td><a asp-controller="trkebat" asp-action="track_trkebat_form" asp-route-id="@item.quotionNumberId">@Html.DisplayFor(modelItem => item.quotionNumberId)</a></td>
+                    <td><a asp-controller="trkebat" asp-action="track_trkebat_form" asp-route-id="@item.quotionNumberId">@Html.DisplayFor(modelItem => item.quotionCode)</a></td>*@
+                        <td>@Html.DisplayFor(modelItem => item.quotation_date)</td>
+                        <td>@Html.DisplayFor(modelItem => item.CustomerArabicName)</td>
+                        <td hidden>@Html.DisplayFor(modelItem => item.branch)</td>
+                        <td>@Html.DisplayFor(modelItem => item.city)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Progress)%</td>
+                        @{
+                            var date = item.InstallationDate.Value.ToShortDateString();
+                        }
+                        <td>@Html.DisplayFor(modelItem => date)</td>
+                    </tr>
+                }
+
+               
+            </tbody>
+        </table>
+    </div>
+   
+</div>
+
+@section Scripts
+
+    {
+
+    <script>
+        var table = $('#example').DataTable({
+            searching: true, paging: false, info: false, scrollY: "400px", "bDestroy": true, columnDefs: [{
+                targets: "_all",
+                searchable: "visible"
+            }],
+        });
+
+        // #myInput is a <input type="text"> element
+        $('#search').on('keyup', function () {
+            table.search(this.value).draw();
+        });
+        //function change_district(e) {
+
+        //    val = $(e).val();
+        //    var district_text = $(e).find('option:selected').text();
+        //    if (val == 0) {
+        //        $('tbody tr').show();
+
+        //        $('td:nth-child(6),th:nth-child(6)').show();
+        //        $('span#district_display').text('');
+        //    }
+        //    else {
+        //        $('td:nth-child(6),th:nth-child(6)').hide();
+        //        $('tbody tr').hide();
+
+        //        // if (val == 1) {
+        //        $('td').each(function () {
+        //            if (this.textContent.includes(district_text)) {
+        //                $(this).parent().show();
+        //            }
+        //        });
+                
+
+        //        $('span#district_display').text('في ' + $(e).find('option:selected').text());
+        //    }
+
+        //}
+
+
+        //function chnage_filter(e) {
+
+
+        //    val = $(e).val();
+        //    if (val == 0) {
+        //        $('tbody tr').show();
+        //        $('span#f_type').text('كافة طلبات التركيب');
+        //        // $('td:nth-child(5),th:nth-child(5)').hide();
+        //    }
+        //    else {
+                
+        //        $('tbody tr').hide();
+        //        if (val == 1) {
+                    
+
+
+        //            $('table > tbody  > tr').each(function (index, tr) {
+        //                var celltext = $(tr).find('td:nth-child(7)').text();
+        //                var number = parseFloat(celltext.replace(/%/g, ''));
+        //                console.log(number+""+celltext)
+        //                if (number >= 1 && number <= 100) {
+        //                    $(this).show();
+        //                                }
+
+        //                            });
+        //            //$('td:nth-child(7)').each(function () {
+        //            //    var celltext = this.textContent;
+
+        //            //    var number = parseFloat(celltext.replace(/%/g, ''));
+        //            //    //console.log(number);
+        //            //    if (number >= 1 && number <= 100) {
+        //            //        $(this).parent().show();
+        //            //    }
+        //            //});
+        //            $('span#f_type').text('طلبات التركيب المفتوحة ');
+        //        }
+        //        if (val == 2) {
+        //            //$('td').each(function () {
+        //            //    if (this.textContent.includes('متابعة')) {
+        //            //        $(this).parent().show();
+        //            //    }
+        //            //});
+        //            $('td:nth-child(7)').each(function () {
+        //                var celltext = this.textContent;
+
+        //                var number = parseFloat(celltext.replace(/%/g, ''));
+        //                //console.log(number);
+        //                if (number == 100) {
+        //                    $(this).parent().show();
+        //                }
+        //            });
+        //            $('span#f_type').text('طلبات التركيب المنتهية');
+        //        }
+        //        if (val == 3) {
+        //            $('td').each(function () {
+        //                if (this.textContent.includes('متابعة')) {
+        //                    $(this).parent().show();
+        //                }
+        //            });
+        //            $('span#f_type').text('طلبات التركيب تحت الصيانة');
+        //        }
+
+        //    }
+            
+        //}
+
+
+
+        //
+
+        var filter = 0, district = 0;
+        var district_text;
+
+
+
+        function filteration() {
+
+
+            if (filter == 0 && district == 0) {
+                $('tbody tr').show();
+                $('span#f_type').text('كافة طلبات التركيب');
+
+                $('td:nth-child(6),th:nth-child(6)').show();
+
+                $('span#district_display').text('');
+
+
+            }
+            if (filter != 0 && district == 0) {
+
+                $('tbody tr').hide();
+
+                $('td:nth-child(6),th:nth-child(6)').show();
+
+                $('span#district_display').text('');
+
+
+                if (filter == 1) {
+
+                    $('table > tbody  > tr').each(function (index, tr) {
+
+                        var celltext = $(tr).find('td:nth-child(7)').text();
+                        var number = parseFloat(celltext.replace(/%/g, ''));
+                        if (number >= 1 && number <= 100) {
+                            $(this).show();
+                        }
+
+                    });
+
+                    $('span#f_type').text('طلبات التركيب المفتوحة ');
+                }
+                if (filter == 2) {
+                    $('table > tbody  > tr').each(function (index, tr) {
+
+                        var celltext = $(tr).find('td:nth-child(7)').text();
+                        var number = parseFloat(celltext.replace(/%/g, ''));
+                        if (number == 100) {
+                            $(this).show();
+                        }
+
+                    });
+
+                    $('span#f_type').text('طلبات التركيب المنتهية ');
+                }
+                if (filter == 3) {
+                    $('td').each(function () {
+                        if (this.textContent.includes('متابعة')) {
+                            $(this).parent().show();
+                        }
+                    });
+                    $('span#f_type').text('طلبات التركيب تحت الصيانة');
+                }
+
+
+
+            }
+
+            if (filter != 0 && district != 0) {
+
+
+                $('tbody tr').hide();
+
+                $('td:nth-child(6),th:nth-child(6)').hide();
+
+
+
+                if (filter == 1) {
+
+                    $('table > tbody  > tr').each(function (index, tr) {
+
+                        var celltext = $(tr).find('td:nth-child(7)').text();
+                        var number = parseFloat(celltext.replace(/%/g, ''));
+                        if ($(tr).find('td:nth-child(6)').text() == district_text && number >= 1 && number <= 100) {
+                            $(this).show();
+                        }
+
+                    });
+
+                    $('span#f_type').text('طلبات التركيب المفتوحة ');
+                }
+                if (filter == 2) {
+                    $('table > tbody  > tr').each(function (index, tr) {
+
+                        var celltext = $(tr).find('td:nth-child(7)').text();
+                        var number = parseFloat(celltext.replace(/%/g, ''));
+                        if ($(tr).find('td:nth-child(6)').text() == district_text && number == 100) {
+                            $(this).show();
+                        }
+
+                    });
+
+                    $('span#f_type').text('طلبات التركيب المنتهية ');
+                }
+                if (filter == 3) {
+                    $('table > tbody  > tr').each(function (index, tr) {
+
+                       
+                        if ($(tr).find('td:nth-child(6)').text() == district_text &&$(tr).find('td:nth-child(7)').text()=='test' ) {
+                            $(this).show();
+                        }
+
+                    });
+                    $('span#f_type').text('طلبات التركيب تحت الصيانة');
+                }
+
+               
+                $('span#district_display').text('في ' + district_text);
+
+            }
+            if (filter == 0 && district != 0) {
+
+
+                $('tbody tr').hide();
+                $('span#f_type').text('كافة طلبات التركيب');
+                $('td:nth-child(6),th:nth-child(6)').hide();
+
+                $('table > tbody  > tr').each(function (index, tr) {
+
+                    if ($(tr).find('td:nth-child(6)').text() == district_text) {
+                        $(this).show();
+                    }
+
+                });
+
+                $('span#district_display').text('في ' + district_text);
+
+            }
+        }
+
+        function change_district(e) {
+
+
+            val = $(e).val();
+            district = val;
+
+            district_text = $(e).find('option:selected').text();
+            // alert(val + '' + district_text);
+            filteration();
+
+        }
+
+        function chnage_filter(e) {
+            val = $(e).val();
+            filter = val;
+            district = 0;
+            $('select#district').val(0);
+          
+            filteration();
+        }
+
+    </script>
+
+      }

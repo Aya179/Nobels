@@ -1,0 +1,157 @@
+﻿@model Nobels.Models.Item
+
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Employee> SignInManager
+@inject UserManager<Employee> UserManagerc
+@{
+        ViewData["Title"] = "Details";
+
+    var user = UserManagerc.FindByNameAsync(User.Identity.Name);
+    var role = user.Result.RoleId;
+    if(role==6)
+    {
+        Layout = "_LayoutProductManeger";
+
+    }
+    else{
+        Layout = "_Layout";
+
+    }
+}
+
+
+
+
+
+
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4 col">
+
+                <div class="card-header" style=" display: flex;justify-content: space-between;">
+                    <a asp-action="Index"> <i class="fa fa-arrow-left fa-lg"></i></a>
+                    <p>تفاصيل الصنف</p>
+
+
+
+                </div>
+                <div class="card-body">
+                    <form style=" width: 50vw; margin: auto; ">
+                        <input type="hidden" asp-for="ItemId" />
+                        <div class="row mb-4">
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label asp-for="ItemArName" class="form-label" for="form6Example1"></label>
+                                    <input asp-for="ItemArName" type="text" id="form6Example1" class="form-control " readonly />
+
+                                    <span asp-validation-for="ItemArName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label asp-for="ItemEnName" class="form-label" for="form6Example2"></label>
+                                    <input type="text" asp-for="ItemEnName" id="form6Example2" class="form-control" readonly />
+
+                                    <span asp-validation-for="ItemEnName" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-outline mb-4">
+
+                            <label asp-for="ItemCode" class="form-label" for="form6Example2"></label>
+                            <input type="text" asp-for="ItemCode" id="form6Example2" class="form-control" readonly />
+
+                            <span asp-validation-for="ItemCode" class="text-danger"></span>
+                        </div>
+                        <div class="form-outline mb-4">
+
+                            <label asp-for="ItemCurrentPrice" class="form-label" for="form6Example2"></label>
+                            <input type="text" asp-for="ItemCurrentPrice" id="form6Example2" class="form-control" readonly />
+
+                            <span asp-validation-for="ItemCurrentPrice" class="text-danger"></span>
+                        </div>
+
+
+                        <div class="form-outline mb-4">
+
+                            <label asp-for="FCost" class="form-label" for="form6Example2"></label>
+                            <input type="text" asp-for="FCost" id="form6Example2" class="form-control" readonly />
+
+                            <span asp-validation-for="FCost" class="text-danger"></span>
+                        </div>
+                        <div class="form-outline mb-4">
+
+                            <label asp-for="ICost" class="form-label" for="form6Example2"></label>
+                            <input type="text" asp-for="ICost" id="form6Example2" class="form-control" readonly />
+
+                            <span asp-validation-for="ICost" class="text-danger"></span>
+                        </div>
+                        <div class="form-outline mb-4">
+
+                            <label asp-for="RMCost" class="form-label" for="form6Example2"></label>
+                            <input type="text" asp-for="RMCost" id="form6Example2" class="form-control" readonly />
+
+                            <span asp-validation-for="RMCost" class="text-danger"></span>
+                        </div>
+                        <div class="form-outline mb-4">
+
+                            <label asp-for="COG" class="form-label" for="form6Example2"></label>
+                            <input type="text" asp-for="COG" id="form6Example2" class="form-control" readonly />
+
+                            <span asp-validation-for="COG" class="text-danger"></span>
+                        </div>
+
+
+
+                        <div class="form-outline mb-4">
+
+                            <label asp-for="Notes" class="form-label" for="form6Example2"></label>
+                            <input type="text" asp-for="Notes" id="form6Example2" class="form-control" readonly />
+
+                            <span asp-validation-for="Notes" class="text-danger"></span>
+                        </div>
+                        <div class="form-outline mb-4">
+
+                            <label asp-for="ItemSubTypeId" class="form-label" for="form6Example2"></label>
+                            <input type="text" asp-for="ItemSubType.SubTypeEnName" id="form6Example2" class="form-control" readonly />
+
+                            <span asp-validation-for="ItemSubType.SubTypeEnName" class="text-danger"></span>
+                        </div>
+                        @*<div class="form-outline mb-4">
+
+                            <center>
+                                <label asp-for="ItemPhotoPath" class="form-label" for="form6Example3"></label>
+                                <br />
+                                <img src="/@Model.ItemPhotoPath" width="250" height="250" />
+                            </center>
+                        </div>*@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</section>

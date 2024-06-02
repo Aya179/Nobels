@@ -1,0 +1,196 @@
+﻿@model IEnumerable<Nobels.Models.Customer>
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Employee> SignInManager
+@inject UserManager<Employee> UserManagerc
+@{
+    var user = UserManagerc.FindByNameAsync(User.Identity.Name);
+    var role = user.Result.RoleId;
+    if (role == 6)
+    {
+        Layout = "_LayoutProductManeger";
+
+    }
+    else
+    {
+        Layout = "_Layout";
+
+    }
+}
+
+<div class="row" style="margin-top:10px;">
+    <div class="col-12">
+
+
+        <div class="card">
+            <div class="card-header" style=" display: flex;
+  justify-content: space-between;">
+               <p>الزبائن</p>
+
+
+            </div>
+
+                        <div class="row mb-4" style=" width: 50vw;  margin: auto;">
+                           
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label class="control-label"> المدينة</label>
+
+                                    <select class="form-control" id="city" asp-items="ViewBag.City"  name="mainType">
+                                        <option>الرجاء اختيار المدينة </option>
+                                    </select>
+
+                                   
+
+                                </div>
+                            </div>
+
+                           
+
+                            <div class="col">
+                                <div class="form-outline">
+
+                                    <br />
+                        <button class="btn btn-primary btn-lg btn-block" style="width: 50px;" onclick="ShowCity()">
+                                        <i class="fa fa-search" ></i>
+                        </button>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped" id="dep_table">
+
+                        <thead style="white-space: nowrap;">
+                            <tr>
+                               @* <th style="text-align: center;">
+                                    @Html.DisplayNameFor(model => model.Id)
+                                </th>*@
+                                <th style="text-align: center;">
+                                    @Html.DisplayNameFor(model => model.ArabicName)
+                                </th>
+                                <th style="text-align: center;">
+                                    @Html.DisplayNameFor(model => model.EnglishName)
+                                </th>
+                                <th style="text-align: center;">
+                                    @Html.DisplayNameFor(model => model.Address)
+                                </th>
+                                @*<th style="text-align: center;">
+                                    @Html.DisplayNameFor(model => model.SecondAddress)
+                                </th>*@
+                                <th style="text-align: center;">
+                                    @Html.DisplayNameFor(model => model.City.CityName)
+                                </th>
+                                
+
+                                <th style="text-align: center;">
+                                    @Html.DisplayNameFor(model => model.Phone)
+                                </th>
+                                
+                                
+
+                                
+                            </tr>
+                        </thead>
+                        <tbody id="datatable">
+                          
+                        </tbody>
+
+
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+@section Scripts {
+
+    <script>
+
+
+function ShowCity() {
+    var city = document.getElementById('city').value;
+  //  alert(city);
+
+   $.get("/Customers/CityCoustmer", { cityId: city}, function(data) {
+
+              var table_tr="";
+
+         
+             for (var i = 0; i < data.length; i++) {
+                 
+                  table_tr+=`
+                     <tr>
+                      <td style="text-align: center;"> `+ data[i].arabicName+ ` </td>
+                       <td  style="text-align: center;">` + data[i].englishName+`  </td>
+                       <td  style="text-align: center;">` + data[i].address+`  </td>
+                       <td  style="text-align: center;">` + data[i].city.cityName + `  </td>
+
+                        <td  style="text-align: center;">` + data[i].phone+`  </td>
+
+                       
+                            
+
+                             
+
+                       </tr>`;
+                // alert(data[i].ArabicName);
+                
+                  }
+
+
+
+
+                document.getElementById('datatable').innerHTML = table_tr;
+
+             
+                });
+}
+
+
+
+
+
+
+
+
+
+
+        $(function () {
+            $('#dep_table').DataTable({
+                "lengthMenu": [[5, 10, 15, 20, 25, -1], [5, 10, 15, 20, 25, "All"]],
+                "responsive": true,
+                "autoWidth": true,
+                "language": {
+                    "sProcessing": "جارٍ التحميل...",
+                    "sLengthMenu": "أظهر _MENU_ مدخلات",
+                    "sZeroRecords": "لم يتم العثور على أية نتائج",
+                    "sInfo": "إظهار _START_ إلى _END_ من أصل _TOTAL_ مدخل",
+                    "sInfoEmpty": "يعرض 0 إلى 0 من أصل 0 سجل",
+                    "sInfoFiltered": "(منتقاة من مجموع _MAX_ مُدخل)",
+                    "sInfoPostFix": "",
+                    "sSearch": "البحث:",
+                    "sUrl": "",
+                    "oPaginate": {
+                        "sFirst": "الأول",
+                        "sPrevious": "السابق",
+                        "sNext": "التالي",
+                        "sLast": "الأخير"
+                    }
+                }
+            });
+        });
+    </script>
+    
+
+}

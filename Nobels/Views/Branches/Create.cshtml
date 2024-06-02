@@ -1,0 +1,231 @@
+﻿@model Nobels.Models.Branch
+
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Employee> SignInManager
+@inject UserManager<Employee> UserManagerc
+@{
+    var user = UserManagerc.FindByNameAsync(User.Identity.Name);
+    var role = user.Result.RoleId;
+    if(role==6)
+    {
+        Layout = "_LayoutProductManeger";
+
+    }
+    else{
+        Layout = "_Layout";
+
+    }
+}
+
+
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+               
+                <div class="card-header" style=" display: flex;
+  justify-content: space-between;">
+                    <a asp-action="Index"> <i class="fa fa-arrow-left fa-lg"></i></a>
+                    <p>إنشاء فرع</p>
+
+
+                </div>
+
+                <div class="card-body">
+                    <form id="formSubmission" asp-action="Create" style=" width: 50vw;  margin: auto;" enctype="multipart/form-data" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <!-- 2 column grid layout with text inputs for the first and last names -->
+                        <div class="row mb-4">
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label asp-for="BranchName" class="control-label"></label>
+                                    <input asp-for="BranchName" class="form-control" type="text" id="bname" />
+                                    <span asp-validation-for="BranchName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-outline">
+                                  
+
+                                    <label asp-for="CityId" class="control-label"></label>
+                                    <select asp-for="CityId" class="form-control" asp-items="ViewBag.CityId" id="city"></select>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Text input -->
+                        <div class="form-outline mb-4">
+                             <label asp-for="Location" class="control-label"></label>
+                            <input asp-for="Location" class="form-control" type="text" id="loc" />
+                            <span asp-validation-for="Location" class="text-danger"></span>
+                        </div>
+
+                        <!-- Text input -->
+                        <div class="form-outline mb-4">
+                            <label asp-for="Address" class="control-label"></label>
+                            <input asp-for="Address" class="form-control" type="text"  id="add"/>
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+
+                        <!-- Email input -->
+                        <div class="form-outline mb-4">
+                            <label asp-for="Email" class="control-label"></label>
+                            <input asp-for="Email" class="form-control" type="email" id="ema" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <!-- Number input -->
+                        <div class="form-outline mb-4">
+                            <label asp-for="Phone" class="control-label"></label>
+                            <input asp-for="Phone" class="form-control" type="text" id="ph" />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <label asp-for="Notes" class="control-label"></label>
+                            <input asp-for="Notes" class="form-control"  id="not"/>
+                            <span asp-validation-for="Notes" class="text-danger"></span>
+                        </div>
+                       
+                        <div class="form-outline mb-4">
+               
+                 <label asp-for="BranchType" class="control-label"></label>
+                
+                <select asp-for="BranchType" class="form-control" id="type">
+                    
+                    <option value="1" selected>فرع مبيعات </option>
+                    <option value="2">فرع إدارة</option>
+                </select>
+                <span asp-validation-for="BranchType" class="text-danger"></span>
+            </div>
+            <div class="form-outline mb-4">
+               
+                 <label asp-for="branchImg " class="control-label"></label>
+
+                            <input asp-for="branchImg" class="form-control" type="file" id="file1" name="file1" accept="image/png, image/gif, image/jpeg">
+                            <img id='divOutput'>
+                    
+
+                <span asp-validation-for="branchImg" class="text-danger"></span>
+            </div>
+                       
+
+                        <button class="btn btn-primary btn-lg btn-block" type="submit" id="submitButton" >
+                            إضافة الفرع
+                        </button>
+                    </form>
+
+                    
+   
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+
+@section Scripts {
+
+
+    <script>
+//        var img1;
+//        function read(val) {
+//            const reader = new FileReader();
+
+            
+
+//           reader.readAsDataURL(val.files[0]);
+//            img1 = val.files[0];
+//            console.log(img1);
+
+//        }
+//        $("#formSubmission").submit(function (e) {
+//            //testt();
+
+
+//            var brname = document.getElementById('bname').value;
+//                    var locat = document.getElementById('loc').value;
+//                    var phone1 = document.getElementById('ph').value;
+//                    var email1 = document.getElementById('ema').value;
+//                    var addres = document.getElementById('add').value;
+//                    var cid = document.getElementById('city').value;
+//                    var note = document.getElementById('not').value;
+//                    var btype = document.getElementById('type').value;
+//            var img = new FormData($("#formSubmission")[0]);
+//            console.log(img);
+//            e.preventDefault();
+//            $.post("/Branches/AddBranch", {
+//                            branchName: brname, location: locat, phone: phone1, email: email1, dddress: addres, cityId: cid, notes: note, branchType: btype, file1
+//                       :img }, function (data) {
+
+//                                window.location.href = '@Url.Action("Index", "Branches")' ;
+
+
+//                            });
+            
+//        });
+//        function testt(){
+//alert("onsubmit");
+//            var formData = new FormData();
+//            formData.append("userpic", img1, "chris.jpg");
+
+//         console.log(formData);
+                  
+//        }
+      
+
+    ////     $("#submitButton").on('click', function(e){
+    ////   e.preventDefault();
+        
+    ////        var brname = document.getElementById('bname').value;
+    ////        var locat = document.getElementById('loc').value;
+    ////        var phone1 = document.getElementById('ph').value;
+    ////        var email1 = document.getElementById('ema').value;
+    ////        var addres = document.getElementById('add').value;
+    ////        var cid = document.getElementById('city').value;
+    ////        var note = document.getElementById('not').value;
+    ////        var btype = document.getElementById('type').value;
+    ////        var img = img1;
+            
+    ////        //document.getElementById('file1');
+    ////        //new FormData($("#formSubmission")[0])
+    ////                /**/
+    ////        console.log(img);
+    ////        //console.log(img1);
+           
+    ////        alert("1");
+
+
+
+    ////        var formData = new FormData();
+    ////        console.log(formData);
+    ////       //     $.post("/Branches/AddBranch", {
+    ////       //     branchName: brname, location: locat, phone: phone1, email: email1, dddress: addres, cityId: cid, notes: note, branchType: btype, file1
+    ////       //:img }, function (data) {
+
+    ////       //         window.location.href = '@Url.Action("Index", "Branches")' ;
+
+
+    ////       //     });
+          
+
+
+
+
+    ////});
+       
+
+    </script>
+
+
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

@@ -1,0 +1,182 @@
+﻿@model IEnumerable<Nobels.Models.ItemColor>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "_LayoutshowRoomAndProjectManger";
+
+}
+
+<div class="row" style="margin-top:10px;">
+    <div class="col-12">
+
+
+        <div class="card">
+
+            <div class="card-header">
+                <h3 class="card-title">
+                </h3>
+                
+                   @* <i class="fa fa-plus"></i>
+                    إنشاء لون للعنصر*@
+
+                    <a
+    action="action"
+    onclick="window.history.go(-1); return false;"
+    type="submit"
+    value="Cancel"
+><i class="fa fa-arrow-left fa-lg"></i></a>
+
+                </a>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped" id="dep_table">
+
+                        <thead style="white-space: nowrap;">
+                            <tr>
+                               
+                                <th style="text-align: center;">
+                                    @Html.DisplayNameFor(model => model.ColorId)
+                                </th>
+                                <th style="text-align: center;">
+                                    @Html.DisplayNameFor(model => model.ItemId)
+                                </th>
+                                <th style="text-align: center;">
+                                    @Html.DisplayNameFor(model => model.SpecialPrice)
+                                </th>
+                                
+
+                                <th>
+تفعيل/إلغاء تفعيل
+                                </th>
+                                <th></th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                   
+                                    <td style="text-align: center;">
+                                        @Html.DisplayFor(modelItem => item.Color.ColorName)
+                                        
+                                    </td>
+                                    <td style="text-align: center;">
+                                        @Html.DisplayFor(modelItem => item.Item.ItemArName)
+                                    </td>
+                                    <td style="text-align: center;" id="@item.ColorId" contenteditable='true'>
+                                        @Html.DisplayFor(modelItem => item.SpecialPrice)
+                                       
+                                    </td>
+                                    <td>
+                                        @if (item.isEnabled == false)
+                                        {
+                                           
+                                            <input type="checkbox" id="ch_@Html.DisplayFor(modelItem => item.ItemColorId)" value="true"  onclick="colorCheck(@Html.DisplayFor(modelItem => item.ItemColorId))" data-val="true" >
+                                           
+                                        }
+                                        @if (item.isEnabled == true)
+                                        {
+
+                                            <input type="checkbox" id="ch_@Html.DisplayFor(modelItem => item.ItemColorId)" value="true" onclick="colorCheck(@Html.DisplayFor(modelItem => item.ItemColorId))" data-val="true" checked>
+                                          
+                                        }
+
+
+                                     
+                                    </td>
+                                    <td>
+                                         <button type="submit" onclick="price(@item.ColorId)" class="btn btn-primary " >حفظ السعر الجديد</button>
+                                    </td>
+                                    
+                                   
+                                </tr>
+                            }
+                        </tbody>
+
+
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+@section Scripts {
+
+    
+
+
+
+
+    <script>
+function colorCheck(id) 
+{console.log("item changed");
+            const elem = document.querySelector('#ch_'+id)
+
+            $.post("/showRoomAndProjectManger/color", { Iid: id }, function (data) {
+                   console.log(`Checkbox is checked!....` + id);
+                });
+                
+          
+            
+  
+}
+
+function price(colorid) 
+{
+    //var ItemID = baseUrl.substring(baseUrl.lastIndexOf('=')+1);
+    var baseUrl = (window.location).href; // You can also use document.URL
+var ItemId = baseUrl.substring(baseUrl.lastIndexOf('=') + 1);
+
+  
+      var tdElem = document.getElementById(colorid);
+   
+   
+      var Price = tdElem.innerHTML;
+
+            $.post("/showRoomAndProjectManger/UpdatePrice", { ColorId: colorid, itemId: ItemId, NewPrice: Price }, function (data) {
+                  //  alert(`Checkbox is checked!....` + id);
+         
+                });
+
+
+
+}
+
+
+
+
+        $(function () {
+            $('#dep_table').DataTable({
+                "lengthMenu": [[5, 10, 15, 20, 25, -1], [5, 10, 15, 20, 25, "All"]],
+                "responsive": true,
+                "autoWidth": true,
+                "language": {
+                    "sProcessing": "جارٍ التحميل...",
+                    "sLengthMenu": "أظهر _MENU_ مدخلات",
+                    "sZeroRecords": "لم يتم العثور على أية نتائج",
+                    "sInfo": "إظهار _START_ إلى _END_ من أصل _TOTAL_ مدخل",
+                    "sInfoEmpty": "يعرض 0 إلى 0 من أصل 0 سجل",
+                    "sInfoFiltered": "(منتقاة من مجموع _MAX_ مُدخل)",
+                    "sInfoPostFix": "",
+                    "sSearch": "البحث:",
+                    "sUrl": "",
+                    "oPaginate": {
+                        "sFirst": "الأول",
+                        "sPrevious": "السابق",
+                        "sNext": "التالي",
+                        "sLast": "الأخير"
+                    }
+                }
+            });
+        });</script>
+}
+

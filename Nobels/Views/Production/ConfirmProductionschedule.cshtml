@@ -1,0 +1,123 @@
+@model IEnumerable<Nobels.Models.ProductionSchedule>
+
+@{
+    Layout = "_LayoutRepresntitiveAndAdvisor";
+}
+
+                            <div class="col-md-12  row mt-4">
+                                <div class="col-md-12 ">
+        <h3 class="" style="text-align: center;">تأكيد جدولة الإنتاج للعرض @ViewBag.quoID</h3>
+                                </div>
+                                <div class="col-md-12 ">
+                                    <p class="col-md-12 px-0">
+
+                                        <span>
+                                            <span>رقم أمر المبيعات : </span>
+                <span>@ViewBag.code</span>
+                                        </span>
+                                        <span class="mx-3">
+                                            <span>قيمة أمر المبيعات : </span>
+                                            <span>20000</span>
+                                        </span>
+                                        <span>
+                                            <span>العميل : </span>
+                <span>@ViewBag.customer</span>
+                                        </span>
+                                    </p>
+                                    <p class="col-md-12 px-0">
+                                        <span>
+                                            <span>تاريخ التدقيق الفني : </span>
+                <span>@ViewBag.date2</span>
+                                        </span>
+                                        <span class="mx-3">
+                                            <span>المدينة : </span>
+                <span>@ViewBag.city</span>
+                                        </span>
+
+                                        <span>
+                                            <span>المعرض : </span>
+                <span>@ViewBag.Branch</span>
+                                        </span>
+                                    </p>
+                                     <div class="col-md-12 mt-4">
+                <label class="col-auto align-self-end">
+                       عنوان التركيب:
+                    </label
+                <p class="row" hidden>
+                    
+                </p>
+                <p class="row">
+                   &nbsp;&nbsp;&nbsp;&nbsp; <span >المدينة : </span>&nbsp;&nbsp;
+                    <span >@ViewBag.city</span>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span >الحي : </span>&nbsp;&nbsp;
+                    <span >@ViewBag.neig</span>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span >رقم البيت : </span>&nbsp;&nbsp;
+                    <span >@ViewBag.housenumber</span>&nbsp;&nbsp;&nbsp;&nbsp;- &nbsp;&nbsp;&nbsp;&nbsp;
+                    <span >شارع : </span>&nbsp;&nbsp;
+                    <span >@ViewBag.street</span>
+                </p>
+            </div>
+        <p class="col-md-12 px-0">
+            <span>
+                <span>التاريخ المقترح للتركيب : </span>
+                <span>@ViewBag.date1</span>
+            </span>
+        </p>
+                                </div>
+    <form asp-action="ConfirmProductionscheduleForm" id="Createform">
+       
+                        <input value="@ViewBag.reqid" name="reqId" id="reqId" hidden />
+                                <p class="col-md-12  row">
+                                    <span class="col-auto align-self-center">جدولة الإنتاج بتاريخ : </span>
+            <input type="text" class="form-control " name="selectedDate" id="selectedDate" onchange="handler(event);" value="@ViewBag.date" readonly>
+
+                                </p>
+                                <div class="mb-3">
+            <label id="notes_label" for="notes">إضافة ملاحظة</label>
+            <textarea name="notes" id="notes" class="form-control" cols="10" rows="4"
+                      placeholder="ملاحظات"></textarea>
+        </div>
+                                <p class="col-md-12  ">
+                                    <span>إجمالي قيم الطلبات : </span>
+                                    <span></span>
+
+                                </p>
+
+                                <div class="col-md-12 my-4 mx-auto w-100 ">
+                                    <button class="btn btn-submit"
+                    type="button" onclick="go()">
+                تأكيد
+            </button>
+                                </div>
+    </form>
+                            </div>
+@section Scripts
+      
+      {
+
+    <script>
+        function handler(e) {
+            console.log(e.target.value);
+
+          
+
+        }
+
+
+
+        function go(){
+            Swal.fire({
+                icon: 'warning',
+                title: 'هل أنت متأكد ؟',
+                text: 'قم بالتأكيد',
+                footer: '<button class="swal2-confirm swal2-styled" type="submit" form="Createform">تأكيد </button>',
+                showCancelButton: false,
+                showConfirmButton: false,
+                showCloseButton: true
+            });
+        }
+    </script>
+        
+        
+        
+        }

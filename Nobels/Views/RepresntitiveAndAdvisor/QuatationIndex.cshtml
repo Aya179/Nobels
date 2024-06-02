@@ -1,0 +1,352 @@
+﻿@model IEnumerable<Nobels.Models.Quotation>
+@{
+     Layout = "_LayoutRepresntitiveAndAdvisor";
+    
+}
+@{
+                                      var instreq = (List<InstallationRequest>)ViewData["MyData"];
+                                      var productionlist = (List<ProductionSchedule>)ViewData["productionData"];
+                                      var instSchedlist = (List<InstallationSchedule>)ViewData["instSchedData"];
+                                      
+                                    }
+     <div class="row" style="m  </h3>
+                <a class="float-left" asp-controller="RepresntitiveAndAdvisor" asp-action="CreateQuatationRooms" asp-route-id="@ViewBag.customerid">
+                    <i class="fa fa-plus"></i>
+                    إنشاء عرض جديد
+
+                </a>argin-top:10px;">
+    <div class="col-12">
+
+
+        <div class="card">
+
+          <div class="card-header">
+                <h3 class="card-title">
+              
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped" id="dep_table">
+
+                        <thead style="white-space: nowrap;">
+                            <tr>
+                                <th style="text-align: center;">
+                                    @Html.DisplayNameFor(model => model.QuotationId)
+                                </th>
+                                <th style="text-align: center;">
+                                    @Html.DisplayNameFor(model => model.CustomerId)
+                                </th>
+                                <th style="text-align: center;">
+                                    @Html.DisplayNameFor(model => model.QuotationStatus)
+                                </th>
+                                
+                                <th style="text-align: center;">
+                                    @Html.DisplayNameFor(model => model.Code)
+                                </th>
+                                <th style="text-align: center;">
+                                    @Html.DisplayNameFor(model => model.BranchId)
+                                </th>
+                                <th style="text-align: center;">
+                                   مدينة التركيب
+                                </th>
+                                  <th style="text-align: center;">
+                                    الموظف
+                                </th>
+                                <th style="text-align: center;">
+                                    @Html.DisplayNameFor(model => model.QuotationSimpleDate)
+                                </th>
+                                 <th style="text-align: center;" hidden>
+                                    @Html.DisplayNameFor(model => model.Notes)
+                                </th>
+
+                                 <th>
+
+                                 </th>
+                                 <th hidden></th>
+
+                                
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                var reqID = instreq.Where(i => i.QutationId == item.QuotationId).Select(i => i.Id).FirstOrDefault();
+
+                            <tr>
+                                <td style="text-align: center;">
+                                    @Html.DisplayFor(modelItem => item.QuotationId)
+                                </td>
+                                <td style="text-align: center;">
+                                    @Html.DisplayFor(modelItem => item.Customer.ArabicName)
+                                </td>
+                                @if(instreq.Any(i=>i.QutationId==item.QuotationId)&&(productionlist.Where(i=>i.IntallationRequestId==reqID).Count()==1&&productionlist.Any(i=>i.IsConfirmed==0&&i.IntallationRequestId==reqID))&&!instSchedlist.Any(i=>i.InstallationRequestId==reqID)){
+                                    
+                                    <td style="text-align: center; color:darkgoldenrod">
+                                    الإنتاج – جدولة
+                                </td>
+
+                                }
+                                else if(instreq.Any(i=>i.QutationId==item.QuotationId)&&productionlist.Where(i=>i.IntallationRequestId==reqID).Count()==2&&!instSchedlist.Any(i=>i.InstallationRequestId==reqID)){
+                                    
+                                    <td style="text-align: center; color:darkgoldenrod">
+                                    التركيب – غير مجدول
+                                </td>
+
+                                }
+                                else if(instreq.Any(i=>i.QutationId==item.QuotationId)&&productionlist.Where(i=>i.IntallationRequestId==reqID).Count()==2&&instSchedlist.Any(i=>i.InstallationRequestId==reqID)){
+                                    
+                                    <td style="text-align: center; color:darkgoldenrod">
+                                    التركيب –  مجدول
+                                </td>
+
+                                }
+                              else  if(item.QuotationStatus=="مقبول فنياً"|| item.QuotationStatus=="قيد التدقيق الفني"){
+                                <td style="text-align: center; color:yellowgreen;">
+                                    @Html.DisplayFor(modelItem => item.QuotationStatus)
+                                </td>
+                                } 
+                                else if(instreq.Any(i=>i.QutationId==item.QuotationId)&&item.QuotationStatus=="مقبول مالياً"&&!(instreq.Any(i=>i.QutationId==item.QuotationId)&&productionlist.Any(i=>i.IntallationRequestId==reqID&&i.IsConfirmed==0))){
+                                    <td style="text-align: center; color:cornflowerblue">
+                                    مرفوع للتركيب
+                                </td>
+                                } 
+                                else if(item.QuotationStatus=="مقبول مالياً"||item.QuotationStatus=="قيد التدقيق المالي"&&!instreq.Any(i=>i.QutationId==item.QuotationId))
+                                {
+                                    
+                                <td style="text-align: center; color:springgreen">
+                                    @Html.DisplayFor(modelItem => item.QuotationStatus)
+                                </td>
+                                }
+                                else if(item.QuotationStatus=="مرفوض"||item.QuotationStatus=="مرفوض فنياً"||item.QuotationStatus=="مرفوض مالياً"){
+                                    <td style="text-align: center; color:red;">
+                                    @Html.DisplayFor(modelItem => item.QuotationStatus)
+                                </td>
+                                }
+                               
+                                else{
+                                    <td style="text-align: center;">
+                                    @Html.DisplayFor(modelItem => item.QuotationStatus)
+                                </td>
+                                }
+                                
+                                <td style="text-align: center;">
+                                    @Html.DisplayFor(modelItem => item.Code)
+                                </td>
+                                <td style="text-align: center;">
+                                    @Html.DisplayFor(modelItem => item.Branch.BranchName)
+                                </td>
+                                <td style="text-align: center;">
+                                    @Html.DisplayFor(modelItem => item.discountType)
+                                </td>
+                                <td style="text-align: center;">
+                                    @{
+                                            var emp=new Employee();
+                                            var fullname = "Name";
+                                            for(int i=0;i<ViewBag.Employee.Length;i++){
+                                               if(ViewBag.Employee[i].Id==item.employeeId) 
+                                                emp=ViewBag.Employee[i];
+                                            }
+                                          fullname = emp.UserName;
+                                           // Html.DisplayFor(modelItem => fullname);
+                                        }
+                                         @Html.DisplayFor(modelItem => fullname)
+                                </td>
+                                <td style="text-align: center;">
+                                    @Html.DisplayFor(modelItem => item.QuotationSimpleDate)
+                                </td>
+                                <td style="text-align: center;"hidden>
+                                    @Html.DisplayFor(modelItem => item.Notes)
+                                </td>
+                                  @if (item.QuotationStatus=="جديد"||item.QuotationStatus=="مرفوض فنياً"/*&& item.employeeId==ViewBag.uid*/ ) {
+                                        <td style="text-align: center; white-space: nowrap;">
+                                         <a class="bill5" onclick="makeAPICall(@item.QuotationId)" href="#" > رفع طلب تدقيق فني  </a>|
+                                            <a  asp-action="CreateOrderDetail" asp-route-id="@item.QuotationId" > <i class="fas fa-edit" ></i></a> |
+
+                                            <a class="delete" title="حذف" asp-action="DeleteQU" asp-route-id="@item.QuotationId"><i class="fas fa-trash-alt"></i></a> |
+                                            <a  asp-action="OrderDetails" title="التفاصيل" asp-route-id="@item.QuotationId" > <i class="fas fa-eye" ></i></a> |
+                                           
+                                            <a class="bill" asp-action="BillView" asp-route-id="@item.QuotationId" > عرض سعر معمل  </a>|
+
+                                            <a class="bil3l" asp-action="RoomBillView" asp-route-id="@item.QuotationId" > عرض سعر زبون</a>|
+
+                                            <a  asp-controller="RepresntitiveAndAdvisor" asp-action="RoomDetaildView" asp-route-id="@item.QuotationId">
+                                                عرض سعر مفصل وفق الغرف
+
+                                            </a>
+
+                                        </td>
+                                    }
+                                  @if (item.QuotationStatus=="قيد التدقيق الفني"/*&& item.employeeId==ViewBag.uid*/ ) {
+                                        <td style="text-align: center; white-space: nowrap;">
+                                        <span class="bill5" >  تم رفع طلب تدقيق فني  </span>|
+                                            <a  asp-action="CreateOrderDetail" asp-route-id="@item.QuotationId" > <i class="fas fa-edit" ></i></a> |
+
+                                            <a class="delete" title="حذف" asp-action="DeleteQU" asp-route-id="@item.QuotationId"><i class="fas fa-trash-alt"></i></a> |
+                                            <a  asp-action="OrderDetails" title="التفاصيل" asp-route-id="@item.QuotationId" > <i class="fas fa-eye" ></i></a> |
+                                           
+                                            <a class="bill" asp-action="BillView" asp-route-id="@item.QuotationId" > عرض سعر معمل  </a>|
+
+                                            <a class="bil3l" asp-action="RoomBillView" asp-route-id="@item.QuotationId" > عرض سعر زبون</a>|
+
+                                            <a  asp-controller="RepresntitiveAndAdvisor" asp-action="RoomDetaildView" asp-route-id="@item.QuotationId">
+                                                عرض سعر مفصل وفق الغرف
+
+                                            </a>
+
+                                        </td>
+                                    }
+                                   
+                                    
+                                    @if(item.QuotationStatus=="مقبول فنياً"||item.QuotationStatus=="مرفوض مالياً")
+                                    {
+                                         <td style="text-align: center; white-space: nowrap;">
+                                            <a class="bill5" onclick="makeAPICall(@item.QuotationId)" href="#" > رفع طلب تدقيق مالي  </a>|
+
+                                            <a  asp-action="OrderDetails" asp-route-id="@item.QuotationId" > <i class="fas fa-eye" ></i></a> |
+                                              
+
+                                            <a class="bill" asp-action="BillView" asp-route-id="@item.QuotationId" > عرض سعر معمل  </a>|
+
+                                            <a class="bil3l" asp-action="RoomBillView" asp-route-id="@item.QuotationId" > عرض سعر زبون</a>|
+
+                                            <a  asp-controller="RepresntitiveAndAdvisor" asp-action="RoomDetaildView" asp-route-id="@item.QuotationId">
+                                                عرض سعر مفصل وفق الغرف
+
+                                            </a>
+
+
+                                        </td>
+                                    }
+                                    @if(item.QuotationStatus=="قيد التدقيق المالي")
+                                    {
+                                         <td style="text-align: center; white-space: nowrap;">
+                                                                                 <span class="bill5" >  تم رفع طلب تدقيق مالي  </span>|
+
+
+                                            <a  asp-action="OrderDetails" asp-route-id="@item.QuotationId" > <i class="fas fa-eye" ></i></a> |
+                                              
+
+                                            <a class="bill" asp-action="BillView" asp-route-id="@item.QuotationId" > عرض سعر معمل  </a>|
+
+                                            <a class="bil3l" asp-action="RoomBillView" asp-route-id="@item.QuotationId" > عرض سعر زبون</a>|
+
+                                            <a  asp-controller="RepresntitiveAndAdvisor" asp-action="RoomDetaildView" asp-route-id="@item.QuotationId">
+                                                عرض سعر مفصل وفق الغرف
+
+                                            </a>
+
+
+                                        </td>
+                                    }
+                                    
+                                    @if(item.QuotationStatus=="مقبول مالياً")
+                                    {
+                                         <td style="text-align: center; white-space: nowrap;">
+                                            
+                                            @if(instreq.Any(i=>i.QutationId==item.QuotationId)||(instreq.Any(i=>i.QutationId==item.QuotationId)&&productionlist.Any(i=>i.IntallationRequestId==reqID&&i.IsConfirmed==0)))
+                                            { <span class="bill5" >  تم رفع طلب تركيب  </span>}
+                                        else { 
+                                            <a class="bill5" asp-controller="trkebat" asp-action="trkebat_offer" asp-route-id="@item.QuotationId"  > رفع طلب تركيب  </a>}
+                                           
+                                             | <a  asp-action="OrderDetails" asp-route-id="@item.QuotationId" > <i class="fas fa-eye" ></i></a> |
+
+                                            <a class="bill" asp-action="BillView" asp-route-id="@item.QuotationId" > عرض سعر معمل  </a>|
+
+                                            <a class="bil3l" asp-action="RoomBillView" asp-route-id="@item.QuotationId" > عرض سعر زبون</a>|
+
+                                            <a  asp-controller="RepresntitiveAndAdvisor" asp-action="RoomDetaildView" asp-route-id="@item.QuotationId">
+                                                عرض سعر مفصل وفق الغرف
+
+                                            </a>
+
+
+                                        </td>
+                                    }
+                                    <td style="text-align: center;" hidden>
+                                    @Html.DisplayFor(modelItem => item.employeeId)
+                                </td>
+                                
+                                
+                               
+                            </tr>
+                            }
+                        </tbody>
+
+
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+@section Scripts {
+
+<Script>
+
+    function makeAPICall(qid1){
+         Swal.fire({
+    title: 'رفع الطلب',
+    icon: 'info',
+    showCancelButton: true,
+    cancelButtonText:'إلغاء',
+    confirmButtonText: 'رفع'
+  }).then((result) => {
+    if (result['isConfirmed']){
+              $.post("/RepresntitiveAndAdvisor/updateQoutationStataus", {
+
+                        qid: qid1, 
+                }, function (data) {
+               
+               
+                 
+                  Swal.fire({
+                        icon: 'success',
+                        title: 'تم رفع الطلب',
+
+                      
+                    }).then(() => {
+  window.location.reload();
+});
+
+                });/*window.location.reload();*/  
+
+    }
+  });
+
+                   
+    }
+        $(function () {
+            $('#dep_table').DataTable({
+                "lengthMenu": [[5, 10, 15, 20, 25, -1], [5, 10, 15, 20, 25, "All"]],
+                "responsive": true,
+                "autoWidth": true,
+                "language": {
+                    "sProcessing": "جارٍ التحميل...",
+                    "sLengthMenu": "أظهر _MENU_ مدخلات",
+                    "sZeroRecords": "لم يتم العثور على أية نتائج",
+                    "sInfo": "إظهار _START_ إلى _END_ من أصل _TOTAL_ مدخل",
+                    "sInfoEmpty": "يعرض 0 إلى 0 من أصل 0 سجل",
+                    "sInfoFiltered": "(منتقاة من مجموع _MAX_ مُدخل)",
+                    "sInfoPostFix": "",
+                    "sSearch": "البحث:",
+                    "sUrl": "",
+                    "oPaginate": {
+                        "sFirst": "الأول",
+                        "sPrevious": "السابق",
+                        "sNext": "التالي",
+                        "sLast": "الأخير"
+                    }
+                }
+            });
+        });
+        </script>
+}

@@ -1,0 +1,638 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Employee> SignInManager
+@inject UserManager<Employee> UserManagerc
+@{
+    var user = UserManagerc.FindByNameAsync(User.Identity.Name);
+    var role = user.Result.RoleId;
+    if(role==6)
+    {
+        Layout = "_LayoutProductManeger";
+
+    }
+    else{
+        Layout = "_Layout";
+
+    }
+}
+
+
+
+
+
+
+<!-- Content Wrapper -->
+
+        <div id="content">
+       
+          <!-- Begin Page Content -->
+          <div class="container-fluid">
+            <!-- Page Heading -->
+            <!-- <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+          </div> -->
+
+            <!-- Content Row -->
+            <div class="row">
+              <!-- Earnings (Monthly) Card Example -->
+              <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                  <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                      <div class="col mr-2">
+                        <div
+                          class="h6 font-weight-bold  text-uppercase mb-1" style="    color: #b2cb49;"
+                        >
+                        المنتجات
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                          @ViewBag.count
+                        </div>
+                      </div>
+                      <div class="col-auto">
+                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-info shadow h-100 py-2">
+                  <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                      <div class="col mr-2">
+                        <div
+                          class="h6 font-weight-bold text-info text-uppercase mb-1"
+                        >
+                        الفئات
+                        </div>
+                        <div class="row no-gutters align-items-center">
+                          <div class="col-auto">
+                            <div
+                              class="h5 mb-0 mr-3 font-weight-bold text-gray-800"
+                            >
+                               @ViewBag.count1
+                            </div>
+                          </div>
+                        
+                        </div>
+                      </div>
+                      <div class="col-auto">
+                        <i
+                          class="fas fa-clipboard-list fa-2x text-gray-300"
+                        ></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Pending Requests Card Example -->
+              <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-warning shadow h-100 py-2">
+                  <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                      <div class="col mr-2">
+                        <div
+                          class="h6 font-weight-bold text-warning text-uppercase mb-1"
+                        >
+                        العملاء
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                          @ViewBag.count2
+                        </div>
+                      </div>
+                      <div class="col-auto">
+                        <i class="fas fa-comments fa-2x text-gray-300"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+           
+
+                   <section>
+            <!-- Content Row -->
+
+            <div class="row">
+                <!-- Area Chart -->
+                <div class="col-xl-7 col-lg-7">
+                    <div class="card shadow mb-4">
+                        <!-- Card Header - Dropdown -->
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">
+                                مبيعات الأفرع
+                            </h6>
+                          
+                        </div>
+                        <!-- Card Body -->
+                        <div class="card-body">
+                            <div class="chart-area">
+                                <canvas id="myAreaChart1"></canvas>
+                            </div>
+
+
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pie Chart -->
+                <div class="col-xl-5 col-lg-5">
+                    <div class="card shadow mb-4">
+                        <!-- Card Header - Dropdown -->
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">
+                                مبيعات الزبائن
+                            </h6>
+                            <select class="form-control " style="width: 200px;" aria-invalid="false" asp-items="ViewBag.customer"id="customer" onchange="customersearch()">
+                                @*<option>اختر الزبون</option>
+                                <option>الزبون 1</option>
+                                <option>الزبون 2</option>
+                                <option>الزبون 3</option>*@
+                            </select>
+                        </div>
+                        <!-- Card Body -->
+                        <div class="card-body">
+                            <div class="chart-pie pt-4 pb-2">
+                                <table class="table table-striped" >
+
+                                    <thead style="white-space: nowrap;">
+                                        <tr>
+                                            <th style="text-align: center;" scope="col">
+                                                اسم الزبون
+                                            </th>
+                                            <th style="text-align: center;" scope="col">
+                                               الفرع
+                                            </th>
+                                          
+                                          <th style="text-align: center;" scope="col">
+                                                المجموع
+                                            </th>
+
+
+
+
+                                        </tr>
+                                    </thead>
+                                    <tbody id="customertable">
+                                    </tbody>
+
+
+
+                                </table>
+                            </div>
+                            <div class="mt-4 text-center small">
+                                
+                                <span class="mr-2">
+                                    <i class="fas fa-circle text-info" ></i>
+                                    <label id="customerTotal" />
+                                    المجموع : 
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Row -->
+  <div class="row ">
+    <div class="col-12">
+      <div class="card mb-4  ">
+      
+
+
+        <div class="card-header" style=" display: flex;justify-content: space-between;">
+                            <h6 class="m-0 font-weight-bold text-primary my-3">
+                اهم البائعين
+                            </h6>
+                            <div style="    width: 44%; display: flex; align-items: center;justify-content: space-evenly;">
+                            <span>من</span>
+                                <input type="date" class="form-control" style="width: 200px;" id="start" />
+                            <span>الى</span>
+                            <input type="date" class="form-control" style="width: 200px;"id="end" onchange="topseller()" />
+                            </div>
+               </div>
+                <div class="card-body d-flex justify-content-center">
+
+                   
+
+
+                        
+                    <table class="table table-striped" id="dep_table">
+
+                        <thead style="white-space: nowrap;">
+                            <tr>
+                                <th style="text-align: center;" scope="col">
+                                   اسم البائع
+                                </th>
+                                <th style="text-align: center;" scope="col">
+                                   الفرع                          
+                                   </th>
+                                   <th style="text-align: center;" scope="col">
+                                      المحصلة
+                                   </th>
+                               
+                              
+                              
+                               
+                                
+                            </tr>
+                        </thead>
+                        <tbody id="sellerTable" >
+</tbody>
+
+
+
+                    </table>
+                     </div>
+      </div>
+    </div>
+
+  
+  </div>
+
+  <div class="row ">
+    <div class="col-12">
+      <div class="card mb-4  ">
+      
+
+
+        <div class="card-header" style=" display: flex;justify-content: space-between;">
+                            <h6 class="m-0 font-weight-bold text-primary my-3">
+                                المنتجات الأكثر مبيعاً
+                            </h6>
+                  
+
+
+               </div>
+                <div class="card-body d-flex justify-content-center">
+
+                   
+
+
+                        
+                    <table class="table table-striped" id="dep_table">
+
+                        <thead style="white-space: nowrap;">
+                            <tr>
+                                <th style="text-align: center;" scope="col">
+                                   اسم المنتج
+                                </th>
+                                <th style="text-align: center;" scope="col">
+                                   السعر                          
+                                   </th>
+                                   <th style="text-align: center;" scope="col">
+                                       كود المنتج                      
+                                   </th>
+                               
+                              
+                              
+                               
+                                
+                            </tr>
+                        </thead>
+                        <tbody id="table">
+</tbody>
+
+
+
+                    </table>
+                     </div>
+      </div>
+    </div>
+
+  
+  </div>
+
+  <section>
+  <div class="row ">
+    <div class="col-12">
+      <div class="card mb-4  ">
+      
+
+
+        <div class="card-header" style=" display: flex;justify-content: space-between;">
+                                <h6 class="m-0 font-weight-bold text-primary my-3">
+                                    الفروع الأكثر مبيعاً
+                                </h6>
+
+               </div>
+                <div class="card-body d-flex justify-content-center">
+
+                   
+
+
+                        
+                    <table class="table table-striped" id="dep_table">
+
+                        <thead style="white-space: nowrap;">
+                            <tr>
+                                <th style="text-align: center;" scope="col">
+                                   اسم الفرع
+                                </th>
+                                <th style="text-align: center;" scope="col">
+                                   الموقع                          
+                                   </th>
+                                    <th style="text-align: center;" scope="col">
+                                   العنوان                         
+                                   </th>
+                               
+                              
+                              
+                               
+                                
+                            </tr>
+                        </thead>
+                        <tbody id="table2">
+</tbody>
+
+
+
+                    </table>
+                     </div>
+      </div>
+    </div>
+
+  
+  </div>
+</section>
+
+
+
+           
+              
+
+           
+      @section Scripts
+      
+      {
+
+
+              
+
+
+                   
+
+          <script>
+             
+                    function topseller(){
+                        var start = document.getElementById('start').value;
+                        var end = document.getElementById('end').value;
+                        if(start!=""&&end!="") {
+                            $.get("/Home/TopSeller", { startdate: start, enddate: end }, function (data) {
+
+                var table_tr = "";
+
+
+                for (var i = 0; i < data.length; i++) {
+
+                    table_tr += `
+                             <tr>
+                                                          <td style="text-align: center;"> `+ data[i].name + ` </td>
+                                                           <td style="text-align: center;"> `+ data[i].branch + ` </td>
+                                                            <td style="text-align: center;"> `+ data[i].total + ` </td>
+                                                                         
+
+                               </tr>`;
+
+                }
+
+                            document.getElementById('sellerTable').innerHTML = table_tr;
+                                document.getElementById('start').value = null;
+                                document.getElementById('end').value = null;
+
+
+
+
+            });
+            }
+            //else {
+            //                document.getElementById('start').value=null;
+            //                document.getElementById('end').value = null;
+
+            //}
+
+                    }
+
+
+
+                    function customersearch(){
+
+                        var cust_val = document.getElementById('customer').value;
+
+
+                        $.get("/Home/Customersales", { customerId: cust_val }, function (data) {
+                            var table_tr = "";
+                             var Sumtotal=0;
+
+
+                            for (var i = 0; i < data.length; i++) {
+
+                                table_tr += `
+                                                 <tr>
+                                                                              <td style="text-align: center;"> `+ data[i].customername + ` </td>
+                                                                               <td style="text-align: center;"> `+ data[i].branch + ` </td>
+                                                                                <td style="text-align: center;"> `+ data[i].total + ` </td>
+
+
+
+                                                   </tr>`;
+                                Sumtotal += data[i].total;
+
+
+                            }
+                            document.getElementById("customerTotal").value = Sumtotal;
+
+
+                            document.getElementById('customertable').innerHTML = table_tr;
+
+
+
+
+
+                        });
+
+
+
+
+
+
+                    }
+                     function Top5() 
+                     {
+                        $.get("/Home/TOP5Product", function (data) {
+
+                var table_tr = "";
+
+
+                for (var i = 0; i < data.length; i++) {
+
+                    table_tr += `
+                             <tr>
+                                      <td style="text-align: center;"> `+ data[i].itemArName + ` </td>
+                                       <td style="text-align: center;"> `+ data[i].itemCurrentPrice + ` </td>
+                                        <td style="text-align: center;"> `+ data[i].itemCode + ` </td>
+                                                                         
+
+                               </tr>`;
+
+                }
+
+                document.getElementById('table').innerHTML = table_tr;
+
+
+
+
+            });
+
+                       }
+
+                        function Top5Bra() 
+                     {
+                        $.get("/Home/TOP5Branch", function (data) {
+
+                var table_tr = "";
+
+
+                for (var i = 0; i < data.length; i++) {
+
+                    table_tr += `
+                             <tr>
+                                      <td style="text-align: center;"> `+ data[i].branchName + ` </td>
+                                      <td style="text-align: center;"> `+ data[i].location + ` </td>
+                                       <td style="text-align: center;"> `+ data[i].address + ` </td>
+                                                                         
+
+                               </tr>`;
+
+                }
+
+                document.getElementById('table2').innerHTML = table_tr;
+
+
+
+
+            });
+
+                       }
+
+                        $(document).ready(function() 
+            {
+
+                        $.get("/Home/chartApi", function (data) {
+                            var branch=[];
+                            var total = [];
+
+                            for (var i = 0; i < data.length; i++) {
+                                branch.push(data[i].branch);
+                                total.push(data[i].total);
+                            }
+                            console.log(branch);
+                            console.log(total);
+                  var ctx = document.getElementById("myAreaChart1");
+var myLineChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+                                    labels: branch,
+    datasets: [{
+      label: "Earnings",
+      lineTension: 0.3,
+      backgroundColor: "rgba(78, 115, 223, 0.05)",
+      borderColor: "rgba(78, 115, 223, 1)",
+      pointRadius: 3,
+      pointBackgroundColor: "rgba(78, 115, 223, 1)",
+      pointBorderColor: "rgba(78, 115, 223, 1)",
+      pointHoverRadius: 3,
+      pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+      pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+      pointHitRadius: 10,
+      pointBorderWidth: 2,
+      data: total ,
+    }],
+  },
+  options: {
+    maintainAspectRatio: false,
+    layout: {
+      padding: {
+        left: 10,
+        right: 25,
+        top: 25,
+        bottom: 0
+      }
+    },
+    scales: {
+      xAxes: [{
+        time: {
+          unit: 'date'
+        },
+        gridLines: {
+          display: false,
+          drawBorder: false
+        },
+        ticks: {
+          maxTicksLimit: 7
+        }
+      }],
+      yAxes: [{
+        ticks: {
+          maxTicksLimit: 5,
+          padding: 10,
+          // Include a dollar sign in the ticks
+          callback: function(value, index, values) {
+            return number_format(value) + ' ';
+          }
+        },
+        gridLines: {
+          color: "rgb(234, 236, 244)",
+          zeroLineColor: "rgb(234, 236, 244)",
+          drawBorder: false,
+          borderDash: [2],
+          zeroLineBorderDash: [2]
+        }
+      }],
+    },
+    legend: {
+      display: false
+    },
+    tooltips: {
+      backgroundColor: "rgb(255,255,255)",
+      bodyFontColor: "#858796",
+      titleMarginBottom: 10,
+      titleFontColor: '#6e707e',
+      titleFontSize: 14,
+      borderColor: '#dddfeb',
+      borderWidth: 1,
+      xPadding: 15,
+      yPadding: 15,
+      displayColors: false,
+      intersect: false,
+      mode: 'index',
+      caretPadding: 10,
+      callbacks: {
+        label: function(tooltipItem, chart) {
+          var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+          return datasetLabel + ': $' + number_format(tooltipItem.yLabel);
+        }
+      }
+    }
+  }
+});
+
+                  });
+
+
+               Top5();
+                 Top5Bra();
+
+               });
+
+
+
+          </script>
+      }
+     
+   

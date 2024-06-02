@@ -1,0 +1,164 @@
+﻿ 
+@model IEnumerable<Nobels.Models.BillModel>
+@{
+    Layout = "_LayoutRepresntitiveAndAdvisor";
+    //    Layout = "_LayoutTechnicaloffice";
+
+}
+
+     <div class="row" style="margin-top:10px;">
+    <div class="col-12">
+
+
+        <div class="card">
+
+
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped" id="dep_table">
+
+                        <thead style="white-space: nowrap;">
+                            <tr>
+                                <th style="text-align: center;">
+                                    @Html.DisplayNameFor(model => model.quationId)
+                                </th>
+                                <th style="text-align: center;" hidden>
+                                    @Html.DisplayNameFor(model => model.status)
+                                </th>
+                                <th style="text-align: center;">
+                                    @Html.DisplayNameFor(model => model.Customer)
+                                </th>
+                                <th style="text-align: center;">
+                                    @Html.DisplayNameFor(model => model.code)
+                                </th>
+                                <th style="text-align: center;">
+                                    @Html.DisplayNameFor(model => model.branch)
+                                </th>
+                                <th style="text-align: center;">
+                                    مدينة التركيب
+                                </th>
+                                <th style="text-align: center;">
+                                    @Html.DisplayNameFor(model => model.employeeName)
+                                </th>
+                                <th style="text-align: center;">
+                                   تاريخ القبول فنياً
+                                </th>
+                               
+                                 <th hidden></th>
+
+
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td style="text-align: center;">
+                                        @Html.DisplayFor(modelItem => item.quationId)
+                                    </td>
+
+
+                                     @if(item.status=="مرفوض"){
+                                <td style="text-align: center; color:red;" hidden>
+                                    @Html.DisplayFor(modelItem => item.status)
+                                </td>
+                                }
+                                else{
+                                    <td style="text-align: center;" hidden>
+                                    @Html.DisplayFor(modelItem => item.status)
+                                </td>
+                                }
+                                   @* <td style="text-align: center;">
+                                        @Html.DisplayFor(modelItem => item.status)
+                                    </td>*@
+                                    <td style="text-align: center;">
+                                        @Html.DisplayFor(modelItem => item.Customer)
+                                    </td>
+                                     <td style="text-align: center;">
+                                        @Html.DisplayFor(modelItem => item.code)
+                                    </td>
+                                    <td style="text-align: center;">
+                                        @Html.DisplayFor(modelItem => item.branch)
+                                    </td> <td style="text-align: center;">
+                                        @Html.DisplayFor(modelItem => item.CityName)
+                                    </td>
+                                    <td style="text-align: center;">
+                                        @Html.DisplayFor(modelItem => item.employeeName)
+                                    </td>
+                                    <td style="text-align: center;">
+                                         @if(item.BillDate!=null)
+                                        {
+                                            
+                                            var date = item.BillDate.Value.ToShortDateString();
+                                       
+                                        @Html.DisplayFor(modelItem=>date)
+                                        }
+                                    </td>
+                                    
+                                   
+                                         <td style="text-align: center; white-space: nowrap;" hidden>
+                                               
+                                                 <a class="delete"asp-controller="Technicaloffice" asp-action="Delete" asp-route-id="@item.quationId">رفض العرض@*<i class="fas fa-trash-alt"></i>*@</a>
+
+                                                
+                                                
+
+                        
+
+                                            </td>
+                                   
+                                       
+                                   
+
+
+
+                                </tr>
+                            }
+                        </tbody>
+
+
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+@section Scripts {
+   
+    <Script>
+
+            $(function () {
+                $('#dep_table').DataTable({
+                    "lengthMenu": [[5, 10, 15, 20, 25, -1], [5, 10, 15, 20, 25, "All"]],
+                    "responsive": true,
+                    "autoWidth": true,
+                    "language": {
+                        "sProcessing": "جارٍ التحميل...",
+                        "sLengthMenu": "أظهر _MENU_ مدخلات",
+                        "sZeroRecords": "لم يتم العثور على أية نتائج",
+                        "sInfo": "إظهار _START_ إلى _END_ من أصل _TOTAL_ مدخل",
+                        "sInfoEmpty": "يعرض 0 إلى 0 من أصل 0 سجل",
+                        "sInfoFiltered": "(منتقاة من مجموع _MAX_ مُدخل)",
+                        "sInfoPostFix": "",
+                        "sSearch": "البحث:",
+                        "sUrl": "",
+                        "oPaginate": {
+                            "sFirst": "الأول",
+                            "sPrevious": "السابق",
+                            "sNext": "التالي",
+                            "sLast": "الأخير"
+                        }
+                    }
+                });
+            });
+            </script>
+}

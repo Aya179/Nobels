@@ -1,0 +1,151 @@
+﻿ @model Nobels.Models.Item
+
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Employee> SignInManager
+@inject UserManager<Employee> UserManagerc
+@{
+    ViewData["Title"] = "Edit";
+
+    var user = UserManagerc.FindByNameAsync(User.Identity.Name);
+    var role = user.Result.RoleId;
+    if(role==6)
+    {
+        Layout = "_LayoutProductManeger";
+
+    }
+    else{
+        Layout = "_Layout";
+
+    }
+}
+
+
+
+
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+
+                <div class="card-header" style=" display: flex;
+  justify-content: space-between;">
+                    <a asp-action="Index"> <i class="fa fa-arrow-left fa-lg"></i></a>
+                  <a asp-action="AddColor" asp-route-id="@Model.ItemId">إضافة لون</a>
+
+
+                </div>
+
+                <div class="card-body">
+                    <form asp-action="Edit" style=" width: 50vw;  margin: auto;" enctype="multipart/form-data" method="post">
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="ItemId" />
+
+
+                        <!-- 2 column grid layout with text inputs for the first and last names -->
+                        <div class="row mb-4">
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label asp-for="ItemArName" class="control-label"></label>
+                                    <input asp-for="ItemArName" class="form-control" />
+                                    <span asp-validation-for="ItemArName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label asp-for="ItemEnName" class="control-label"></label>
+                                    <input asp-for="ItemEnName" class="form-control" />
+                                    <span asp-validation-for="ItemEnName" class="text-danger"></span>
+
+                                </div>
+                            </div>
+                           @* <div class="col">
+
+                                <div class="form-outline">
+                                    <label asp-for="MainItemId" class="control-label"></label>
+                                    <select asp-for="MainItemId" class="form-control" asp-items="ViewBag.MainItemId"></select>
+                                </div>
+                            </div>*@
+                        </div>
+
+                        <!-- Text input -->
+                        <div class="form-outline mb-4">
+                            <label asp-for="ItemCode" class="control-label"></label>
+                            <input asp-for="ItemCode" class="form-control" />
+                            <span asp-validation-for="ItemCode" class="text-danger"></span>
+                        </div>
+
+                        <!-- Text input -->
+                        <div class="form-outline mb-4" hidden>
+                            <label asp-for="ItemCurrentPrice" class="control-label"></label>
+                            <input asp-for="ItemCurrentPrice" class="form-control" />
+                            <span asp-validation-for="ItemCurrentPrice" class="text-danger"></span>
+                        </div>
+
+                        <!-- Email input -->
+                        <div class="form-outline mb-4">
+                            <label asp-for="ItemSubTypeId" class="control-label"></label>
+                            <select asp-for="ItemSubTypeId" class="form-control" asp-items="ViewBag.ItemSubTypeId"></select>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <label asp-for="UOM" class="control-label"></label>
+                            <input asp-for="UOM" class="form-control" />
+                            <span asp-validation-for="UOM" class="text-danger"></span>
+                        </div> 
+                        <div class="form-outline mb-4">
+                            <label asp-for="ICost" class="control-label"></label>
+                            <input asp-for="ICost" class="form-control" />
+                            <span asp-validation-for="ICost" class="text-danger"></span>
+                        </div>
+                        <div class="form-outline mb-4">
+                            <label asp-for="FCost" class="control-label"></label>
+                            <input asp-for="FCost" class="form-control" />
+                            <span asp-validation-for="FCost" class="text-danger"></span>
+                        </div>
+                        <div class="form-outline mb-4">
+                            <label asp-for="RMCost" class="control-label"></label>
+                            <input asp-for="RMCost" class="form-control" />
+                            <span asp-validation-for="RMCost" class="text-danger"></span>
+                        </div>
+
+                       
+
+                        <div class="form-outline mb-4">
+                            <label asp-for="Notes" class="control-label"></label>
+                            <input asp-for="Notes" class="form-control" />
+                            <span asp-validation-for="Notes" class="text-danger"></span>
+                        </div>
+
+
+
+                        <button class="btn btn-primary btn-lg btn-block" type="submit">
+                            تعديل
+                        </button>
+                         @*<button class="btn btn-primary btn-lg btn-block" asp-action="AddColor">
+                            Add Color
+                        </button>*@
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<script>
+     function get_id() {
+            var url = document.URL;
+            var stuff = url.split('/');
+            var id = stuff[stuff.length - 1];
+           // document.getElementById('id1').value = id;
+         alert(id);
+</script>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+}
